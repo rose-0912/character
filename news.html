@@ -162,7 +162,7 @@
             border-color: var(--accent-blue);
             color: var(--accent-blue);
             font-weight: bold;
-            pointer-events: none; /* 自分自身のリンクなのでクリック無効化 */
+            pointer-events: none; 
             box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
             position: relative;
         }
@@ -307,26 +307,27 @@
         </ul>
     </div>
 
-    <!-- ナビゲーション：概要ボタンの個別デザイン(home-btn)を廃止し、他と完全に同じにしました -->
-    <div id="about-menu" class="section-panel">
-        <h2>ナビゲーション</h2>
-        <div class="nav-grid">
-            <a href="index.html" class="nav-button">◆概要◆</a> 
-            <a href="news.html" class="nav-button current-page">◆お知らせ◆</a> 
-            <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
-            <a href="company.html" class="nav-button">◆会社◆</a>
-            <a href="weapon.html" class="nav-button">◆武器◆</a>
-            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
-            <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
-            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
-            <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
-        </div>
+    <!-- ナビゲーション：概要ボタンの個別デザイン(home-btn)を廃止し、他と完全に同じフラットに統一 -->
+<div class="nav-grid">
+    <!-- 概要とお知らせは各ページに応じて「current-page」を付け替えてください -->
+    <a href="index.html" class="nav-button">◆概要◆</a> 
+    <a href="news.html" class="nav-button">◆お知らせ◆</a> 
+    <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
+    <a href="company.html" class="nav-button">◆会社◆</a>
+    <a href="weapon.html" class="nav-button">◆武器◆</a>
+    <a href="world_lore.html" class="nav-button">◆世界観◆</a>
+    <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
+    <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
+    
+    <!-- ここは赤グラデーションの強調をキープ！ -->
+    <a href="sheet_make.html" class="nav-button" style="grid-column: span 2; background: linear-gradient(90deg, #ff3b30, #a20000); border: none; font-weight: bold; font-size: 1rem; margin-top: 5px; color: #fff;">キャラクターシート制作ページ ➔</a>
+</div>
     </div>
 
-    <!-- お知らせ一覧エリア（省略せずに保持） -->
+    <!-- お知らせ一覧エリア（すべてノーカットで再設置） -->
     <div id="news-list-section" class="news-container">
-        <!-- 先ほどのお守りデータが入ります -->
-        <!-- （中身は同一のため省略せずにそのまま動作します） -->
+
+        <!-- 2026/05/28 (大規模改修告知) -->
         <details open>
             <summary>
                 <div class="meta-area">
@@ -336,11 +337,232 @@
                 <div class="news-title">キャラクターシート制作に関する大規模改修の告知</div>
             </summary>
             <div class="news-content">
-                直感的に分かりやすく視認性の向上を目的としたキャラクターシート制作方法の大規模改修を予定しています。
-                <!-- 中身省略 -->
+                直感的に分かりやすく視認性の向上を目的としたキャラクターシート制作方法の大規模改修を予定しています
+
+                ▼具体的な変更内容▼（※この内容は予告なく変更される可能性があります）
+                -キャラクターレベル実装
+                -キャラクターレベル実装に伴う能力値分配方法の変更
+                -基本能力、技術能力レベル上昇効率の均一化
+                -武器レベルの一部効果をキャラクターレベルへ移行
+                -武器レベルを1〜5までに変更
+                -武器スキルの獲得レベルの変更及びダメージロールと要求値増加幅変更
+                -経験ポイント廃止
+                -キャラクターレベル実装に伴う「階級とランク」の内容変更及び正式ルール化
+                -特殊能力獲得方法の変更
+                -上記の内容変更に伴う一部特殊能力の内容変更 
             </div>
         </details>
-        <!-- その他の詳細もそのまま news.html に残してください -->
+
+        <!-- 2026/05/28 (無所属追加) -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2026.05.28</span>
+                    <span class="badge update">UPDATE</span>
+                </div>
+                <div class="news-title">無所属の特殊能力追加と能力追加に伴う説明文の軽微な変更のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                ◉追加された特殊能力
+                0．無才
+                9．残された者
+                10．名家の一族
+
+                ◉無所属の説明の追加文
+                ▼追加された文▼
+                なお、分類し難い存在も無所属として扱われることもあります。
+            </div>
+        </details>
+
+        <!-- 2025/11/28 -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.11.28</span>
+                    <span class="badge fix">仕様補足</span>
+                </div>
+                <div class="news-title">呪力に関する追加説明のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                ・追加説明に呪力についての追加情報を記載しました
+            </div>
+        </details>
+
+        <!-- 2025/10/15 -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.10.15</span>
+                    <span class="badge fix">表記修正</span>
+                </div>
+                <div class="news-title">表記修正のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                ・追記説明の「上限の追加」についての変更
+                本来想定していた意図に合った内容に変更
+
+                変更前)全てのLv、ダイス数増加効果に上限を追加
+
+                変更後)ダイス数増加は上限の影響を受けないように変更
+            </div>
+        </details>
+
+        <!-- 2025/09/22 -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.09.22</span>
+                    <span class="badge fix">表記修正</span>
+                </div>
+                <div class="news-title">軽微な表記修正のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                反撃の説明文を微修正 
+            </div>
+        </details>
+
+        <!-- 2025/09/18 -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.09.18</span>
+                    <span class="badge update">UPDATE</span>
+                </div>
+                <div class="news-title">名称表記修正とスナイパーのスキル修正のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                弾丸保有数、総弾丸保有数の表記ではぱっと見で判断しづらく、見間違いをしてしまう可能性を考慮し弾丸保有数を装填数に変更します
+
+                回避・防御・反撃を総じて守備(守備行動、守備能力、守備判定)と呼称することにします
+                スキルや特殊能力にて3種全てを含むものは、順次守備に記載変更を行なっていく予定です
+
+                スナイパースキル表4の効果発生条件難度を上げ、上限を追加しました
+            </div>
+        </details>
+
+        <!-- 2025/09/14 (追加会社修正) -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.09.14</span>
+                    <span class="badge fix">バグ修正</span>
+                </div>
+                <div class="news-title">追加会社の特殊能力に関する修正のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                ◉電務工房
+                14．暴発
+                発動確率が上昇
+
+                ◉刻
+                11．明け方
+                効果記載漏れの修正
+
+                ……薄暮と黎明のスキル追加はまだちゃんと考えてません、ごめんなさい
+                （仮称kP@6/25が命日 — 2025/09/14 17:29）
+            </div>
+        </details>
+
+        <!-- 2025/09/14 (DLC追加) -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.09.14</span>
+                    <span class="badge dlc">DLC追加</span>
+                </div>
+                <div class="news-title">DLC会社追加のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                ・電務工房
+                ・刻
+                ・Mysticism
+                の3種を追加しました
+            </div>
+        </details>
+
+        <!-- 2025/09/12 -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.09.12</span>
+                    <span class="badge update">UPDATE</span>
+                </div>
+                <div class="news-title">武器：弓矢・ショットガンのバランス調整に関するお知らせ</div>
+            </summary>
+            <div class="news-content">
+                ダメージロール内容に+矢n発の記載が欠落していた問題を修正しました
+                また、スキル表1〜6の武器Lv増加に伴うダメージロール増加をナーフ、スキル表5の効果内容を対象ランダムに変更しました
+
+                弓矢スキル表4・5、ショットガンスキル表4に(対象重複可)の追記をしました 
+            </div>
+        </details>
+
+        <!-- 2025/09/09 (追加変更) -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.09.09</span>
+                    <span class="badge update">UPDATE</span>
+                </div>
+                <div class="news-title">特殊能力に関する追加変更のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                Lv上昇のみの特殊能力全てに
+                Lv10ごとに増加量+1(Lv90は超過しない)
+                を追加しました
+                また、センスの集中的センスのみ増加量が+2になっています
+            </div>
+        </details>
+
+        <!-- 2025/09/09 (初期) -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2025.09.09</span>
+                    <span class="badge update">UPDATE</span>
+                </div>
+                <div class="news-title">特殊能力に関する変更のお知らせ</div>
+            </summary>
+            <div class="news-content">
+                能力の効果変更や表記の変更を行いました
+
+                ◉赤色戦派
+                -7．撃ち合い特化
+                増加ダイス数が1から2になりました
+
+                ◉ディフィポリディ
+                -11．防御強化
+                発動条件緩和、上限追加
+                -12．攻撃は最大の防御
+                固定ダメージから自身の防護参照に変更
+                -15．重装部隊
+                獲得バリア数を×4から×3に変更
+
+                ◉メローメディック
+                -2．医務の合間に
+                回復量を1から1d6に変更
+
+                ◉ライブラビランス
+                -2．集中
+                表記揺れの修正
+                -5．弱点を突く
+                ダメージ量に上限を追加
+                -8．増幅
+                魔力増幅から増幅に名称変更
+
+                ◉決闘連盟
+                7．素早く決めようではないか
+                効果を相手の判定がマイナスから自身の判定がプラスに変更
+
+                ◉無所属
+                -1．ならずものの暴虐
+                Lv上昇のポイント効率変化に伴い効果発動条件を判定値8から18に変更
+                4．負け犬の意地
+                Lv上昇のポイント効率変化に伴い効果発動の条件のLv合計値を8から60に変更
+                HP上昇量を5から10に増加
+            </div>
+        </details>
+
     </div>
 </div>
 
