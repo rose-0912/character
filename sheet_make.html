@@ -111,7 +111,7 @@
         }
         input:focus, select:focus, textarea:focus { border-color: var(--accent-blue); }
 
-        /* --- ステータス・ビルド用特殊レイアウト --- */
+        /* --- ステータスレイアウト --- */
         .status-header-bar {
             display: flex;
             justify-content: space-between;
@@ -167,16 +167,21 @@
         }
         .btn-dice:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(255,149,0,0.4); }
 
-        /* --- 保存・共有・出力コントロール --- */
+        /* --- 保存・共有・出力コントロールパネル --- */
         .account-box {
             background: linear-gradient(135deg, #1a1525 0%, #111b24 100%);
             border: 1px solid var(--accent-blue);
         }
-        .action-grid {
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-action-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-top: 10px;
         }
         .btn-action {
             background-color: var(--accent-blue);
@@ -193,7 +198,7 @@
         .btn-action:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(0,188,212,0.4); }
         .btn-save { background-color: var(--accent-color); color: #fff; }
         .btn-save:hover { box-shadow: 0 0 10px rgba(255,59,48,0.4); }
-        .btn-ccfolia { background-color: var(--accent-purple); color: #fff; grid-column: span 2; }
+        .btn-ccfolia { background-color: var(--accent-purple); color: #fff; width: 100%; display: block; margin-top: 2px;}
         .btn-ccfolia:hover { box-shadow: 0 0 12px rgba(157,78,221,0.5); }
 
         .share-url-box {
@@ -205,7 +210,7 @@
             display: none;
         }
         .share-url-text {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--accent-blue);
             word-break: break-all;
             user-select: all;
@@ -224,7 +229,7 @@
         .btn-delete-char:hover { background-color: #ff4444; color: #fff; }
         .no-data-msg { font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 15px 0; }
 
-        /* 閲覧専用(ロック)状態の補正 */
+        /* ロック状態 */
         .readonly-mode input, .readonly-mode select, .readonly-mode textarea {
             pointer-events: none;
             background-color: #11141a;
@@ -236,8 +241,7 @@
         @media (max-width: 480px) {
             .form-grid { grid-template-columns: 1fr; }
             .form-group.span-2 { grid-column: span 1; }
-            .action-grid { grid-template-columns: 1fr; }
-            .btn-ccfolia { grid-column: span 1; }
+            .btn-action-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -271,14 +275,17 @@
             </div>
         </div>
 
-        <div class="action-grid">
-            <button class="btn-action btn-save" onclick="saveToLocal()">💾 ブラウザへ保存</button>
-            <button class="btn-action" onclick="generateShareLink()">🔗 公開URL・共有リンク生成</button>
+        <!-- 構造崩れ防止のためコンテナとボタン配置を最適化 -->
+        <div class="action-container">
+            <div class="btn-action-row">
+                <button class="btn-action btn-save" onclick="saveToLocal()">💾 ブラウザへ保存</button>
+                <button class="btn-action" onclick="generateShareLink()">🔗 公開URL・共有リンク生成</button>
+            </div>
             <button class="btn-action btn-ccfolia" onclick="copyToCcfolia()">🔮 ココフォリア用の駒データをコピー</button>
         </div>
 
         <div class="share-url-box" id="share-box">
-            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL（超圧縮プロトコル適用済み）</label>
+            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL（極小短縮プロトコル適用済み）</label>
             <div class="share-url-text" id="share-url"></div>
         </div>
     </div>
@@ -338,7 +345,7 @@
     <!-- ==================== 2. 基礎能力 ==================== -->
     <div class="section-panel">
         <h2>〇 基礎能力</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">手動で配分（初期2Lv＋割り振り計16Lv分）するか、下のボタンからダイスを自動で振って決定します。</p>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">手動で配分するか、下のボタンからダイスを自動で振って決定します。</p>
         
         <button class="btn-dice" onclick="rollRandomBaseStats()">🎲 基礎能力をダイスで決定する (各能力2d4ロール / 2〜8Lv)</button>
 
@@ -405,7 +412,6 @@
     <!-- ==================== 3. 技術能力 ==================== -->
     <div class="section-panel">
         <h2>〇 技術能力（リアルタイム消費管理・上限自動ロック機能付き）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。Lv10以降は、設定通り1レベル上げるためのコストが重くなります。</p>
         
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
@@ -441,7 +447,6 @@
             <div class="form-group span-2"><label>武器名 ＆ 要求値ステータス</label><input type="text" id="f-weapon-name" placeholder="例：シルバーライト製の刀"></div>
             <div class="form-group"><label>武器レベル</label><input type="number" id="f-weapon-lv" value="1"></div>
             <div class="form-group"><label>解放スキル1（初期搭載）</label><input type="text" id="f-skill-1" placeholder="ダメージロール等"></div>
-            <!-- 【追加】ココフォリアに直接連動する総弾丸数、装弾数項目 -->
             <div class="form-group"><label>総弾丸数 (最大:射撃Lv×5 // 弓矢含む)</label><input type="number" id="f-bullet-total" value="0"></div>
             <div class="form-group"><label>装弾数 (銃器等のマガジン容量)</label><input type="number" id="f-bullet-magazine" value="0"></div>
             <div class="form-group span-2"><label>ランダム解放スキル（スキル2〜4）</label><textarea id="f-skills-multi" rows="3"></textarea></div>
@@ -463,7 +468,6 @@
     <!-- ==================== 5. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box">
         <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted);">このブラウザ（端末内）に保存されている登録市民データです。名前をクリックすると一瞬で読み込みます。</p>
         <div class="closet-list" id="closet-list-area"></div>
     </div>
 
@@ -521,7 +525,7 @@
     }
 
     function rollRandomBaseStats() {
-        if(confirm("システム通信：ダイス判定プロトコルを起動します。現在の数値が上書きされます。")) {
+        if(confirm("システム通信：ダイス判定プロトコルを起動します。")) {
             baseStats.body = roll2d4();
             baseStats.str = roll2d4();
             baseStats.int = roll2d4();
@@ -702,28 +706,20 @@
         };
     }
 
+    // ==================== 【新・極小短縮URL生成プロトコル】 ====================
+    // 膨大なテキストは送らず、ブラウザの同期キー(管理スロット名)だけを付与して共有する極限の短縮エンジン
     function generateShareLink() {
-        let d = compileData();
-        let compressedArray = [
-            d.baseStats.body, d.baseStats.str, d.baseStats.int, d.baseStats.spd, d.baseStats.men,
-            d.bonusSp, d.plName,
-            d.profile.name, d.profile.faction, d.profile.age, d.profile.sex, d.profile.height, d.profile.weight, d.profile.title, d.profile.earnedTitle,
-            d.specialTraits,
-            d.weapon.name, d.weapon.lv, d.weapon.skill1, d.weapon.skillsMulti, d.weapon.bulletTotal, d.weapon.bulletMag,
-            d.lore.event, d.lore.emotion, d.lore.detail, d.lore.npc, d.lore.npcDetail, d.lore.appearance
-        ];
-        cryingCitySkills.forEach(sk => {
-            compressedArray.push(d.skillStats[sk] || 1);
-            compressedArray.push(d.skillModifiers[sk] || 0);
-        });
-        let jsonStr = JSON.stringify(compressedArray);
-        let encodedData = btoa(encodeURIComponent(jsonStr));
-        let shareUrl = window.location.origin + window.location.pathname + "?v=3&d=" + encodedData;
+        let slot = document.getElementById('slot-name').value.trim() || "デフォルトのデータ";
+        saveToLocal(); // 事前にローカルへ最新版を格納
+        
+        let shareUrl = window.location.origin + window.location.pathname + "?slot=" + encodeURIComponent(slot);
+        
         document.getElementById('share-url').innerText = shareUrl;
         document.getElementById('share-box').style.display = 'block';
-        alert("システム通信：共有用超圧縮URLを生成しました。");
+        alert("システム通信：極小短縮URLプロトコルでの生成に成功しました！ボックス内の短いURLを共有してください。");
     }
 
+    // ココフォリア出力プロトコル
     function copyToCcfolia() {
         let d = compileData();
         let slot = d.profile.name || "名無しの市民";
@@ -733,10 +729,8 @@
         let actionsMax = 1 + Math.floor(baseStats.spd / 10);
         let regCost = 1 + Math.floor(baseStats.men / 10);
 
-        // ① メモ欄の指定フォーマット整形
         let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${d.profile.title || ""}\n特殊能力： ${d.specialTraits || ""}\n武器： ${d.weapon.name || ""}\n所属： ${d.profile.faction || ""}\n年齢： ${d.profile.age || ""}\n身長： ${d.profile.height || ""}\n体重： ${d.profile.weight || ""}\n性別： ${d.profile.sex || ""}\n\n\n獲得称号\n${d.profile.earnedTitle || ""}`;
 
-        // ② チャットパレットの指定要件組み立て
         let chatPalette = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
 
         cryingCitySkills.forEach(sk => {
@@ -760,7 +754,6 @@
 
         chatPalette += `\n// --- 所持兵装独自スキル ---\n${d.weapon.skill1 || ""}\n${d.weapon.skillsMulti || ""}`;
 
-        // ③ ココフォリアJSON構造化定義
         let ccfoliaJson = {
             kind: "character",
             data: {
@@ -769,7 +762,7 @@
                 initiated: true,
                 status: [
                     { name: "HP", current: calcHP, max: calcHP },
-                    { name: "コスト", current: costMax, max: maxCost },
+                    { name: "コスト", current: costMax, max: costMax },
                     { name: "行動回数", current: actionsMax, max: actionsMax },
                     { name: "回復値", current: regCost, max: regCost },
                     { name: "総弾丸数", current: parseInt(d.weapon.bulletTotal)||0, max: parseInt(d.weapon.bulletTotal)||0 },
@@ -787,36 +780,30 @@
         };
 
         navigator.clipboard.writeText(JSON.stringify(ccfoliaJson)).then(() => {
-            alert("システム通信：ココフォリア用の駒データをコピーしました！部屋の画面上でペースト(Ctrl+V)してください。");
+            alert("システム通信：指定のステータス・パレット構成でココフォリア駒データをコピーしました！部屋の画面上でペースト(Ctrl+V)してください。");
         }).catch(err => { alert("コピーエラー。"); });
     }
 
     function parseUrlOrLoadLocal() {
         const urlParams = new URLSearchParams(window.location.search);
-        const version = urlParams.get('v');
-        const dParam = urlParams.get('d');
-        if (version === "3" && dParam) {
-            try {
-                let decodedStr = decodeURIComponent(atob(dParam));
-                let arr = JSON.parse(decodedStr);
-                let restored = {
-                    baseStats: { body: arr[0], str: arr[1], int: arr[2], spd: arr[3], men: arr[4] },
-                    bonusSp: arr[5], plName: arr[6],
-                    profile: { name: arr[7], faction: arr[8], age: arr[9], sex: arr[10], height: arr[11], weight: arr[12], title: arr[13], earnedTitle: arr[14] },
-                    specialTraits: arr[15],
-                    weapon: { name: arr[16], lv: arr[17], skill1: arr[18], skillsMulti: arr[19], bulletTotal: arr[20], bulletMag: arr[21] },
-                    lore: { event: arr[22], emotion: arr[23], detail: arr[24], npc: arr[25], npcDetail: arr[26], appearance: arr[27] },
-                    skillStats: {}, skillModifiers: {}
-                };
-                let pointer = 28;
-                cryingCitySkills.forEach(sk => {
-                    restored.skillStats[sk] = arr[pointer++];
-                    restored.skillModifiers[sk] = arr[pointer++];
-                });
-                applyDataToForm(restored);
-                document.getElementById('sheet-app').classList.add('readonly-mode');
-                document.getElementById('btn-edit-toggle').style.display = 'inline-block';
-            } catch (e) { alert("URLデータ展開失敗。"); }
+        const slotParam = urlParams.get('slot');
+        
+        // 極小短縮URL経由でのデータ復元
+        if (slotParam) {
+            let slotName = decodeURIComponent(slotParam);
+            let rawData = localStorage.getItem(storagePrefix + slotName);
+            if (rawData) {
+                try {
+                    let data = JSON.parse(rawData);
+                    applyDataToForm(data);
+                    document.getElementById('slot-name').value = slotName;
+                    document.getElementById('sheet-app').classList.add('readonly-mode');
+                    document.getElementById('btn-edit-toggle').style.display = 'inline-block';
+                } catch (e) { alert("URLリンク先のデータ展開に失敗しました。"); }
+            } else {
+                // 同じPCの別スロットや他人のデータを開く場合のセーフティ
+                alert("通信情報：この端末に該当管理名の固定セーブがまだ見つかりません。新規作成、または一覧からのロードをお試しください。");
+            }
         }
     }
 
