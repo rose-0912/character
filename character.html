@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クライングシティ - キャラクター制作</title>
+    <style>
+        /* --- 基本設定 & ディストピア風カラー --- */
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: #161a22;
+            --accent-color: #ff3b30; /* 警告用ネオンレッド */
+            --accent-gray: #b3bac2;  
+            --accent-blue: #00bcd4;  /* サイバーブルー */
+            --accent-orange: #ff9500;/* プロフィール・重要項目用 */
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding-bottom: 60px;
+            opacity: 0;
+            animation: fadeInPage 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            background: linear-gradient(180deg, #11141a 0%, var(--panel-bg) 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-gray);
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .sub-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            letter-spacing: 0.1em;
+        }
+
+        /* --- お知らせバナー --- */
+        .banner-container {
+            background-color: #1a0000; 
+            border-bottom: 1px solid var(--accent-color);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .banner-track {
+            display: flex;
+            white-space: nowrap;
+            will-change: transform; 
+            animation: scroll-left 35s linear infinite;
+        }
+
+        .banner-item {
+            display: inline-block;
+            padding-right: 50px;
+            color: var(--accent-color); 
+            font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #fff;
+            border-left: 4px solid var(--accent-gray);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        h3 {
+            font-size: 1rem;
+            color: var(--accent-orange);
+            margin: 15px 0 5px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            text-align: justify;
+            white-space: pre-line;
+        }
+
+        /* --- ナビゲーション --- */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nav-button {
+            display: block;
+            background-color: #222733;
+            color: #fff;
+            text-align: center;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #2d3446;
+            border-color: var(--accent-gray);
+            color: #fff;
+        }
+
+        .nav-grid .nav-button.current-page,
+        .nav-grid .nav-button.current-page:hover {
+            background-color: #05161a !important;
+            border-color: var(--accent-blue) !important;
+            color: var(--accent-blue) !important;
+            font-weight: bold !important;
+            pointer-events: none; 
+            box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
+        }
+        .nav-grid .nav-button.current-page::before { content: '● '; font-size: 0.7rem; vertical-align: middle; }
+
+        .nav-button.highlight {
+            grid-column: span 2;
+            background: linear-gradient(90deg, #ff3b30, #a20000);
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 5px;
+            color: #fff;
+        }
+
+        /* --- プロフィール箇条書き、特殊ルール枠 --- */
+        .rule-box {
+            background-color: #12151c;
+            border: 1px dashed var(--border-color);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        .bullet-list {
+            padding-left: 20px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        /* --- 技術能力切り替えクイックリストボタン --- */
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            list-style: none;
+            padding: 5px 0;
+            margin-bottom: 15px;
+        }
+        .list-grid li button {
+            width: 100%;
+            background-color: #12151c;
+            color: var(--text-color);
+            border: none;
+            padding: 8px 5px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-left: 3px solid var(--accent-blue);
+            text-align: center;
+            transition: background 0.2s;
+        }
+        .list-grid li button:hover { background-color: #1c2230; }
+
+        /* --- 技術能力横カルーセルスライダー --- */
+        .slider-wrapper {
+            position: relative;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        .slide-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background-color: rgba(22, 26, 34, 0.95);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        .slide-arrow:hover { border-color: var(--accent-blue); color: var(--accent-blue); background-color: #12151c; }
+        .arrow-prev { left: -12px; }
+        .arrow-next { right: -12px; }
+
+        .slider-container {
+            width: 100%;
+            overflow-x: auto;
+            display: flex;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+        .slider-container::-webkit-scrollbar { display: none; }
+
+        .tech-card {
+            flex: 0 0 100%;
+            width: 100%;
+            scroll-snap-align: start;
+            background-color: #1a202c;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            padding: 15px;
+        }
+        .tech-card-header {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .tech-sub-list {
+            list-style: none;
+        }
+        .tech-item {
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+        .tech-item:last-child { margin-bottom: 0; }
+        .tech-name {
+            font-weight: bold;
+            color: var(--accent-blue);
+            display: block;
+        }
+        .tech-desc {
+            color: var(--text-color);
+            padding-left: 10px;
+            border-left: 2px solid #3a475c;
+            display: block;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 480px) {
+            .nav-grid { grid-template-columns: 1fr; }
+            .list-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-button.highlight { grid-column: span 1; }
+            .main-title { font-size: 1.6rem; }
+            .slide-arrow { width: 32px; height: 32px; }
+        }
+    </style>
+</head>
+<body onpageshow="if (event.persisted) window.location.reload();">
+
+<header>
+    <div class="main-title">クライングシティ</div>
+    <div class="sub-title">市民（プレイヤーキャラクター）登録・制作ガイド</div>
+</header>
+
+<div class="banner-container">
+    <div class="banner-track">
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ナビゲーション（キャラクター制作が current-page） -->
+    <div id="about-menu" class="section-panel">
+        <h2>ナビゲーション</h2>
+        <div class="nav-grid">
+            <a href="index.html" class="nav-button">◆概要◆</a> 
+            <a href="news.html" class="nav-button">◆お知らせ◆</a>
+            <a href="character.html" class="nav-button current-page">◆キャラクター制作◆</a>
+            <a href="company.html" class="nav-button">◆会社◆</a>
+            <a href="weapon.html" class="nav-button">◆武器◆</a>
+            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
+            <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
+            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
+            <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
+        </div>
+    </div>
+
+    <!-- 〇プロフィール -->
+    <div class="section-panel">
+        <h2>〇 プロフィール設定</h2>
+        <p>あなたが操作することになるキャラクター、市民の作り方について説明していきます。
+        一般的なプロフィールとして、以下の6つの項目を決定します。</p>
+        <div class="rule-box" style="color: var(--accent-orange); font-weight: bold;">
+            名前、年齢、性別、身長、体重、所属
+        </div>
+        <p>これらすべてを埋める必要はありませんが、<strong>「所属」のみ後述する特殊能力の決定に繋がるため必須項目</strong>となります。</p>
+    </div>
+
+    <!-- 〇能力（基礎能力） -->
+    <div class="section-panel">
+        <h2>〇 基礎能力の決定</h2>
+        <p>キャラクターには3つの能力があります。はじめに基礎能力（ステータス）を決めていきましょう。
+        基礎能力は全部で<strong>身体、筋力、知能、速度、精神</strong>の5つに分類され、初期数値はすべて基本2Lvからスタートします。
+        Lv（レベル）の割り振り方は以下の2種類から選択可能です。</p>
+        
+        <h3>■ 割り振り方式（上限：制作時最大8Lvまで）</h3>
+        <ul class="bullet-list">
+            <li><strong>ランダム割り振り:</strong> 各項目ごとに2d4をダイスロールし、2～8の数値をそのまま決定。</li>
+            <li><strong>手動（固定値）割り振り:</strong> 初期値2Lvの状態から、自由に分配できる【16Lv分】のポイントを手動で各能力に割り振る。</li>
+        </ul>
+
+        <div class="rule-box">
+            <strong>【成長システム補足】</strong>
+            シナリオクリア報酬の経験ポイントで能力Lvを上限突破させて成長可能ですが、<strong>Lv10の節目以降は、1Lv上昇させるための消費量が1ずつ増加</strong>します。
+            （例：Lv1→Lv2＝1pt、Lv9→Lv10＝2pt、Lv8→Lv10＝計3pt）
+            ※キャラ制作時の16Lv割り振り時は、数値分そのままストレートに上昇させて構いません。
+        </div>
+
+        <h3>■ 各基礎能力の対応ステータス影響</h3>
+        <ul class="bullet-list" style="list-style: square;">
+            <li><strong>〈身体〉:</strong> Lv×6だけHPの最大値が増加。</li>
+            <li><strong>〈筋力〉:</strong> Lv7につき、ダメージロールに「+DB」の記載がある攻撃へ +1d6 の追加ダメージが発生。</li>
+            <li><strong>〈知能〉:</strong> Lv×3だけ技術能力を上げる「技能ポイント」を獲得。さらにLv10到達時に追加で10ポイント獲得。</li>
+            <li><strong>〈速度〉:</strong> Lvの値だけ行動順が早くなる。さらにLv10到達時に戦闘中の「行動回数+1」。</li>
+            <li><strong>〈精神〉:</strong> Lv4につきコスト最大値+1。さらにLv10到達時にターン終了時の「コスト回復値+1」。</li>
+        </ul>
+
+        <div class="rule-box" style="background-color: #11141c; font-size: 0.85rem; color: var(--text-muted);">
+            <strong>【用語解説】</strong><br>
+            ・HP: ダメージで減少し、0になると死亡する。<br>
+            ・技能ポイント: 技術能力のLv上昇に使用する。<br>
+            ・行動回数: 戦闘中に1回につき1行動として、技術・特殊能力を使用できる量。<br>
+            ・コスト: 初期値3。強力な行動時に消費。ターン終了時に「1 + コスト回復値」だけ回復する。
+        </div>
+    </div>
+
+    <!-- ・技術能力 -->
+    <div class="section-panel">
+        <h2>〇 技術能力（技能）</h2>
+        <p>技術能力は、基礎能力より細分化された個々の判定を行うためのものです。技能ポイントやクリア報酬の経験ポイントを消費して成長させます。
+        <strong>初期値はすべて1Lv</strong>で、1ポイントにつき1Lv上昇します（こちらも基礎能力同様、Lv10を節目に消費量が1ずつ増加します）。</p>
+
+        <h3>技術能力カテゴリ (タップでスライド切り替え)</h3>
+        <ul class="list-grid">
+            <li><button onclick="scrollToTech(0)">戦闘系能力</button></li>
+            <li><button onclick="scrollToTech(1)">感覚能力</button></li>
+            <li><button onclick="scrollToTech(2)">行動能力</button></li>
+            <li><button onclick="scrollToTech(3)">対人能力</button></li>
+            <li><button onclick="scrollToTech(4)">知識能力</button></li>
+        </ul>
+
+        <div class="slider-wrapper">
+            <button class="slide-arrow arrow-prev" onclick="moveTechSlider(-1)">◀</button>
+            <div class="slider-container" id="tech-slider">
+                
+                <!-- 1. 戦闘系能力 -->
+                <div class="tech-card">
+                    <div class="tech-card-header">戦闘系能力 <span>[1/5]</span></div>
+                    <ul class="tech-sub-list">
+                        <li class="tech-item"><span class="tech-name">【回避】(守備能力)</span><span class="tech-desc">攻撃を回避する。敵の出目と同等以上なら無効。失敗するまで再使用可能。発動ターンは他守備行動不可。</span></li>
+                        <li class="tech-item"><span class="tech-name">【防御】(守備能力)</span><span class="tech-desc">攻撃を受け止める。出目の値だけバリアを獲得（ターン終了まで維持）。1ターンに1回。発動ターンは他守備行動不可。</span></li>
+                        <li class="tech-item"><span class="tech-name">【反撃】(守備能力)</span><span class="tech-desc">敵より出目が大きければスキルを無効化し、使用武器の「スキル1」で反撃（DB無効）。1ターン2回。遠距離・特殊攻撃にはダメージ判定なし。発動ターンは他守備行動不可。</span></li>
+                        <li class="tech-item"><span class="tech-name">【近接攻撃( 武器種 )】</span><span class="tech-desc">近接戦技能。格闘、短剣(ナイフ等)、刀剣、大剣、長柄(槍・ハルバード)、鈍器(ハンマー・スパナ)などを括弧内に記載。</span></li>
+                        <li class="tech-item"><span class="tech-name">【射撃攻撃( 銃器種 )】</span><span class="tech-desc">遠距離戦技能。拳銃、ライフル(スナイパー/アサルト)、ショットガン、弓矢などを括弧内に記載。弾丸を消費する。</span></li>
+                        <li class="tech-item"><span class="tech-name">【投擲】</span><span class="tech-desc">狙った場所に物を投げる能力。ただしダメージロール時、DB（ダメージボーナス）の効果が半減する（端数切り捨て）。</span></li>
+                    </ul>
+                </div>
+
+                <!-- 2. 感覚能力 -->
+                <div class="tech-card">
+                    <div class="tech-card-header">感覚能力 <span>[2/5]</span></div>
+                    <ul class="tech-sub-list">
+                        <li class="tech-item"><span class="tech-name">【視覚】</span><span class="tech-desc">何かを見つける、発見する能力。素早いものを目で追う際にも使用。</span></li>
+                        <li class="tech-item"><span class="tech-name">【聴覚】</span><span class="tech-desc">何かを聞く、聞き取る能力。複数の音を聞き分ける際にも使用。</span></li>
+                        <li class="tech-item"><span class="tech-name">【嗅覚】</span><span class="tech-desc">漂う臭いにいち早く気づく能力。反対に息を素早く止めるといった応用も可能。</span></li>
+                        <li class="tech-item"><span class="tech-name">【感知】</span><span class="tech-desc">周囲の違和感や気配、何らかの事象を察知するための能力。</span></li>
+                        <li class="tech-item"><span class="tech-name">【思案】</span><span class="tech-desc">何かを思いつく、アイデアや解決の糸口を脳内に導き出すための能力。</span></li>
+                    </ul>
+                </div>
+
+                <!-- 3. 行動能力 -->
+                <div class="tech-card">
+                    <div class="tech-card-header">行動能力 <span>[3/5]</span></div>
+                    <ul class="tech-sub-list">
+                        <li class="tech-item"><span class="tech-name">【調査】</span><span class="tech-desc">未知や複雑な物を調べる能力。本や書類、電子データを調べるのにも使う。</span></li>
+                        <li class="tech-item"><span class="tech-name">【隠密】</span><span class="tech-desc">誰にも見つからないよう隠れる能力。隠れやすい場所や逃走経路の推察も可能。</span></li>
+                        <li class="tech-item"><span class="tech-name">【跳躍】</span><span class="tech-desc">壁や塀、裂け目などを跳び越すための身体能力。</span></li>
+                        <li class="tech-item"><span class="tech-name">【登攀】</span><span class="tech-desc">崖や建造物の壁、ハシゴなどを登るための能力。</span></li>
+                        <li class="tech-item"><span class="tech-name">【追跡】</span><span class="tech-desc">逃げる相手を追ったり、残された痕跡を見つけ出す能力。</span></li>
+                        <li class="tech-item"><span class="tech-name">【手当】</span><span class="tech-desc">負傷者を1d4回復する。成否判定のダイス数をそのまま回復判定に移すことができる。</span></li>
+                    </ul>
+                </div>
+
+                <!-- 4. 対人能力 -->
+                <div class="tech-card">
+                    <div class="tech-card-header">対人能力 <span>[4/5]</span></div>
+                    <ul class="tech-sub-list">
+                        <li class="tech-item"><span class="tech-name">【話術】</span><span class="tech-desc">言葉を適切に選び分かりやすく伝える能力。説得や言いくるめなど。</span></li>
+                        <li class="tech-item"><span class="tech-name">【詐術】</span><span class="tech-desc">相手を欺く、嘘を吐く能力。相手の嘘を見抜く代用判定としても使用可能。</span></li>
+                        <li class="tech-item"><span class="tech-name">【心理学】</span><span class="tech-desc">心と行動を解き明かす能力。嘘を見抜いたり、NPCの心の内を推察する。</span></li>
+                        <li class="tech-item"><span class="tech-name">【威圧】</span><span class="tech-desc">精神的な圧力をかけ、相手を威圧・脅迫したり気圧されたりする能力。</span></li>
+                        <li class="tech-item"><span class="tech-name">【信用】</span><span class="tech-desc">自分が信用に足る存在かを表す。所持金や社会的地位が高ければこれだけで有利。</span></li>
+                    </ul>
+                </div>
+
+                <!-- 5. 知識能力 -->
+                <div class="tech-card">
+                    <div class="tech-card-header">知識能力 <span>[5/5]</span></div>
+                    <ul class="tech-sub-list">
+                        <li class="tech-item"><span class="tech-name">【言語】</span><span class="tech-desc">あらゆる言葉に通ずる能力。言語に関する理解度や、暗号の簡易認識。</span></li>
+                        <li class="tech-item"><span class="tech-name">【解読】</span><span class="tech-desc">未知の文章や古代文字、高度な暗号を時間をかけて解読する能力。</span></li>
+                        <li class="tech-item"><span class="tech-name">【医学】</span><span class="tech-desc">人体や病気に関しての専門知識。治療に使う場合「手当」の代用が可能だが、ダイスを回復効果に移すことはできない。</span></li>
+                        <li class="tech-item"><span class="tech-name">【コンピューター】</span><span class="tech-desc">電子機器やネットワーク、それに準ずる機械類に対する知識・ハッキング能力。</span></li>
+                        <li class="tech-item"><span class="tech-name">【修繕】</span><span class="tech-desc">壊れた機械の修理や武器の整備能力。特定の武器の「攻撃スキル」を選択・移植する際にも要求される。</span></li>
+                        <li class="tech-item"><span class="tech-name">【自然】</span><span class="tech-desc">生物や植物、気象や宇宙など、元々世界に存在する自然科学・博物学的知識。</span></li>
+                    </ul>
+                </div>
+
+            </div>
+            <button class="slide-arrow arrow-next" onclick="moveTechSlider(1)">▶</button>
+        </div>
+    </div>
+
+    <!-- 〇特殊能力 -->
+    <div class="section-panel">
+        <h2>〇 特殊能力の獲得</h2>
+        <p>探索や戦闘で個性を発揮する特殊能力は、全部で4つまで設定できますが、<strong>キャラクター制作段階では1つしか設定できません</strong>。残りの枠はシナリオクリア時の経験ポイント（5、10、20pt）を消費して解放します。
+        
+        特殊能力による基礎能力の上昇は、キャラクター制作時の<strong>「上限8Lv」の制限を無視して突破・加算</strong>されます。基礎能力および技術能力のポイント割り振りは、この特殊能力の補正が乗った後に反映されます。</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">※ポータルに記載されているのは主力会社のみですが、世界に存在する中小会社はほぼ大規模の傘下です。詳細は「◆会社◆」ページをご確認のうえ、主要会社名を所属欄にご記入ください。</p>
+    </div>
+
+    <!-- 〇武器 -->
+    <div class="section-panel">
+        <h2>〇 初期武器の所持</h2>
+        <p>このクライングシティにおいて、会社員は大抵武器を保有しています。そうでなければ生き残ることは不可能です。
+        初期武器Lvは1からスタートし、要求値（必要ステータス）を満たしていれば装備可能です。武器Lvが上昇すると要求値も上昇します。複数の武器を同時使用（二刀流など）する場合、<strong>要求値はすべて加算（累積）</strong>されます。</p>
+        
+        <div class="rule-box" style="font-size:0.9rem;">
+            <strong>【攻撃スキルの解放タイミング】</strong><br>
+            武器レベルが <strong>Lv1、Lv2、Lv5、Lv15</strong> に達した時点で、それぞれ攻撃スキル1〜4が順次解放されます。<br>
+            スキル1は固定ですが、スキル2以降の効果内容はランダムに決定されます。もしキャラクターの【修繕Lv】が「武器Lv÷2（切り上げ）」以上であれば、効果を任意に選択して取得・味方に適用することが可能です。（一律経験ポイント3消費でリロールも可能）
+        </div>
+    </div>
+
+    <!-- 〇詳細 -->
+    <div class="section-panel">
+        <h2>〇 キャラクターの詳細（過去と感情）</h2>
+        <p>最後に容姿・性格・行動理念を記載する「備考欄（自由入力）」と、システムに直接影響を及ぼす<strong>「過去・感情・重要な人物欄」</strong>を記述します。
+        この街で10年以上生きていれば、誰しも他人に言えない罪、恥、暗い過去（誰かを殺した、利用した等）を必ず背負うことになります。</p>
+        
+        <div class="rule-box" style="border-left: 4px solid var(--accent-orange); background-color: #12151c;">
+            <strong>【システム効果：過去のトリガー】</strong><br>
+            あなたが設定した過去・感情・重要な人物の内容が、シナリオ中に発生した判定のシチュエーションに近い、または強く関連するとGMが認めた場合、<strong>その判定時のダイス数が1増加</strong>するボーナスを得られます。
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">※この項目はシナリオや卓の性質上、他のプレイヤーに秘匿された状態（秘密HOなど）で指定・配布される場合があります。</p>
+    </div>
+
+</div>
+
+<!-- カルーセル制御スクリプト -->
+<script>
+    function moveTechSlider(direction) {
+        const container = document.getElementById('tech-slider');
+        const cardWidth = container.clientWidth;
+        container.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+    }
+
+    function scrollToTech(index) {
+        const container = document.getElementById('tech-slider');
+        const cardWidth = container.clientWidth;
+        container.scrollTo({ left: cardWidth * index, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
