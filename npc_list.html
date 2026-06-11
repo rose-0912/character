@@ -180,7 +180,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* --- キャラクターカード＆アコーディオン --- */
+        /* --- キャラクターカード --- */
         .npc-card {
             background-color: #1a202c;
             border: 1px solid var(--border-color);
@@ -202,15 +202,30 @@
             align-items: center;
             border-bottom: 1px solid var(--border-color);
         }
-        .npc-img-id {
-            font-size: 0.75rem;
-            font-family: monospace;
+
+        /* 【新機能】イラスト画像表示エリアの追加設定 */
+        .npc-illustration-box {
             background-color: #0d0f12;
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
         }
+        .npc-avatar {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px; /* スマホで見やすいよう縦幅の上限を設定 */
+            object-fit: contain;
+            border-radius: 4px;
+            border: 1px solid #3a475c;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        .warning-style .npc-avatar {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(255, 59, 48, 0.2);
+        }
+
         .npc-body {
             padding: 15px 20px;
             font-size: 0.95rem;
@@ -252,6 +267,7 @@
             .main-title { font-size: 1.6rem; }
             .npc-header { flex-direction: column; align-items: flex-start; gap: 5px; }
             .npc-summary::after { content: '▼ 展開'; }
+            .npc-avatar { max-height: 220px; } /* スマホ向けに縮小 */
         }
     </style>
 </head>
@@ -300,7 +316,11 @@
         
         <!-- クレール -->
         <div class="npc-card">
-            <div class="npc-header">【クレール】 <span class="npc-img-id">VISUAL_ID: a7091b4b069fa920.png</span></div>
+            <div class="npc-header">【クレール】</div>
+            <!-- 指定されたファイル名でイラストを挿入 -->
+            <div class="npc-illustration-box">
+                <img src="a7091b4b069fa920.png" alt="クレール" class="npc-avatar" onerror="this.style.display='none';">
+            </div>
             <div class="npc-body">Rains Factory Recovery部署の運転手
             白銀の異名を持つ</div>
             <details class="npc-details">
@@ -314,7 +334,10 @@
 
         <!-- ルシェアード・ヴァルカン -->
         <div class="npc-card">
-            <div class="npc-header">【ルシェアード・ヴァルカン】 <span class="npc-img-id">VISUAL_ID: 247f6e6c7a149735.png</span></div>
+            <div class="npc-header">【ルシェアード・ヴァルカン】</div>
+            <div class="npc-illustration-box">
+                <img src="247f6e6c7a149735.png" alt="ルシェアード・ヴァルカン" class="npc-avatar" onerror="this.style.display='none';">
+            </div>
             <div class="npc-body">Rains Factory Recovery部署を率いる案内人
             黒辻の異名を持つ、元黒塗の戦線リーダー</div>
             <details class="npc-details">
@@ -328,27 +351,39 @@
 
         <!-- 西崎 佐熊 -->
         <div class="npc-card">
-            <div class="npc-header">【西崎 佐熊】 <span class="npc-img-id">VISUAL_ID: eb5b06874a36758d.png</span></div>
+            <div class="npc-header">【西崎 佐熊】</div>
+            <div class="npc-illustration-box">
+                <img src="eb5b06874a36758d.png" alt="西崎 佐熊" class="npc-avatar" onerror="this.style.display='none';">
+            </div>
             <div class="npc-body">Last Eden Manifestation所属</div>
         </div>
 
         <!-- キリア シャルロット -->
         <div class="npc-card">
-            <div class="npc-header">【キリア シャルロット】 <span class="npc-img-id">VISUAL_ID: 74c5f47f8e876087.png</span></div>
+            <div class="npc-header">【キリア シャルロット】</div>
+            <div class="npc-illustration-box">
+                <img src="74c5f47f8e876087.png" alt="キリア シャルロット" class="npc-avatar" onerror="this.style.display='none';">
+            </div>
             <div class="npc-body">Last Eden Manifestation所属
             トーナの弟</div>
         </div>
 
         <!-- トーナ シャルロット -->
         <div class="npc-card warning-style">
-            <div class="npc-header" style="background-color: #2a1215;">【トーナ シャルロット】 <span class="npc-img-id" style="color: var(--accent-color);">VISUAL_ID: 665a8afecfcb27fd.png</span></div>
+            <div class="npc-header" style="background-color: #2a1215;">【トーナ シャルロット】</div>
+            <div class="npc-illustration-box">
+                <img src="665a8afecfcb27fd.png" alt="トーナ シャルロット" class="npc-avatar" onerror="this.style.display='none';">
+            </div>
             <div class="npc-body">今回の作戦にて同行する事になった没落者
             <span style="color: var(--accent-color); font-weight: bold;">該当人物に関する情報の閲覧は許可されていません</span></div>
         </div>
 
         <!-- リンナ シリン -->
         <div class="npc-card">
-            <div class="npc-header">【リンナ シリン】 <span class="npc-img-id">VISUAL_ID: 4296db567710590d.png</span></div>
+            <div class="npc-header">【リンナ シリン】</div>
+            <div class="npc-illustration-box">
+                <img src="4296db567710590d.png" alt="リンナ シリン" class="npc-avatar" onerror="this.style.display='none';">
+            </div>
             <div class="npc-body">Last Eden Manifestation所属
             とある調査の元調査隊員</div>
         </div>
@@ -360,42 +395,45 @@
         
         <!-- ゼン -->
         <div class="npc-card past-card">
-            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【ゼン】 <span class="npc-img-id">AGENCY_ID: TYPE-E_LEADER</span></div>
+            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【ゼン】</div>
             <div class="npc-body">ゼン代理店 代表。ランクE。
             高い状況判断力とナイフを用いた俊敏な連撃で最前線を切り開く、事務所のリーダー。</div>
         </div>
 
         <!-- リリン -->
         <div class="npc-card past-card">
-            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【リリン】 <span class="npc-img-id">AGENCY_ID: TYPE-E_TECH</span></div>
+            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【リリン】</div>
             <div class="npc-body">ゼン代理店 社員。ランクE。
             巨大な工具状兵装を駆使する「モードⅡ戦闘（振動波・衝撃砲）」を操る、技術整備を兼ねた前衛職員。</div>
         </div>
 
         <!-- スファリック -->
         <div class="npc-card past-card">
-            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【スファリック】 <span class="npc-img-id">AGENCY_ID: TYPE-E_RANGE</span></div>
+            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【スファリック】</div>
             <div class="npc-body">ゼン代理店 社員。ランクE。
             路地裏の生活から代表に拾われた銃器使いの青年。現実的な収支計算と愚痴担当。</div>
         </div>
 
         <!-- ヒロト -->
         <div class="npc-card past-card">
-            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【ヒロト】 <span class="npc-img-id">AGENCY_ID: TYPE-F_SWORD</span></div>
+            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【ヒロト】</div>
             <div class="npc-body">ゼン代理店 新人社員。ランクF。
             主要武器は片手剣。死闘の中で複数の重兵装の換装技術を見出し、驚異的な足掻きを見せる前衛。</div>
         </div>
 
         <!-- サミ -->
         <div class="npc-card past-card">
-            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【サミ】 <span class="npc-img-id">AGENCY_ID: TYPE-F_GUARD</span></div>
+            <div class="npc-header" style="border-left: 3px solid var(--accent-green);">【サミ】</div>
             <div class="npc-body">ゼン代理店 新人社員。ランクF。
             主要装備はガントレット。高い耐久力と、瓦礫の投擲による精密なカバー能力を持つ防衛前衛。</div>
         </div>
 
         <!-- 巣くう化け物 -->
         <div class="npc-card warning-style">
-            <div class="npc-header" style="background-color: #2a1215;">【巣くう化け物】 <span class="npc-img-id" style="color: var(--accent-color);">VISUAL_ID: 5777111f5243f746.png</span></div>
+            <div class="npc-header" style="background-color: #2a1215;">【巣くう化け物】</div>
+            <div class="npc-illustration-box">
+                <img src="5777111f5243f746.png" alt="巣くう化け物" class="npc-avatar" onerror="this.style.display='none';">
+            </div>
             <div class="npc-body">過去埋没された100年前のビルに住み着いた外来種</div>
             <details class="npc-details">
                 <summary class="npc-summary" style="color: var(--accent-color);">危険脅威特性ログ</summary>
