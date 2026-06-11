@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>クライングシティ - 概要ページ</title>
     <style>
-        /* --- 基本設定 & ディストピア風カラー（ダークテーマ） --- */
+        /* --- 基本設定 & ディストピア風カラー --- */
         :root {
             --bg-color: #0d0f12;
             --panel-bg: #161a22;
-            --accent-color: #ff3b30; /* 警告・ディストピアをイメージする赤 */
+            --accent-color: #ff3b30; 
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #2d3748;
+            --info-blue: #00bcd4; /* お知らせ用のサイバーブルー */
         }
 
         * {
@@ -52,33 +53,38 @@
             letter-spacing: 0.1em;
         }
 
-        /* --- 1. お知らせバナー（左右に無限ループ） --- */
+        /* --- 1. お知らせバナー（隙間なし無限ループ） --- */
         .banner-container {
             background-color: #1a0000;
             border-bottom: 1px solid var(--accent-color);
             overflow: hidden;
-            white-space: nowrap;
+            position: relative;
+            display: flex;
+            align-items: center;
             padding: 10px 0;
-            box-shadow: inset 0 0 10px rgba(255,0,0,0.3);
         }
 
         .banner-track {
-            display: inline-block;
-            animation: scroll-left 25s linear infinite;
+            display: flex;
+            white-space: nowrap;
+            /* パフォーマンス向上のためハードウェアアクセラレーションを有効化 */
+            will-change: transform; 
+            animation: scroll-left 35s linear infinite;
         }
 
         .banner-item {
             display: inline-block;
-            padding: 0 30px;
+            padding-right: 50px; /* 文字列同士の程よい間隔 */
             color: var(--accent-color);
             font-weight: bold;
             font-size: 0.85rem;
             letter-spacing: 0.05em;
         }
 
+        /* 完全に隙間なくループさせるためのアニメーション設定 */
         @keyframes scroll-left {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* 半分（1セット分）進んだら最初に戻す */
         }
 
         /* --- メインレイアウト（スマホ最適化） --- */
@@ -109,7 +115,7 @@
             font-size: 0.95rem;
             margin-bottom: 15px;
             text-align: justify;
-            white-space: pre-line; /* 改行をそのまま反映 */
+            white-space: pre-line;
         }
 
         /* --- 2. ページ内目次 --- */
@@ -132,7 +138,7 @@
             color: var(--accent-color);
         }
 
-        /* --- 3. 別ページ一覧 & キャラシート（リンクナビ） --- */
+        /* --- 3. 別ページ一覧（リンクナビ） --- */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -158,8 +164,19 @@
             border-color: var(--accent-color);
         }
 
+        /* 新規追加：お知らせボタンを目立たせる（サイバーブルー） */
+        .nav-button.info-btn {
+            background-color: #1a2936;
+            border-color: var(--info-blue);
+            color: #e0f7fa;
+        }
+        .nav-button.info-btn:hover {
+            background-color: var(--info-blue);
+            color: #000;
+        }
+
         .nav-button.highlight {
-            grid-column: span 2; /* キャラシート制作は横いっぱいに配置 */
+            grid-column: span 2;
             background: linear-gradient(90deg, #ff3b30, #a20000);
             border: none;
             font-weight: bold;
@@ -167,7 +184,44 @@
             margin-top: 5px;
         }
 
-        /* スマホ用調整（画面が特に小さい場合） */
+        /* --- 4. 概要ページ用の新規お知らせ表示エリア --- */
+        .news-box {
+            border-left: 4px solid var(--info-blue) !important; /* お知らせは青ライン */
+        }
+        .news-list {
+            list-style: none;
+        }
+        .news-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        .news-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .news-date {
+            color: var(--info-blue);
+            font-weight: bold;
+            font-family: monospace;
+        }
+        .news-badge {
+            background-color: var(--accent-color);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .news-content {
+            color: var(--text-color);
+        }
+
+        /* スマホ用調整 */
         @media (max-width: 480px) {
             .nav-grid {
                 grid-template-columns: 1fr;
@@ -189,11 +243,13 @@
     <div class="sub-title">停滞した世界に抗うディストピアTRPG</div>
 </header>
 
-<!-- お知らせバナー（同じ文言を2回繰り返すことで無限ループを実現しています） -->
+<!-- お知らせバナー（まったく同じ内容を2組並べることで、途切れのないループにしています） -->
 <div class="banner-container">
     <div class="banner-track">
+        <!-- 1組目 -->
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <!-- 2組目（ループ繋ぎ用） -->
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
     </div>
@@ -206,16 +262,18 @@
         <h2>目次</h2>
         <ul class="toc-list">
             <li><a href="#about-menu">別ページ・ツール一覧 <span>➔</span></a></li>
+            <li><a href="#recent-news">新規お知らせ <span>➔</span></a></li>
             <li><a href="#intro">◆はじめに◆ <span>➔</span></a></li>
             <li><a href="#world">◆この世界について◆ <span>➔</span></a></li>
         </ul>
     </div>
 
-    <!-- 別ページ一覧 -->
+    <!-- 別ページ一覧（お知らせを追加） -->
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
             <a href="#" class="nav-button">◆概要◆</a>
+            <a href="#" class="nav-button info-btn">◆お知らせ◆</a> <!-- 追加要素 -->
             <a href="#" class="nav-button">◆キャラクター制作◆</a>
             <a href="#" class="nav-button">◆会社◆</a>
             <a href="#" class="nav-button">◆武器◆</a>
@@ -223,9 +281,29 @@
             <a href="#" class="nav-button">◆追記・追加説明◆</a>
             <a href="#" class="nav-button">◆登場人物一覧◆</a>
             
-            <!-- キャラクターシート制作ページ（目立たせるために大きく配置） -->
+            <!-- キャラシート -->
             <a href="#" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
+    </div>
+
+    <!-- 新規お知らせ表示エリア -->
+    <div id="recent-news" class="section-panel news-box">
+        <h2 style="border-left-color: var(--info-blue);">新規お知らせ</h2>
+        <ul class="news-list">
+            <li class="news-item">
+                <div class="news-meta">
+                    <span class="news-date">2026.06.12</span>
+                    <span class="news-badge">NEW</span>
+                </div>
+                <div class="news-content">世界観設定に「ワールドマスター」に関する不穏な噂を追記しました。確認は自己責任で。</div>
+            </li>
+            <li class="news-item">
+                <div class="news-meta">
+                    <span class="news-date">2026.06.01</span>
+                </div>
+                <div class="news-content">武器データのバランス調整を行いました。「一般労働所」支給の装備は据え置きです。</div>
+            </li>
+        </ul>
     </div>
 
     <!-- 本文：はじめに -->
