@@ -146,7 +146,8 @@
             font-weight: bold;
             font-size: 1.1rem;
         }
-        .btn-calc:hover { background-color: #2d3548; border-color: var(--accent-blue); }
+        .btn-calc:hover:not(:disabled) { background-color: #2d3548; border-color: var(--accent-blue); }
+        .btn-calc:disabled { opacity: 0.3; cursor: not-allowed; border-color: #222; }
 
         /* ランダムダイス生成ボタン */
         .btn-dice {
@@ -211,44 +212,15 @@
             font-family: monospace;
         }
 
-        /* --- 【新設】キャラクター一覧用スタイル --- */
-        .closet-box {
-            background-color: #11141b;
-            border: 1px solid #334155;
-        }
-        .closet-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-            max-height: 250px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-        .closet-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #1c2331;
-            padding: 10px 15px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            transition: 0.2s;
-        }
+        /* キャラクター一覧用 */
+        .closet-box { background-color: #11141b; border: 1px solid #334155; }
+        .closet-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+        .closet-item { display: flex; justify-content: space-between; align-items: center; background-color: #1c2331; padding: 10px 15px; border-radius: 4px; border: 1px solid var(--border-color); transition: 0.2s; }
         .closet-item:hover { border-color: var(--accent-blue); background-color: #232c3d; }
         .closet-info { display: flex; flex-direction: column; cursor: pointer; flex-grow: 1; }
         .closet-name { font-weight: bold; font-size: 0.95rem; color: #fff; }
         .closet-meta { font-size: 0.75rem; color: var(--text-muted); }
-        .btn-delete-char {
-            background-color: #331c20;
-            color: #ff4444;
-            border: 1px solid #552222;
-            padding: 4px 10px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+        .btn-delete-char { background-color: #331c20; color: #ff4444; border: 1px solid #552222; padding: 4px 10px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; transition: 0.2s; }
         .btn-delete-char:hover { background-color: #ff4444; color: #fff; }
         .no-data-msg { font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 15px 0; }
 
@@ -283,13 +255,16 @@
         <button id="btn-edit-toggle" class="btn-nav" style="display:none; background-color: #1a2736; border-color: var(--accent-blue);" onclick="enableEditing()">⚙ このシートを編集する</button>
     </div>
 
+    <!-- ==================== セーブ・共有・ココフォリア出力パネル ==================== -->
     <div class="section-panel account-box">
         <h2>◆ システム・セーブ＆出力プロトコル</h2>
         <p style="font-size:0.85rem; color:var(--text-muted);">LocalStorageによる自動アカウント管理、暗号化URLによるシート公開、およびココフォリアへのダイレクト駒生成に対応しています。</p>
         
-        <div class="form-group" style="margin-top: 10px;">
-            <label>セーブスロット（アカウント内管理名）</label>
-            <input type="text" id="slot-name" value="デフォルトの市民データ">
+        <div class="form-grid" style="margin-top: 10px; gap:10px;">
+            <div class="form-group span-2">
+                <label>セーブスロット（アカウント内管理名）</label>
+                <input type="text" id="slot-name" value="デフォルトの市民データ">
+            </div>
         </div>
 
         <div class="action-grid">
@@ -299,11 +274,12 @@
         </div>
 
         <div class="share-url-box" id="share-box">
-            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL（コピーして他人に送信可能）</label>
+            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL（超圧縮プロトコル適用済み）</label>
             <div class="share-url-text" id="share-url"></div>
         </div>
     </div>
 
+    <!-- ==================== 1. プロフィール ==================== -->
     <div class="section-panel">
         <h2>〇 プロフィール</h2>
         <div class="form-grid">
@@ -347,6 +323,7 @@
         </div>
     </div>
 
+    <!-- ==================== 2. 基礎能力 ==================== -->
     <div class="section-panel">
         <h2>〇 基礎能力</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">手動で配分（初期2Lv＋割り振り計16Lv分）するか、下のボタンからダイスを自動で振って決定します。</p>
@@ -406,18 +383,40 @@
         <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
             <div class="form-group"><label>最大HP</label><input type="text" id="calc-hp" value="12" readonly style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="form-group"><label>追加ダメージ（DB）</label><input type="text" id="calc-db" value="なし" readonly></div>
-            <div class="form-group"><label>総支給 技能ポイント</label><input type="text" id="calc-sp" value="6" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
+            <div class="form-group"><label>知能由来の基本技能ポイント</label><input type="text" id="calc-sp" value="6" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
             <div class="form-group"><label>戦闘時 行動回数</label><input type="text" id="calc-actions" value="1回" readonly></div>
             <div class="form-group"><label>最大コスト値</label><input type="text" id="calc-cost-max" value="3" readonly></div>
             <div class="form-group"><label>毎ターン コスト回復値</label><input type="text" id="calc-cost-reg" value="1" readonly></div>
         </div>
     </div>
 
+    <!-- ==================== 3. 技術能力 ==================== -->
     <div class="section-panel">
-        <h2>〇 技術能力（技能ポイントを消費して取得）</h2>
+        <h2>〇 技術能力（リアルタイム消費管理・上限自動ロック機能付き）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。Lv10以降は、設定通り1レベル上げるためのコストが重くなります。</p>
+        
+        <!-- 【新設】ポイント補正入力および残数メーター -->
+        <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
+            <div class="form-group">
+                <label>特技ポイントの【補正追加分】（特殊能力・アイテム等用）</label>
+                <input type="number" id="bonus-sp" value="0" min="0" oninput="recalculate()">
+            </div>
+            <div class="form-group">
+                <label style="color: var(--accent-orange);">⚠️ 使用可能残り技能ポイント</label>
+                <input type="text" id="calc-rem-sp" value="0" readonly style="font-weight:bold; font-size:1.1rem; text-align:center; color: var(--accent-orange);">
+            </div>
+        </div>
+
+        <div class="status-header-bar" style="border-color: var(--accent-blue);">
+            <span style="width: 40%;">技術能力項目</span>
+            <span style="width: 25%; text-align: center;">補正値</span>
+            <span style="width: 35%; text-align: right;">実値レベル</span>
+        </div>
+
         <div id="skills-container"></div>
     </div>
 
+    <!-- ==================== 4. 特殊能力 & 武器 & 備考 ==================== -->
     <div class="section-panel">
         <h2>〇 特殊能力（最大4つ）</h2>
         <div class="form-group">
@@ -447,15 +446,16 @@
         </div>
     </div>
 
+    <!-- ==================== 5. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box">
         <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
         <p style="font-size:0.8rem; color:var(--text-muted);">このブラウザ（端末内）に保存されている登録市民データです。名前をクリックすると一瞬で読み込みます。</p>
-        <div class="closet-list" id="closet-list-area">
-            </div>
+        <div class="closet-list" id="closet-list-area"></div>
     </div>
 
 </div>
 
+<!-- ==================== キャラクターシート・コアエンジン ==================== -->
 <script>
     const cryingCitySkills = [
         "回避", "防御", "反撃", "近接攻撃(格闘)", "近接攻撃(刀剣)", "射撃攻撃(銃器)", "投擲",
@@ -467,13 +467,14 @@
 
     let baseStats = { body: 2, str: 2, int: 2, spd: 2, men: 2 };
     let skillStats = {};
+    let skillModifiers = {}; // 【新設】個別技能補正値用オブジェクト
     const storagePrefix = "crying_city_sheet_";
 
     window.onload = function() {
         initSkills();
         parseUrlOrLoadLocal();
         recalculate();
-        refreshClosetList(); // 一覧の読み込み
+        refreshClosetList();
     };
 
     function initSkills() {
@@ -481,14 +482,20 @@
         container.innerHTML = "";
         cryingCitySkills.forEach((sk, index) => {
             skillStats[sk] = 1;
+            skillModifiers[sk] = 0; // 補正値の初期値は0
+            
             const div = document.createElement('div');
             div.className = 'stat-row';
             div.innerHTML = `
-                <div><span class="stat-name">${sk}</span></div>
-                <div class="stat-control">
-                    <button class="btn-calc" onclick="adjustSkill('${sk}', -1)">-</button>
-                    <input type="number" id="sk-${index}" value="1" style="width:50px; text-align:center;" readonly>
-                    <button class="btn-calc" onclick="adjustSkill('${sk}', 1)">+</button>
+                <div style="width: 40%;"><span class="stat-name">${sk}</span></div>
+                <!-- 【新設】個別補正入力欄 -->
+                <div style="width: 25%; text-align: center;">
+                    <input type="number" id="skmod-${index}" value="0" style="width:55px; text-align:center; border-color:var(--accent-purple);" oninput="updateModifier('${sk}', ${index})">
+                </div>
+                <div class="stat-control" style="width: 35%; justify-content: flex-end;">
+                    <button class="btn-calc" onclick="adjustSkill('${sk}', ${index}, -1)">-</button>
+                    <input type="number" id="sk-${index}" value="1" style="width:45px; text-align:center;" readonly>
+                    <button class="btn-calc" id="btn-plus-${index}" onclick="adjustSkill('${sk}', ${index}, 1)">+</button>
                 </div>
             `;
             container.appendChild(div);
@@ -521,22 +528,72 @@
         recalculate();
     }
 
-    function adjustSkill(skName, val) {
-        let idx = cryingCitySkills.indexOf(skName);
+    function updateModifier(skName, index) {
+        let val = parseInt(document.getElementById(`skmod-${index}`).value) || 0;
+        skillModifiers[skName] = val;
+    }
+
+    // 各技能の累進ポイント消費量を計算する関数 (Lv10節目ルール完全準拠)
+    function calculateSkillCost(lv) {
+        let cost = 0;
+        for (let i = 1; i < lv; i++) {
+            cost += Math.floor((i - 1) / 10) + 1;
+        }
+        return cost;
+    }
+
+    function adjustSkill(skName, index, val) {
         let current = skillStats[skName];
         if (current + val < 1 || current + val > 90) return;
+
+        // 次のレベルに上げるために必要なコストを確認
+        if (val > 0) {
+            let nextLevelNeed = Math.floor((current - 1) / 10) + 1;
+            let currentRemaining = parseInt(document.getElementById('calc-rem-sp').value) || 0;
+            if (currentRemaining < nextLevelNeed) {
+                alert("特技ポイントが不足しているため、これ以上レベルを上げられません。");
+                return;
+            }
+        }
+
         skillStats[skName] += val;
-        document.getElementById(`sk-${idx}`).value = skillStats[skName];
+        document.getElementById(`sk-${index}`).value = skillStats[skName];
         recalculate();
     }
 
+    // ポイントリアルタイム制限・ロックおよび各種自動計算
     function recalculate() {
         document.getElementById('calc-hp').value = baseStats.body * 6;
         let dbCount = Math.floor(baseStats.str / 7);
         document.getElementById('calc-db').value = dbCount > 0 ? `+${dbCount}d6` : "なし";
+        
         let spBonus = Math.floor(baseStats.int / 10) * 10;
-        let totalSP = (baseStats.int * 3) + spBonus;
-        document.getElementById('calc-sp').value = `${totalSP} pt`;
+        let basicSP = (baseStats.int * 3) + spBonus;
+        document.getElementById('calc-sp').value = `${basicSP} pt`;
+        
+        // 補正追加技能ポイント枠の合算
+        let addedSP = parseInt(document.getElementById('bonus-sp').value) || 0;
+        let maxAvailableSP = basicSP + addedSP;
+
+        // 全技術能力の現在の合計消費量を算出
+        let totalUsedSP = 0;
+        cryingCitySkills.forEach(sk => {
+            totalUsedSP += calculateSkillCost(skillStats[sk]);
+        });
+
+        let remainingSP = maxAvailableSP - totalUsedSP;
+        document.getElementById('calc-rem-sp').value = remainingSP + " pt";
+
+        // 残ポイントが0、または次レベルの要求ptに満たない場合「＋」ボタンを完全自動ロック
+        cryingCitySkills.forEach((sk, index) => {
+            let currentLv = skillStats[sk];
+            let nextCost = Math.floor((currentLv - 1) / 10) + 1;
+            let plusBtn = document.getElementById(`btn-plus-${index}`);
+            if (plusBtn) {
+                plusBtn.disabled = (remainingSP < nextCost);
+            }
+        });
+
         let extraActions = Math.floor(baseStats.spd / 10);
         document.getElementById('calc-actions').value = `${1 + extraActions} 回`;
         let extraCost = Math.floor(baseStats.men / 4);
@@ -545,7 +602,6 @@
         document.getElementById('calc-cost-reg').value = 1 + costReg;
     }
 
-    // --- 一覧（クローゼット）処理ロジック ---
     function refreshClosetList() {
         const listArea = document.getElementById('closet-list-area');
         listArea.innerHTML = "";
@@ -570,14 +626,13 @@
                 item.innerHTML = `
                     <div class="closet-info" onclick="loadFromCloset('${slotName}')">
                         <span class="closet-name">👤 ${charName} <span style="font-size:0.8rem; font-weight:normal; color:var(--accent-blue);">[管理名: ${slotName}]</span></span>
-                        <span class="closet-meta">所属: ${faction} / 身体Lv${baseStats.body} 知能Lv${baseStats.int}</span>
+                        <span class="closet-meta">所属: ${faction}</span>
                     </div>
                     <button class="btn-delete-char" onclick="deleteFromCloset('${slotName}')">削除</button>
                 `;
                 listArea.appendChild(item);
             }
         }
-
         if (!hasData) {
             listArea.innerHTML = `<div class="no-data-msg">現在ブラウザ内に保存された市民データはありません。</div>`;
         }
@@ -588,7 +643,7 @@
         let slot = document.getElementById('slot-name').value.trim() || "デフォルトのデータ";
         localStorage.setItem(storagePrefix + slot, JSON.stringify(sheetData));
         alert(`システム通信：セーブ完了。\n【${slot}】として保存されました。`);
-        refreshClosetList(); // リストを即時更新
+        refreshClosetList();
     }
 
     function loadFromCloset(slotName) {
@@ -605,7 +660,7 @@
     }
 
     function deleteFromCloset(slotName) {
-        if (confirm(`システム通信：本当に【${slotName}】のキャラクターデータを削除しますか？\n（この操作は取り消せません）`)) {
+        if (confirm(`システム通信：本当に【${slotName}】のデータを削除しますか？`)) {
             localStorage.removeItem(storagePrefix + slotName);
             refreshClosetList();
         }
@@ -613,7 +668,8 @@
 
     function compileData() {
         return {
-            baseStats, skillStats,
+            baseStats, skillStats, skillModifiers,
+            bonusSp: parseInt(document.getElementById('bonus-sp').value) || 0,
             profile: {
                 name: document.getElementById('p-name').value,
                 faction: document.getElementById('p-faction').value,
@@ -640,14 +696,33 @@
         };
     }
 
+    // ==================== 【超圧縮URL生成プロトコル】 ====================
+    // キー名や技能名を一切排除し、配列インデックスの数値配列へ変換することで長さを激減させる
     function generateShareLink() {
-        let data = compileData();
-        let jsonStr = JSON.stringify(data);
+        let d = compileData();
+        
+        let compressedArray = [
+            d.baseStats.body, d.baseStats.str, d.baseStats.int, d.baseStats.spd, d.baseStats.men,
+            d.bonusSp,
+            d.profile.name, d.profile.faction, d.profile.age, d.profile.sex, d.profile.height, d.profile.weight,
+            d.specialTraits,
+            d.weapon.name, d.weapon.lv, d.weapon.skill1, d.weapon.skillsMulti,
+            d.lore.event, d.lore.emotion, d.lore.detail, d.lore.npc, d.lore.npcDetail, d.lore.appearance
+        ];
+
+        // 各技能の「実値」と「補正値」を順番にパッキング
+        cryingCitySkills.forEach(sk => {
+            compressedArray.push(d.skillStats[sk] || 1);
+            compressedArray.push(d.skillModifiers[sk] || 0);
+        });
+
+        let jsonStr = JSON.stringify(compressedArray);
         let encodedData = btoa(encodeURIComponent(jsonStr));
-        let shareUrl = window.location.origin + window.location.pathname + "?data=" + encodedData;
+        let shareUrl = window.location.origin + window.location.pathname + "?v=2&d=" + encodedData;
+        
         document.getElementById('share-url').innerText = shareUrl;
         document.getElementById('share-box').style.display = 'block';
-        alert("システム通信：共有URLを生成しました。ボックス内をコピーしてください。");
+        alert("システム通信：超圧縮・短縮URLプロトコルでの生成に成功しました。");
     }
 
     function copyToCcfolia() {
@@ -659,8 +734,12 @@
         let extraActions = Math.floor(baseStats.spd / 10);
         let totalActions = 1 + extraActions;
 
-        let chatPalette = `// --- 基礎判定・システム ---\n1d100 基礎システム判定\n1d6 コスト回復\n// --- 初期解放・所持兵装スキル ---\n${currentData.weapon.skill1 || "1d6+DB [武器スキル1]"}\n${currentData.weapon.skillsMulti || "// 追加解放スキルはシートを参照"}\n\n// --- 技術能力判定ボット一覧 ---\n`;
-        for (let sk in skillStats) { chatPalette += `1d100<={${sk}} 【${sk}】能力判定\n`; }
+        let chatPalette = `// --- 基礎判定・システム ---\n1d100 基礎システム判定\n1d6 コスト回復\n// --- 初期解放・所持兵装スキル ---\n${currentData.weapon.skill1 || "1d6+DB [武器スキル1]"}\n${currentData.weapon.skillsMulti || "// 追加解放スキルはシートを参照"}\n\n// --- 技術能力判定ボット一覧 (実値+補正値適用済み) ---\n`;
+        
+        for (let sk in skillStats) { 
+            let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
+            chatPalette += `1d100<=${totalSkillLv} 【${sk}】能力判定\n`; 
+        }
 
         let ccfoliaJson = {
             kind: "character",
@@ -684,25 +763,59 @@
             }
         };
 
-        for (let sk in skillStats) { ccfoliaJson.data.params.push({ name: sk, value: String(skillStats[sk]) }); }
+        for (let sk in skillStats) { 
+            let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
+            ccfoliaJson.data.params.push({ name: sk, value: String(totalSkillLv) }); 
+        }
 
         let jsonString = JSON.stringify(ccfoliaJson);
         navigator.clipboard.writeText(jsonString).then(() => {
-            alert(`システム通信：ココフォリア用の駒データをコピーしました！\nココフォリアの部屋の画面上で「Ctrl + V」を行うと、このキャラクターの駒が自動生成されます。`);
+            alert(`システム通信：ココフォリア用の駒データをコピーしました！\n実値レベルに個別補正値を合算した判定ダイスボットが完全同期されています。`);
         }).catch(err => { alert("コピーに失敗しました。"); });
     }
 
     function parseUrlOrLoadLocal() {
         const urlParams = new URLSearchParams(window.location.search);
-        const encodedData = urlParams.get('data');
-        if (encodedData) {
+        const version = urlParams.get('v');
+        const dParam = urlParams.get('d');
+        const oldData = urlParams.get('data');
+
+        // 超圧縮型URL（v=2）のパース復元処理
+        if (version === "2" && dParam) {
             try {
-                let decodedStr = decodeURIComponent(atob(encodedData));
-                let data = JSON.parse(decodedStr);
-                applyDataToForm(data);
+                let decodedStr = decodeURIComponent(atob(dParam));
+                let arr = JSON.parse(decodedStr);
+                
+                let restored = {
+                    baseStats: { body: arr[0], str: arr[1], int: arr[2], spd: arr[3], men: arr[4] },
+                    bonusSp: arr[5],
+                    profile: { name: arr[6], faction: arr[7], age: arr[8], sex: arr[9], height: arr[10], weight: arr[11] },
+                    specialTraits: arr[12],
+                    weapon: { name: arr[13], lv: arr[14], skill1: arr[15], skillsMulti: arr[16] },
+                    lore: { event: arr[17], emotion: arr[18], detail: arr[19], npc: arr[20], npcDetail: arr[21], appearance: arr[22] },
+                    skillStats: {},
+                    skillModifiers: {}
+                };
+
+                let pointer = 23;
+                cryingCitySkills.forEach(sk => {
+                    restored.skillStats[sk] = arr[pointer++];
+                    restored.skillModifiers[sk] = arr[pointer++];
+                });
+
+                applyDataToForm(restored);
                 document.getElementById('sheet-app').classList.add('readonly-mode');
                 document.getElementById('btn-edit-toggle').style.display = 'inline-block';
-            } catch (e) { alert("エラー：データ破損または不正なURLです。"); }
+            } catch (e) { alert("データ復元に失敗しました。"); }
+        } 
+        // 従来のLocalデータ読み込み互換
+        else if (oldData) {
+            try {
+                let decodedStr = decodeURIComponent(atob(oldData));
+                applyDataToForm(JSON.parse(decodedStr));
+                document.getElementById('sheet-app').classList.add('readonly-mode');
+                document.getElementById('btn-edit-toggle').style.display = 'inline-block';
+            } catch(e){}
         }
     }
 
@@ -710,11 +823,16 @@
         if (!data) return;
         baseStats = data.baseStats || baseStats;
         skillStats = data.skillStats || skillStats;
+        skillModifiers = data.skillModifiers || skillModifiers;
+        
+        document.getElementById('bonus-sp').value = data.bonusSp || 0;
+
         for (let key in baseStats) {
             if(document.getElementById(`base-${key}`)) document.getElementById(`base-${key}`).value = baseStats[key];
         }
         cryingCitySkills.forEach((sk, index) => {
             if(document.getElementById(`sk-${index}`)) document.getElementById(`sk-${index}`).value = skillStats[sk] || 1;
+            if(document.getElementById(`skmod-${index}`)) document.getElementById(`skmod-${index}`).value = skillModifiers[sk] || 0;
         });
         if(data.profile) {
             document.getElementById('p-name').value = data.profile.name || "";
