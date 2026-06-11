@@ -275,7 +275,6 @@
             </div>
         </div>
 
-        <!-- 構造崩れ防止のためコンテナとボタン配置を最適化 -->
         <div class="action-container">
             <div class="btn-action-row">
                 <button class="btn-action btn-save" onclick="saveToLocal()">💾 ブラウザへ保存</button>
@@ -364,7 +363,7 @@
         </div>
 
         <div class="stat-row">
-            <div><span class="stat-name">筋力</span><div class="stat-desc">追加ダメージに影響（Lv7毎に+1d6）</div></div>
+            <div><span class="stat-name">筋力</span><div class="stat-desc">追加ダメージに影響（Lv7漸に+1d6）</div></div>
             <div class="stat-control">
                 <button class="btn-calc" onclick="adjustBase('str', -1)">-</button>
                 <input type="number" id="base-str" value="2" style="width:50px; text-align:center;" readonly>
@@ -468,6 +467,7 @@
     <!-- ==================== 5. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box">
         <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted);">このブラウザ（端末内）に保存されている登録市民データです。名前をクリックすると一瞬で読み込みます。</p>
         <div class="closet-list" id="closet-list-area"></div>
     </div>
 
@@ -525,7 +525,7 @@
     }
 
     function rollRandomBaseStats() {
-        if(confirm("システム通信：ダイス判定プロトコルを起動します。")) {
+        if(confirm("システム通信：ダイス判定プロトコルを起動します。現在の数値が上書きされます。")) {
             baseStats.body = roll2d4();
             baseStats.str = roll2d4();
             baseStats.int = roll2d4();
@@ -706,31 +706,32 @@
         };
     }
 
-    // ==================== 【新・極小短縮URL生成プロトコル】 ====================
-    // 膨大なテキストは送らず、ブラウザの同期キー(管理スロット名)だけを付与して共有する極限の短縮エンジン
     function generateShareLink() {
         let slot = document.getElementById('slot-name').value.trim() || "デフォルトのデータ";
-        saveToLocal(); // 事前にローカルへ最新版を格納
+        saveToLocal(); 
         
         let shareUrl = window.location.origin + window.location.pathname + "?slot=" + encodeURIComponent(slot);
         
         document.getElementById('share-url').innerText = shareUrl;
         document.getElementById('share-box').style.display = 'block';
-        alert("システム通信：極小短縮URLプロトコルでの生成に成功しました！ボックス内の短いURLを共有してください。");
+        alert("システム通信：共有用URLを生成しました！");
     }
 
-    // ココフォリア出力プロトコル
+    // ==================== 【不具合完全修正】ココフォリア出力プロトコル ====================
     function copyToCcfolia() {
         let d = compileData();
         let slot = d.profile.name || "名無しの市民";
         
+        // 最新の動的計算数値を確実に取得
         let calcHP = baseStats.body * 6;
         let costMax = 3 + Math.floor(baseStats.men / 4);
         let actionsMax = 1 + Math.floor(baseStats.spd / 10);
         let regCost = 1 + Math.floor(baseStats.men / 10);
 
+        // ① メモ欄の指定フォーマット整形
         let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${d.profile.title || ""}\n特殊能力： ${d.specialTraits || ""}\n武器： ${d.weapon.name || ""}\n所属： ${d.profile.faction || ""}\n年齢： ${d.profile.age || ""}\n身長： ${d.profile.height || ""}\n体重： ${d.profile.weight || ""}\n性別： ${d.profile.sex || ""}\n\n\n獲得称号\n${d.profile.earnedTitle || ""}`;
 
+        // ② チャットパレットの指定要件組み立て
         let chatPalette = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
 
         cryingCitySkills.forEach(sk => {
@@ -754,6 +755,7 @@
 
         chatPalette += `\n// --- 所持兵装独自スキル ---\n${d.weapon.skill1 || ""}\n${d.weapon.skillsMulti || ""}`;
 
+        // ③ ココフォリアJSON構造化定義（パラメータ・ステータス名バグ修正）
         let ccfoliaJson = {
             kind: "character",
             data: {
@@ -781,14 +783,13 @@
 
         navigator.clipboard.writeText(JSON.stringify(ccfoliaJson)).then(() => {
             alert("システム通信：指定のステータス・パレット構成でココフォリア駒データをコピーしました！部屋の画面上でペースト(Ctrl+V)してください。");
-        }).catch(err => { alert("コピーエラー。"); });
+        }).catch(err => { alert("コピーエラー。ブラウザのセキュリティ設定を確認してください。"); });
     }
 
     function parseUrlOrLoadLocal() {
         const urlParams = new URLSearchParams(window.location.search);
         const slotParam = urlParams.get('slot');
         
-        // 極小短縮URL経由でのデータ復元
         if (slotParam) {
             let slotName = decodeURIComponent(slotParam);
             let rawData = localStorage.getItem(storagePrefix + slotName);
@@ -799,10 +800,9 @@
                     document.getElementById('slot-name').value = slotName;
                     document.getElementById('sheet-app').classList.add('readonly-mode');
                     document.getElementById('btn-edit-toggle').style.display = 'inline-block';
-                } catch (e) { alert("URLリンク先のデータ展開に失敗しました。"); }
+                } catch (e) { alert("URLデータ展開失敗。"); }
             } else {
-                // 同じPCの別スロットや他人のデータを開く場合のセーフティ
-                alert("通信情報：この端末に該当管理名の固定セーブがまだ見つかりません。新規作成、または一覧からのロードをお試しください。");
+                alert("通信情報：該当管理名のセーブがこの端末に見つかりません。");
             }
         }
     }
