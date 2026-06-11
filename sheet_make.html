@@ -261,9 +261,13 @@
         <p style="font-size:0.85rem; color:var(--text-muted);">LocalStorageによる自動アカウント管理、暗号化URLによるシート公開、およびココフォリアへのダイレクト駒生成に対応しています。</p>
         
         <div class="form-grid" style="margin-top: 10px; gap:10px;">
-            <div class="form-group span-2">
+            <div class="form-group">
                 <label>セーブスロット（アカウント内管理名）</label>
                 <input type="text" id="slot-name" value="デフォルトの市民データ">
+            </div>
+            <div class="form-group">
+                <label>PL名（ココフォリア出力用項目）</label>
+                <input type="text" id="p-pl-name" placeholder="プレイヤー名">
             </div>
         </div>
 
@@ -284,11 +288,11 @@
         <h2>〇 プロフィール</h2>
         <div class="form-grid">
             <div class="form-group">
-                <label>名前</label>
+                <label>名前 (PC名)</label>
                 <input type="text" id="p-name" placeholder="名無しの市民">
             </div>
             <div class="form-group">
-                <label>所属会社（必須）</label>
+                <label>所属会社（所属）</label>
                 <select id="p-faction">
                     <option value="赤色戦派">赤色戦派 [大規模]</option>
                     <option value="ディフィポリディ">ディフィポリディ [大規模]</option>
@@ -305,6 +309,10 @@
                 </select>
             </div>
             <div class="form-group">
+                <label>称号（ココフォリア出力用項目）</label>
+                <input type="text" id="p-title" placeholder="例：白銀">
+            </div>
+            <div class="form-group">
                 <label>年齢</label>
                 <input type="text" id="p-age" placeholder="23">
             </div>
@@ -319,6 +327,10 @@
             <div class="form-group">
                 <label>体重</label>
                 <input type="text" id="p-weight" placeholder="60kg">
+            </div>
+            <div class="form-group">
+                <label>獲得称号（ココフォリア出力用項目）</label>
+                <input type="text" id="p-earned-title" placeholder="特になし">
             </div>
         </div>
     </div>
@@ -386,7 +398,7 @@
             <div class="form-group"><label>知能由来の基本技能ポイント</label><input type="text" id="calc-sp" value="6" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
             <div class="form-group"><label>戦闘時 行動回数</label><input type="text" id="calc-actions" value="1回" readonly></div>
             <div class="form-group"><label>最大コスト値</label><input type="text" id="calc-cost-max" value="3" readonly></div>
-            <div class="form-group"><label>毎ターン コスト回復値</label><input type="text" id="calc-cost-reg" value="1" readonly></div>
+            <div class="form-group"><label>毎ターン コスト回復値（回復値）</label><input type="text" id="calc-cost-reg" value="1" readonly></div>
         </div>
     </div>
 
@@ -395,10 +407,9 @@
         <h2>〇 技術能力（リアルタイム消費管理・上限自動ロック機能付き）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。Lv10以降は、設定通り1レベル上げるためのコストが重くなります。</p>
         
-        <!-- 【新設】ポイント補正入力および残数メーター -->
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
-                <label>特技ポイントの【補正追加分】（特殊能力・アイテム等用）</label>
+                <label>特技ポイントの【補正追加分】</label>
                 <input type="number" id="bonus-sp" value="0" min="0" oninput="recalculate()">
             </div>
             <div class="form-group">
@@ -425,11 +436,14 @@
     </div>
 
     <div class="section-panel">
-        <h2>〇 所持武器・スキル</h2>
+        <h2>〇 所持武器・スキル・弾数管理（ココフォリアステータス連動）</h2>
         <div class="form-grid">
             <div class="form-group span-2"><label>武器名 ＆ 要求値ステータス</label><input type="text" id="f-weapon-name" placeholder="例：シルバーライト製の刀"></div>
             <div class="form-group"><label>武器レベル</label><input type="number" id="f-weapon-lv" value="1"></div>
             <div class="form-group"><label>解放スキル1（初期搭載）</label><input type="text" id="f-skill-1" placeholder="ダメージロール等"></div>
+            <!-- 【追加】ココフォリアに直接連動する総弾丸数、装弾数項目 -->
+            <div class="form-group"><label>総弾丸数 (最大:射撃Lv×5 // 弓矢含む)</label><input type="number" id="f-bullet-total" value="0"></div>
+            <div class="form-group"><label>装弾数 (銃器等のマガジン容量)</label><input type="number" id="f-bullet-magazine" value="0"></div>
             <div class="form-group span-2"><label>ランダム解放スキル（スキル2〜4）</label><textarea id="f-skills-multi" rows="3"></textarea></div>
         </div>
     </div>
@@ -439,10 +453,10 @@
         <div class="form-grid">
             <div class="form-group"><label>過去あった事象</label><input type="text" id="f-past-event"></div>
             <div class="form-group"><label>感情</label><input type="text" id="f-past-emotion"></div>
-            <div class="form-group span-2"><label>過去の背景・具体的な内容</label><textarea id="f-past-detail" rows="3"></textarea></div>
+            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>過去の背景・具体的な内容</label><textarea id="f-past-detail" rows="3"></textarea></div></div>
             <div class="form-group"><label>重要な人物</label><input type="text" id="f-past-npc"></div>
-            <div class="form-group span-2"><label>人物に関する感情・補足事項</label><textarea id="f-npc-detail" rows="2"></textarea></div>
-            <div class="form-group span-2"><label>容姿・性格の特徴（備考欄）</label><textarea id="f-appearance" rows="3"></textarea></div>
+            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>人物に関する感情・補足事項</label><textarea id="f-npc-detail" rows="2"></textarea></div></div>
+            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>容姿・性格の特徴（備考欄）</label><textarea id="f-appearance" rows="3"></textarea></div></div>
         </div>
     </div>
 
@@ -458,7 +472,8 @@
 <!-- ==================== キャラクターシート・コアエンジン ==================== -->
 <script>
     const cryingCitySkills = [
-        "回避", "防御", "反撃", "近接攻撃(格闘)", "近接攻撃(刀剣)", "射撃攻撃(銃器)", "投擲",
+        "回避", "防御", "反撃", "近接攻撃：格闘", "近接攻撃：短剣", "近接攻撃：刀剣", "近接攻撃：大剣", "近接攻撃：長柄", "近接攻撃：鈍器",
+        "射撃攻撃：拳銃", "射撃攻撃：ライフル", "射撃攻撃：ショットガン", "射撃攻撃：弓矢", "投擲",
         "視覚", "聴覚", "嗅覚", "感知", "思案",
         "調査", "隠密", "跳躍", "登攀", "追跡", "手当",
         "話術", "詐術", "心理学", "威圧", "信用",
@@ -467,7 +482,7 @@
 
     let baseStats = { body: 2, str: 2, int: 2, spd: 2, men: 2 };
     let skillStats = {};
-    let skillModifiers = {}; // 【新設】個別技能補正値用オブジェクト
+    let skillModifiers = {}; 
     const storagePrefix = "crying_city_sheet_";
 
     window.onload = function() {
@@ -482,13 +497,12 @@
         container.innerHTML = "";
         cryingCitySkills.forEach((sk, index) => {
             skillStats[sk] = 1;
-            skillModifiers[sk] = 0; // 補正値の初期値は0
+            skillModifiers[sk] = 0; 
             
             const div = document.createElement('div');
             div.className = 'stat-row';
             div.innerHTML = `
                 <div style="width: 40%;"><span class="stat-name">${sk}</span></div>
-                <!-- 【新設】個別補正入力欄 -->
                 <div style="width: 25%; text-align: center;">
                     <input type="number" id="skmod-${index}" value="0" style="width:55px; text-align:center; border-color:var(--accent-purple);" oninput="updateModifier('${sk}', ${index})">
                 </div>
@@ -533,7 +547,6 @@
         skillModifiers[skName] = val;
     }
 
-    // 各技能の累進ポイント消費量を計算する関数 (Lv10節目ルール完全準拠)
     function calculateSkillCost(lv) {
         let cost = 0;
         for (let i = 1; i < lv; i++) {
@@ -546,22 +559,19 @@
         let current = skillStats[skName];
         if (current + val < 1 || current + val > 90) return;
 
-        // 次のレベルに上げるために必要なコストを確認
         if (val > 0) {
             let nextLevelNeed = Math.floor((current - 1) / 10) + 1;
             let currentRemaining = parseInt(document.getElementById('calc-rem-sp').value) || 0;
             if (currentRemaining < nextLevelNeed) {
-                alert("特技ポイントが不足しているため、これ以上レベルを上げられません。");
+                alert("特技ポイントが不足しています。");
                 return;
             }
         }
-
         skillStats[skName] += val;
         document.getElementById(`sk-${index}`).value = skillStats[skName];
         recalculate();
     }
 
-    // ポイントリアルタイム制限・ロックおよび各種自動計算
     function recalculate() {
         document.getElementById('calc-hp').value = baseStats.body * 6;
         let dbCount = Math.floor(baseStats.str / 7);
@@ -571,27 +581,20 @@
         let basicSP = (baseStats.int * 3) + spBonus;
         document.getElementById('calc-sp').value = `${basicSP} pt`;
         
-        // 補正追加技能ポイント枠の合算
         let addedSP = parseInt(document.getElementById('bonus-sp').value) || 0;
         let maxAvailableSP = basicSP + addedSP;
 
-        // 全技術能力の現在の合計消費量を算出
         let totalUsedSP = 0;
-        cryingCitySkills.forEach(sk => {
-            totalUsedSP += calculateSkillCost(skillStats[sk]);
-        });
+        cryingCitySkills.forEach(sk => { totalUsedSP += calculateSkillCost(skillStats[sk]); });
 
         let remainingSP = maxAvailableSP - totalUsedSP;
         document.getElementById('calc-rem-sp').value = remainingSP + " pt";
 
-        // 残ポイントが0、または次レベルの要求ptに満たない場合「＋」ボタンを完全自動ロック
         cryingCitySkills.forEach((sk, index) => {
             let currentLv = skillStats[sk];
             let nextCost = Math.floor((currentLv - 1) / 10) + 1;
             let plusBtn = document.getElementById(`btn-plus-${index}`);
-            if (plusBtn) {
-                plusBtn.disabled = (remainingSP < nextCost);
-            }
+            if (plusBtn) plusBtn.disabled = (remainingSP < nextCost);
         });
 
         let extraActions = Math.floor(baseStats.spd / 10);
@@ -625,7 +628,7 @@
                 item.className = 'closet-item';
                 item.innerHTML = `
                     <div class="closet-info" onclick="loadFromCloset('${slotName}')">
-                        <span class="closet-name">👤 ${charName} <span style="font-size:0.8rem; font-weight:normal; color:var(--accent-blue);">[管理名: ${slotName}]</span></span>
+                        <span class="closet-name">👤 ${charName} <span style="font-size:0.8rem; font-weight:normal; color:var(--accent-blue);">[${slotName}]</span></span>
                         <span class="closet-meta">所属: ${faction}</span>
                     </div>
                     <button class="btn-delete-char" onclick="deleteFromCloset('${slotName}')">削除</button>
@@ -633,16 +636,14 @@
                 listArea.appendChild(item);
             }
         }
-        if (!hasData) {
-            listArea.innerHTML = `<div class="no-data-msg">現在ブラウザ内に保存された市民データはありません。</div>`;
-        }
+        if (!hasData) listArea.innerHTML = `<div class="no-data-msg">保存された市民データはありません。</div>`;
     }
 
     function saveToLocal() {
         let sheetData = compileData();
         let slot = document.getElementById('slot-name').value.trim() || "デフォルトのデータ";
         localStorage.setItem(storagePrefix + slot, JSON.stringify(sheetData));
-        alert(`システム通信：セーブ完了。\n【${slot}】として保存されました。`);
+        alert(`【${slot}】として固定保存しました。`);
         refreshClosetList();
     }
 
@@ -654,13 +655,13 @@
                 applyDataToForm(data);
                 document.getElementById('slot-name').value = slotName;
                 recalculate();
-                alert(`システム通信：【${slotName}】のデータをロードしました。`);
-            } catch(e) { alert("ロードエラー：データが破損しています。"); }
+                alert(`【${slotName}】をロードしました。`);
+            } catch(e) { alert("データ破損エラー。"); }
         }
     }
 
     function deleteFromCloset(slotName) {
-        if (confirm(`システム通信：本当に【${slotName}】のデータを削除しますか？`)) {
+        if (confirm(`本当に【${slotName}】を削除しますか？`)) {
             localStorage.removeItem(storagePrefix + slotName);
             refreshClosetList();
         }
@@ -670,20 +671,25 @@
         return {
             baseStats, skillStats, skillModifiers,
             bonusSp: parseInt(document.getElementById('bonus-sp').value) || 0,
+            plName: document.getElementById('p-pl-name').value,
             profile: {
                 name: document.getElementById('p-name').value,
                 faction: document.getElementById('p-faction').value,
                 age: document.getElementById('p-age').value,
                 sex: document.getElementById('p-sex').value,
                 height: document.getElementById('p-height').value,
-                weight: document.getElementById('p-weight').value
+                weight: document.getElementById('p-weight').value,
+                title: document.getElementById('p-title').value,
+                earnedTitle: document.getElementById('p-earned-title').value
             },
             specialTraits: document.getElementById('f-special-traits').value,
             weapon: {
                 name: document.getElementById('f-weapon-name').value,
                 lv: document.getElementById('f-weapon-lv').value,
                 skill1: document.getElementById('f-skill-1').value,
-                skillsMulti: document.getElementById('f-skills-multi').value
+                skillsMulti: document.getElementById('f-skills-multi').value,
+                bulletTotal: document.getElementById('f-bullet-total').value,
+                bulletMag: document.getElementById('f-bullet-magazine').value
             },
             lore: {
                 event: document.getElementById('f-past-event').value,
@@ -696,61 +702,78 @@
         };
     }
 
-    // ==================== 【超圧縮URL生成プロトコル】 ====================
-    // キー名や技能名を一切排除し、配列インデックスの数値配列へ変換することで長さを激減させる
     function generateShareLink() {
         let d = compileData();
-        
         let compressedArray = [
             d.baseStats.body, d.baseStats.str, d.baseStats.int, d.baseStats.spd, d.baseStats.men,
-            d.bonusSp,
-            d.profile.name, d.profile.faction, d.profile.age, d.profile.sex, d.profile.height, d.profile.weight,
+            d.bonusSp, d.plName,
+            d.profile.name, d.profile.faction, d.profile.age, d.profile.sex, d.profile.height, d.profile.weight, d.profile.title, d.profile.earnedTitle,
             d.specialTraits,
-            d.weapon.name, d.weapon.lv, d.weapon.skill1, d.weapon.skillsMulti,
+            d.weapon.name, d.weapon.lv, d.weapon.skill1, d.weapon.skillsMulti, d.weapon.bulletTotal, d.weapon.bulletMag,
             d.lore.event, d.lore.emotion, d.lore.detail, d.lore.npc, d.lore.npcDetail, d.lore.appearance
         ];
-
-        // 各技能の「実値」と「補正値」を順番にパッキング
         cryingCitySkills.forEach(sk => {
             compressedArray.push(d.skillStats[sk] || 1);
             compressedArray.push(d.skillModifiers[sk] || 0);
         });
-
         let jsonStr = JSON.stringify(compressedArray);
         let encodedData = btoa(encodeURIComponent(jsonStr));
-        let shareUrl = window.location.origin + window.location.pathname + "?v=2&d=" + encodedData;
-        
+        let shareUrl = window.location.origin + window.location.pathname + "?v=3&d=" + encodedData;
         document.getElementById('share-url').innerText = shareUrl;
         document.getElementById('share-box').style.display = 'block';
-        alert("システム通信：超圧縮・短縮URLプロトコルでの生成に成功しました。");
+        alert("システム通信：共有用超圧縮URLを生成しました。");
     }
 
     function copyToCcfolia() {
-        let currentData = compileData();
-        let slot = document.getElementById('slot-name').value || "名無しの市民";
-        let calcHP = baseStats.body * 6;
-        let extraCost = Math.floor(baseStats.men / 4);
-        let maxCost = 3 + extraCost;
-        let extraActions = Math.floor(baseStats.spd / 10);
-        let totalActions = 1 + extraActions;
-
-        let chatPalette = `// --- 基礎判定・システム ---\n1d100 基礎システム判定\n1d6 コスト回復\n// --- 初期解放・所持兵装スキル ---\n${currentData.weapon.skill1 || "1d6+DB [武器スキル1]"}\n${currentData.weapon.skillsMulti || "// 追加解放スキルはシートを参照"}\n\n// --- 技術能力判定ボット一覧 (実値+補正値適用済み) ---\n`;
+        let d = compileData();
+        let slot = d.profile.name || "名無しの市民";
         
-        for (let sk in skillStats) { 
-            let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
-            chatPalette += `1d100<=${totalSkillLv} 【${sk}】能力判定\n`; 
-        }
+        let calcHP = baseStats.body * 6;
+        let costMax = 3 + Math.floor(baseStats.men / 4);
+        let actionsMax = 1 + Math.floor(baseStats.spd / 10);
+        let regCost = 1 + Math.floor(baseStats.men / 10);
 
+        // ① メモ欄の指定フォーマット整形
+        let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${d.profile.title || ""}\n特殊能力： ${d.specialTraits || ""}\n武器： ${d.weapon.name || ""}\n所属： ${d.profile.faction || ""}\n年齢： ${d.profile.age || ""}\n身長： ${d.profile.height || ""}\n体重： ${d.profile.weight || ""}\n性別： ${d.profile.sex || ""}\n\n\n獲得称号\n${d.profile.earnedTitle || ""}`;
+
+        // ② チャットパレットの指定要件組み立て
+        let chatPalette = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
+
+        cryingCitySkills.forEach(sk => {
+            let prefix = "";
+            if (sk === "回避") prefix = "▽戦闘系能力\n";
+            else if (sk === "視覚") prefix = "▽感覚能力\n";
+            else if (sk === "調査") prefix = "▽行動能力\n";
+            else if (sk === "話術") prefix = "▽対人能力\n";
+            else if (sk === "言語") prefix = "▽知識能力\n";
+
+            chatPalette += prefix;
+
+            let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
+            
+            if (sk.startsWith("近接攻撃") || sk.startsWith("射撃攻撃") || sk === "投擲") {
+                chatPalette += `${totalSkillLv}d6 【${sk}】\n`;
+            } else {
+                chatPalette += `${totalSkillLv}d6>= 【${sk}】\n`;
+            }
+        });
+
+        chatPalette += `\n// --- 所持兵装独自スキル ---\n${d.weapon.skill1 || ""}\n${d.weapon.skillsMulti || ""}`;
+
+        // ③ ココフォリアJSON構造化定義
         let ccfoliaJson = {
             kind: "character",
             data: {
-                name: currentData.profile.name || slot,
-                memo: `【所属】${currentData.profile.faction}\n【年齢】${currentData.profile.age} / 【性別】${currentData.profile.sex}\n【過去】${currentData.lore.event} (${currentData.lore.emotion})\n${currentData.specialTraits}`,
+                name: slot,
+                memo: memo,
                 initiated: true,
                 status: [
                     { name: "HP", current: calcHP, max: calcHP },
-                    { name: "コスト", current: maxCost, max: maxCost },
-                    { name: "行動回数", current: totalActions, max: totalActions }
+                    { name: "コスト", current: costMax, max: maxCost },
+                    { name: "行動回数", current: actionsMax, max: actionsMax },
+                    { name: "回復値", current: regCost, max: regCost },
+                    { name: "総弾丸数", current: parseInt(d.weapon.bulletTotal)||0, max: parseInt(d.weapon.bulletTotal)||0 },
+                    { name: "装弾数", current: parseInt(d.weapon.bulletMag)||0, max: parseInt(d.weapon.bulletMag)||0 }
                 ],
                 params: [
                     { name: "身体", value: String(baseStats.body) },
@@ -763,59 +786,37 @@
             }
         };
 
-        for (let sk in skillStats) { 
-            let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
-            ccfoliaJson.data.params.push({ name: sk, value: String(totalSkillLv) }); 
-        }
-
-        let jsonString = JSON.stringify(ccfoliaJson);
-        navigator.clipboard.writeText(jsonString).then(() => {
-            alert(`システム通信：ココフォリア用の駒データをコピーしました！\n実値レベルに個別補正値を合算した判定ダイスボットが完全同期されています。`);
-        }).catch(err => { alert("コピーに失敗しました。"); });
+        navigator.clipboard.writeText(JSON.stringify(ccfoliaJson)).then(() => {
+            alert("システム通信：ココフォリア用の駒データをコピーしました！部屋の画面上でペースト(Ctrl+V)してください。");
+        }).catch(err => { alert("コピーエラー。"); });
     }
 
     function parseUrlOrLoadLocal() {
         const urlParams = new URLSearchParams(window.location.search);
         const version = urlParams.get('v');
         const dParam = urlParams.get('d');
-        const oldData = urlParams.get('data');
-
-        // 超圧縮型URL（v=2）のパース復元処理
-        if (version === "2" && dParam) {
+        if (version === "3" && dParam) {
             try {
                 let decodedStr = decodeURIComponent(atob(dParam));
                 let arr = JSON.parse(decodedStr);
-                
                 let restored = {
                     baseStats: { body: arr[0], str: arr[1], int: arr[2], spd: arr[3], men: arr[4] },
-                    bonusSp: arr[5],
-                    profile: { name: arr[6], faction: arr[7], age: arr[8], sex: arr[9], height: arr[10], weight: arr[11] },
-                    specialTraits: arr[12],
-                    weapon: { name: arr[13], lv: arr[14], skill1: arr[15], skillsMulti: arr[16] },
-                    lore: { event: arr[17], emotion: arr[18], detail: arr[19], npc: arr[20], npcDetail: arr[21], appearance: arr[22] },
-                    skillStats: {},
-                    skillModifiers: {}
+                    bonusSp: arr[5], plName: arr[6],
+                    profile: { name: arr[7], faction: arr[8], age: arr[9], sex: arr[10], height: arr[11], weight: arr[12], title: arr[13], earnedTitle: arr[14] },
+                    specialTraits: arr[15],
+                    weapon: { name: arr[16], lv: arr[17], skill1: arr[18], skillsMulti: arr[19], bulletTotal: arr[20], bulletMag: arr[21] },
+                    lore: { event: arr[22], emotion: arr[23], detail: arr[24], npc: arr[25], npcDetail: arr[26], appearance: arr[27] },
+                    skillStats: {}, skillModifiers: {}
                 };
-
-                let pointer = 23;
+                let pointer = 28;
                 cryingCitySkills.forEach(sk => {
                     restored.skillStats[sk] = arr[pointer++];
                     restored.skillModifiers[sk] = arr[pointer++];
                 });
-
                 applyDataToForm(restored);
                 document.getElementById('sheet-app').classList.add('readonly-mode');
                 document.getElementById('btn-edit-toggle').style.display = 'inline-block';
-            } catch (e) { alert("データ復元に失敗しました。"); }
-        } 
-        // 従来のLocalデータ読み込み互換
-        else if (oldData) {
-            try {
-                let decodedStr = decodeURIComponent(atob(oldData));
-                applyDataToForm(JSON.parse(decodedStr));
-                document.getElementById('sheet-app').classList.add('readonly-mode');
-                document.getElementById('btn-edit-toggle').style.display = 'inline-block';
-            } catch(e){}
+            } catch (e) { alert("URLデータ展開失敗。"); }
         }
     }
 
@@ -824,8 +825,8 @@
         baseStats = data.baseStats || baseStats;
         skillStats = data.skillStats || skillStats;
         skillModifiers = data.skillModifiers || skillModifiers;
-        
         document.getElementById('bonus-sp').value = data.bonusSp || 0;
+        if(data.plName) document.getElementById('p-pl-name').value = data.plName;
 
         for (let key in baseStats) {
             if(document.getElementById(`base-${key}`)) document.getElementById(`base-${key}`).value = baseStats[key];
@@ -841,6 +842,8 @@
             document.getElementById('p-sex').value = data.profile.sex || "";
             document.getElementById('p-height').value = data.profile.height || "";
             document.getElementById('p-weight').value = data.profile.weight || "";
+            document.getElementById('p-title').value = data.profile.title || "";
+            document.getElementById('p-earned-title').value = data.profile.earnedTitle || "";
         }
         document.getElementById('f-special-traits').value = data.specialTraits || "";
         if(data.weapon) {
@@ -848,6 +851,8 @@
             document.getElementById('f-weapon-lv').value = data.weapon.lv || 1;
             document.getElementById('f-skill-1').value = data.weapon.skill1 || "";
             document.getElementById('f-skills-multi').value = data.weapon.skillsMulti || "";
+            document.getElementById('f-bullet-total').value = data.weapon.bulletTotal || 0;
+            document.getElementById('f-bullet-magazine').value = data.weapon.bulletMag || 0;
         }
         if(data.lore) {
             document.getElementById('f-past-event').value = data.lore.event || "";
@@ -862,7 +867,7 @@
     function enableEditing() {
         document.getElementById('sheet-app').classList.remove('readonly-mode');
         document.getElementById('btn-edit-toggle').style.display = 'none';
-        alert("システム通信：ロックを解除しました。再編集が可能です。");
+        alert("再編集プロトコルを有効化しました。");
     }
 </script>
 
