@@ -136,7 +136,7 @@
             color: var(--accent-gray);
         }
 
-        /* --- ナビゲーション（フラットに統一） --- */
+        /* --- ナビゲーション（通常ボタン） --- */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -159,28 +159,27 @@
 
         .nav-button:hover {
             background-color: #2d3446;
-            border-color: var(--accent-gray);
+            border-color: #94a3b8;
             color: #fff;
         }
 
-        /* 現在開いているアクティブなページのスタイル（概要用） */
-        .nav-button.current-page {
-            background-color: #11141a;
-            border-color: var(--accent-gray);
-            color: #fff;
-            font-weight: bold;
-            pointer-events: none; 
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
-            position: relative;
+        /* 【修正点】現在開いているアクティブページの強調（お知らせページ同様に優先度を最適化） */
+        .nav-grid .nav-button.current-page,
+        .nav-grid .nav-button.current-page:hover {
+            background-color: #05161a !important;
+            border-color: var(--accent-blue) !important;
+            color: var(--accent-blue) !important;
+            font-weight: bold !important;
+            pointer-events: none; /* クリック無効 */
+            box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
         }
-        .nav-button.current-page::before {
+        .nav-grid .nav-button.current-page::before {
             content: '● ';
             font-size: 0.7rem;
-            color: var(--accent-gray);
             vertical-align: middle;
         }
 
-        /* キャラクターシート制作ボタン（赤グラデーションを維持・固定） */
+        /* キャラクターシート制作ボタン（赤グラデーションを維持） */
         .nav-button.highlight {
             grid-column: span 2;
             background: linear-gradient(90deg, #ff3b30, #a20000);
@@ -281,7 +280,7 @@
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
-            <a href="index.html" class="nav-button current-page">◆概要◆</a> 
+            <a href="index.html" class="nav-button current-page">◆概要◆</a> <!-- ここがネオンブルーに点灯します -->
             <a href="news.html" class="nav-button">◆お知らせ◆</a>
             <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
             <a href="company.html" class="nav-button">◆会社◆</a>
@@ -336,28 +335,7 @@
         ここではどんな事もあり得ますし否定する余地も無い、どんな理不尽も受け入れ諦める心が生きていくためには必要ですから。
         本当になんでもあり得てしまう世界ですから無いものを探す方が難しいですね、あぁ…すぐ挙げられる無い物が一つ、平和はございませんでしたね。
         この世界で生きていく上で働く場所は会社と企業、一般労働所の3つだけ。
-        そして、あなたはこの世界の会社員として会社に所属している事でしょう。
-        もしかしたらそうじゃないかもしれませんが、基本的にはそうなるはずです。
-        この会社と呼ばれるものはあなたが想像する一般的なそれとは異なります。
-        あなたの思い浮かべる会社というのは、この世界では全て一般労働所と呼ばれており、一日のほとんどをその労働所で安全かつ単調に過ごす。
-        どんな仕事をしていようと彼らは一般労働職員であり、それ以上の名誉も自由もない。
-        退屈で意味のない人生そのものです。
-
-        では会社、及び会社員とは何か。
-        彼らは簡単に説明するならば特殊隊員と表現するのが一番近いかもしれません。
-        当然この特殊という意味が決して良い意味では無いという事はご存じかもしれませんが、念のために記載しておきます。
-        この特殊という意味は『通常ではありえない』という意味合いであり、特別だとか好待遇だとかそういった類のものではありません。
-        会社と呼ばれるものはそう多くはありませんが、種類があるという事は会社次第で仕事内容は多少変化します。
-        まず前提として、命の危険が伴う仕事は大抵会社が行うことになるでしょう。
-        警察などの治安維持組織や要人の護衛、戦争などで運用する軍事まで全て会社が請け負っていると言えばわかりやすいでしょうか。
-        ただし、当然ながらそれ以外の仕事も存在します。
-        あなたの存在価値や利用価値が高く、類まれな運の持ち主だったのならですが。
-        それに命の危険を晒しつつもこの世界のあらゆる事象を体験し、様々な出来事を記憶していきたいのならある程度使い捨てられる扱いの方が好都合でしょう。
-        縛られずに生きることは不可能に等しいのがこの世界です、このぐらいのリスクを背負っても多少娯楽になるのならそう選択するべきじゃないですか？
-        それとも何かこの世界に意味を見出せるのなら、そうしてみるのもきっと悪くはないでしょう。
-
-        企業とは何か、と思われた方の為に説明いたしますと企業は研究所兼政府といった所でしょうか。
-        技術の発信地点であり、一定の区域の管理を行っているのがこの世界の企業です。
+        空間の管理を行っているのがこの世界の企業です。
         階級で言えば企業＞会社＞一般労働という形になりますね。
         その上にワールドマスターと呼ばれるのもありますが、今は関係ないでしょう。
         そもそも気にするものでもありません、知らなくて良いことは知らないままでいるべきですから。
