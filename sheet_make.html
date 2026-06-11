@@ -363,7 +363,7 @@
         </div>
 
         <div class="stat-row">
-            <div><span class="stat-name">筋力</span><div class="stat-desc">追加ダメージに影響（Lv7漸に+1d6）</div></div>
+            <div><span class="stat-name">筋力</span><div class="stat-desc">追加ダメージに影響（Lv7毎に+1d6）</div></div>
             <div class="stat-control">
                 <button class="btn-calc" onclick="adjustBase('str', -1)">-</button>
                 <input type="number" id="base-str" value="2" style="width:50px; text-align:center;" readonly>
@@ -709,20 +709,17 @@
     function generateShareLink() {
         let slot = document.getElementById('slot-name').value.trim() || "デフォルトのデータ";
         saveToLocal(); 
-        
         let shareUrl = window.location.origin + window.location.pathname + "?slot=" + encodeURIComponent(slot);
-        
         document.getElementById('share-url').innerText = shareUrl;
         document.getElementById('share-box').style.display = 'block';
         alert("システム通信：共有用URLを生成しました！");
     }
 
-    // ==================== 【不具合完全修正】ココフォリア出力プロトコル ====================
+    // ==================== 【公式JSON完全互換】ココフォリア出力プロトコル ====================
     function copyToCcfolia() {
         let d = compileData();
         let slot = d.profile.name || "名無しの市民";
         
-        // 最新の動的計算数値を確実に取得
         let calcHP = baseStats.body * 6;
         let costMax = 3 + Math.floor(baseStats.men / 4);
         let actionsMax = 1 + Math.floor(baseStats.spd / 10);
@@ -731,8 +728,8 @@
         // ① メモ欄の指定フォーマット整形
         let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${d.profile.title || ""}\n特殊能力： ${d.specialTraits || ""}\n武器： ${d.weapon.name || ""}\n所属： ${d.profile.faction || ""}\n年齢： ${d.profile.age || ""}\n身長： ${d.profile.height || ""}\n体重： ${d.profile.weight || ""}\n性別： ${d.profile.sex || ""}\n\n\n獲得称号\n${d.profile.earnedTitle || ""}`;
 
-        // ② チャットパレットの指定要件組み立て
-        let chatPalette = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
+        // ② チャットパレット（commands）の構築
+        let commands = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
 
         cryingCitySkills.forEach(sk => {
             let prefix = "";
@@ -742,48 +739,50 @@
             else if (sk === "話術") prefix = "▽対人能力\n";
             else if (sk === "言語") prefix = "▽知識能力\n";
 
-            chatPalette += prefix;
+            commands += prefix;
 
             let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
             
             if (sk.startsWith("近接攻撃") || sk.startsWith("射撃攻撃") || sk === "投擲") {
-                chatPalette += `${totalSkillLv}d6 【${sk}】\n`;
+                commands += `${totalSkillLv}d6 【${sk}】\n`;
             } else {
-                chatPalette += `${totalSkillLv}d6>= 【${sk}】\n`;
+                commands += `${totalSkillLv}d6>= 【${sk}】\n`;
             }
         });
 
-        chatPalette += `\n// --- 所持兵装独自スキル ---\n${d.weapon.skill1 || ""}\n${d.weapon.skillsMulti || ""}`;
+        commands += `\n// --- 所持兵装独自スキル ---\n${d.weapon.skill1 || ""}\n${d.weapon.skillsMulti || ""}`;
 
-        // ③ ココフォリアJSON構造化定義（パラメータ・ステータス名バグ修正）
+        // ③ ココフォリア規格（label / value / max / commands）に完全準拠したJSONオブジェクト
         let ccfoliaJson = {
             kind: "character",
             data: {
                 name: slot,
+                initiative: baseStats.spd, // 速度実値をイニシアティブに自動割当
+                externalUrl: window.location.href,
+                iconUrl: "",
                 memo: memo,
-                initiated: true,
+                commands: commands,
                 status: [
-                    { name: "HP", current: calcHP, max: calcHP },
-                    { name: "コスト", current: costMax, max: costMax },
-                    { name: "行動回数", current: actionsMax, max: actionsMax },
-                    { name: "回復値", current: regCost, max: regCost },
-                    { name: "総弾丸数", current: parseInt(d.weapon.bulletTotal)||0, max: parseInt(d.weapon.bulletTotal)||0 },
-                    { name: "装弾数", current: parseInt(d.weapon.bulletMag)||0, max: parseInt(d.weapon.bulletMag)||0 }
+                    { label: "HP", value: calcHP, max: calcHP },
+                    { label: "コスト", value: costMax, max: costMax },
+                    { label: "行動回数", value: actionsMax, max: actionsMax },
+                    { label: "回復値", value: regCost, max: regCost },
+                    { label: "総弾丸数", value: parseInt(d.weapon.bulletTotal) || 0, max: parseInt(d.weapon.bulletTotal) || 0 },
+                    { label: "装弾数", value: parseInt(d.weapon.bulletMag) || 0, max: parseInt(d.weapon.bulletMag) || 0 }
                 ],
                 params: [
-                    { name: "身体", value: String(baseStats.body) },
-                    { name: "筋力", value: String(baseStats.str) },
-                    { name: "知能", value: String(baseStats.int) },
-                    { name: "速度", value: String(baseStats.spd) },
-                    { name: "精神", value: String(baseStats.men) }
-                ],
-                chatPalette: chatPalette
+                    { label: "身体", value: String(baseStats.body) },
+                    { label: "筋力", value: String(baseStats.str) },
+                    { label: "知能", value: String(baseStats.int) },
+                    { label: "速度", value: String(baseStats.spd) },
+                    { label: "精神", value: String(baseStats.men) }
+                ]
             }
         };
 
         navigator.clipboard.writeText(JSON.stringify(ccfoliaJson)).then(() => {
-            alert("システム通信：指定のステータス・パレット構成でココフォリア駒データをコピーしました！部屋の画面上でペースト(Ctrl+V)してください。");
-        }).catch(err => { alert("コピーエラー。ブラウザのセキュリティ設定を確認してください。"); });
+            alert("システム通信：ココフォリア規格に完全適合した駒データをコピーしました！部屋の画面上でペースト(Ctrl+V)してください。");
+        }).catch(err => { alert("コピーエラー。"); });
     }
 
     function parseUrlOrLoadLocal() {
