@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クライングシティ - 概要ページ</title>
+    <style>
+        /* --- 基本設定 & ディストピア風カラー（ダークテーマ） --- */
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: #161a22;
+            --accent-color: #ff3b30; /* 警告・ディストピアをイメージする赤 */
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding-bottom: 60px;
+        }
+
+        /* --- ヘッダー・タイトル --- */
+        header {
+            background: linear-gradient(180deg, #1a0505 0%, var(--panel-bg) 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            color: #fff;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .sub-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            letter-spacing: 0.1em;
+        }
+
+        /* --- 1. お知らせバナー（左右に無限ループ） --- */
+        .banner-container {
+            background-color: #1a0000;
+            border-bottom: 1px solid var(--accent-color);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 10px 0;
+            box-shadow: inset 0 0 10px rgba(255,0,0,0.3);
+        }
+
+        .banner-track {
+            display: inline-block;
+            animation: scroll-left 25s linear infinite;
+        }
+
+        .banner-item {
+            display: inline-block;
+            padding: 0 30px;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- メインレイアウト（スマホ最適化） --- */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #fff;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            text-align: justify;
+            white-space: pre-line; /* 改行をそのまま反映 */
+        }
+
+        /* --- 2. ページ内目次 --- */
+        .toc-list {
+            list-style: none;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted var(--border-color);
+            padding-bottom: 4px;
+        }
+        .toc-list a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- 3. 別ページ一覧 & キャラシート（リンクナビ） --- */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nav-button {
+            display: block;
+            background-color: #222733;
+            color: #fff;
+            text-align: center;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .nav-button.highlight {
+            grid-column: span 2; /* キャラシート制作は横いっぱいに配置 */
+            background: linear-gradient(90deg, #ff3b30, #a20000);
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        /* スマホ用調整（画面が特に小さい場合） */
+        @media (max-width: 480px) {
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-button.highlight {
+                grid-column: span 1;
+            }
+            .main-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- タイトルヘッダー -->
+<header>
+    <div class="main-title">クライングシティ</div>
+    <div class="sub-title">停滞した世界に抗うディストピアTRPG</div>
+</header>
+
+<!-- お知らせバナー（同じ文言を2回繰り返すことで無限ループを実現しています） -->
+<div class="banner-container">
+    <div class="banner-track">
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ページでの目次 -->
+    <div class="section-panel">
+        <h2>目次</h2>
+        <ul class="toc-list">
+            <li><a href="#about-menu">別ページ・ツール一覧 <span>➔</span></a></li>
+            <li><a href="#intro">◆はじめに◆ <span>➔</span></a></li>
+            <li><a href="#world">◆この世界について◆ <span>➔</span></a></li>
+        </ul>
+    </div>
+
+    <!-- 別ページ一覧 -->
+    <div id="about-menu" class="section-panel">
+        <h2>ナビゲーション</h2>
+        <div class="nav-grid">
+            <a href="#" class="nav-button">◆概要◆</a>
+            <a href="#" class="nav-button">◆キャラクター制作◆</a>
+            <a href="#" class="nav-button">◆会社◆</a>
+            <a href="#" class="nav-button">◆武器◆</a>
+            <a href="#" class="nav-button">◆世界観◆</a>
+            <a href="#" class="nav-button">◆追記・追加説明◆</a>
+            <a href="#" class="nav-button">◆登場人物一覧◆</a>
+            
+            <!-- キャラクターシート制作ページ（目立たせるために大きく配置） -->
+            <a href="#" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
+        </div>
+    </div>
+
+    <!-- 本文：はじめに -->
+    <div id="intro" class="section-panel">
+        <h2>◆はじめに◆</h2>
+        <p>クライングシティは閉鎖され自由を奪われた人々、科学を超越し倫理を失った科学、未だ明かされていない未知をテーマとしたディストピアTRPGです。
+        あなたはその世界の会社員として、偶然か必然か、はたまた己の意志で危険と秘密と相対しながらあらゆる事象を経験します。
+        そしてこの停滞しきった世界の運命を左右するカギとなることも、あなたとその仲間たちに委ねられる場合も…。
+        このゲームではロールプレイを土台に細分化された戦闘と慎重な探索を中心に展開していきます。
+        ダイスによる判定と状況に応じた選択と決断、その先に起きる出来事を楽しむTRPG。
+        この地獄のような世界で、己だけを信じ前へと進むことになるでしょう。
+        それでは、幸運を。</p>
+    </div>
+
+    <!-- 本文：この世界について -->
+    <div id="world" class="section-panel">
+        <h2>◆この世界について◆</h2>
+        <p>技術と科学で飽和された都市、クライングシティへようこそ。
+        この世界では銃刀法などは存在せず、人々が命を奪い合って踏みにじり合って生きている。
+        日の光が見えなくなって久しいこの街に、空よりも暗い顔で人々は己の為に今日も働いているでしょう。
+        ここではどんな事もあり得ますし否定する余地も無い、どんな理不尽も受け入れ諦める心が生きていくためには必要ですから。
+        本当になんでもあり得てしまう世界ですから無いものを探す方が難しいですね、あぁ…すぐ挙げられる無い物が一つ、平和はございませんでしたね。
+        この世界で生きていく上で働く場所は会社と企業、一般労働所の3つだけ。
+        そして、あなたはこの世界の会社員として会社に所属している事でしょう。
+        もしかしたらそうじゃないかもしれませんが、基本的にはそうなるはずです。
+        この会社と呼ばれるものはあなたが想像する一般的なそれとは異なります。
+        あなたの思い浮かべる会社というのは、この世界では全て一般労働所と呼ばれており、一日のほとんどをその労働所で安全かつ単調に過ごす。
+        どんな仕事をしていようと彼らは一般労働職員であり、それ以上の名誉も自由もない。
+        退屈で意味のない人生そのものです。
+
+        では会社、及び会社員とは何か。
+        彼らを簡単に説明するならば特殊隊員と表現するのが一番近いかもしれません。
+        当然この特殊という意味が決して良い意味では無いという事はご存じかもしれませんが、念のために記載しておきます。
+        この特殊という意味は『通常ではありえない』という意味合いであり、特別だとか好待遇だとかそういった類のものではありません。
+        会社と呼ばれるものはそう多くはありませんが、種類があるという事は会社次第で仕事内容は多少変化します。
+        まず前提として、命の危険が伴う仕事は大抵会社が行うことになるでしょう。
+        警察などの治安維持組織や要人の護衛、戦争などで運用する軍事まで全て会社が請け負っていると言えばわかりやすいでしょうか。
+        ただし、当然ながらそれ以外の仕事も存在します。
+        あなたの存在価値や利用価値が高く、類まれな運の持ち主だったのならですが。
+        それに命の危険を晒しつつもこの世界のあらゆる事象を体験し、様々な出来事を記憶していきたいのならある程度使い捨てられる扱いの方が好都合でしょう。
+        縛られずに生きることは不可能に等しいのがこの世界です、このぐらいのリスクを背負っても多少娯楽になるのならそう選択するべきじゃないですか？
+        それとも何かこの世界に意味を見出せるのなら、そうしてみるのもきっと悪くはないでしょう。
+
+        企業とは何か、と思われた方の為に説明いたしますと企業は研究所兼政府といった所でしょうか。
+        技術の発信地点であり、一定の区域の管理を行っているのがこの世界の企業です。
+        階級で言えば企業＞会社＞一般労働という形になりますね。
+        その上にワールドマスターと呼ばれるのもありますが、今は関係ないでしょう。
+        そもそも気にするものでもありません、知らなくて良いことは知らないままでいるべきですから。
+        また、この3つの職のいずれにも就かず放浪する愚か者が毎日人を襲って生計を立てたりしています。（もちろん会社などに就くほど軟弱でない方も少数ながら存在している事もあるでしょうが）
+        そう言った人達から身を守れる力が無ければ、いつかは淘汰されてしまいますのでご注意ください。
+        この世界で生きる為に必要なのは人を信じる事でも、人と繋がることでもありません。
+        人を利用し欺くことがより上手く、人より強く優秀である事です。
+        『何処か』に属し『何か』に認められどう生きるかが重要視されている世界ですから。</p>
+    </div>
+
+</div>
+
+</body>
+</html>
