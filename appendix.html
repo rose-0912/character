@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クライングシティ - 追記・追加説明</title>
+    <style>
+        /* --- 基本設定 & ディストピア風カラー --- */
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: #161a22;
+            --accent-color: #ff3b30; /* 警告用ネオンレッド */
+            --accent-gray: #b3bac2;  
+            --accent-blue: #00bcd4;  /* サイバーブルー */
+            --accent-orange: #ff9500;/* 禁忌・制限用オレンジ */
+            --accent-purple: #af52de;/* 呪力用パープル */
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding-bottom: 60px;
+            opacity: 0;
+            animation: fadeInPage 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            background: linear-gradient(180deg, #11141a 0%, var(--panel-bg) 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-gray);
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .sub-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            letter-spacing: 0.1em;
+        }
+
+        /* --- お知らせバナー --- */
+        .banner-container {
+            background-color: #1a0000; 
+            border-bottom: 1px solid var(--accent-color);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .banner-track {
+            display: flex;
+            white-space: nowrap;
+            will-change: transform; 
+            animation: scroll-left 35s linear infinite;
+        }
+
+        .banner-item {
+            display: inline-block;
+            padding-right: 50px;
+            color: var(--accent-color); 
+            font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #fff;
+            border-left: 4px solid var(--accent-gray);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            text-align: justify;
+            white-space: pre-line;
+        }
+
+        /* --- ナビゲーション --- */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nav-button {
+            display: block;
+            background-color: #222733;
+            color: #fff;
+            text-align: center;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #2d3446;
+            border-color: var(--accent-gray);
+            color: #fff;
+        }
+
+        .nav-grid .nav-button.current-page,
+        .nav-grid .nav-button.current-page:hover {
+            background-color: #05161a !important;
+            border-color: var(--accent-blue) !important;
+            color: var(--accent-blue) !important;
+            font-weight: bold !important;
+            pointer-events: none; 
+            box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
+        }
+        .nav-grid .nav-button.current-page::before { content: '● '; font-size: 0.7rem; vertical-align: middle; }
+
+        .nav-button.highlight {
+            grid-column: span 2;
+            background: linear-gradient(90deg, #ff3b30, #a20000);
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 5px;
+            color: #fff;
+        }
+
+        /* --- カテゴリアコーディオン --- */
+        .archive-box {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .archive-box[open] {
+            border-color: var(--accent-blue);
+        }
+        .archive-box.danger-box[open] { border-color: var(--accent-orange); }
+        .archive-box.purple-box[open] { border-color: var(--accent-purple); }
+
+        .archive-summary {
+            padding: 15px 20px;
+            cursor: pointer;
+            background-color: #1e2430;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.05rem;
+            outline: none;
+            list-style: none;
+            position: relative;
+        }
+        .archive-summary::after {
+            content: '▼ データを展開';
+            position: absolute;
+            right: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+        .archive-box[open] .archive-summary::after {
+            content: '▲ 閉じる';
+            color: #fff;
+        }
+
+        .archive-content {
+            padding: 20px;
+            background-color: #0f1217;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* --- ランク水準ブロック用の装飾 --- */
+        .rank-block {
+            background-color: #161a22;
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-blue);
+            padding: 12px 15px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 15px;
+        }
+        .rank-title {
+            font-weight: bold;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .rank-stat {
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            font-family: monospace;
+            display: block;
+            margin-bottom: 6px;
+            background-color: #0d0f12;
+            padding: 2px 8px;
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+        @media (max-width: 480px) {
+            .nav-grid { grid-template-columns: 1fr; }
+            .nav-button.highlight { grid-column: span 1; }
+            .main-title { font-size: 1.6rem; }
+            .archive-summary::after { content: '▼'; }
+        }
+    </style>
+</head>
+<body onpageshow="if (event.persisted) window.location.reload();">
+
+<header>
+    <div class="main-title">クライングシティ</div>
+    <div class="sub-title">都市管理パッチ // 追記・追加説明アーカイブ</div>
+</header>
+
+<div class="banner-container">
+    <div class="banner-track">
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ナビゲーション（追記・追加説明が current-page） -->
+    <div id="about-menu" class="section-panel">
+        <h2>ナビゲーション</h2>
+        <div class="nav-grid">
+            <a href="index.html" class="nav-button">◆概要◆</a> 
+            <a href="news.html" class="nav-button">◆お知らせ◆</a>
+            <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
+            <a href="company.html" class="nav-button">◆会社◆</a>
+            <a href="weapon.html" class="nav-button">◆武器◆</a>
+            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
+            <a href="appendix.html" class="nav-button current-page">◆追記・追加説明◆</a>
+            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
+            <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
+        </div>
+    </div>
+
+    <!-- ==================== 1. 階級とランク ==================== -->
+    <details class="archive-box" open>
+        <summary class="archive-summary">「階級とランク」</summary>
+        <div class="archive-content">
+            <p>社員の皆様にはランク、そしてこの世界の全員には階級が付いています。
+            会社に所属していない金持ちなだけの方は基本ランクなんてものは付きませんが、階級は彼らにも存在します。
+            ここではその位を、ランクを中心に簡潔に分かりやすくまとめさせていただきました。</p>
+
+            <div class="rank-block">
+                <span class="rank-title">一般労働階級</span>
+                <span class="rank-stat">◉基礎能力水準：平均値2 / 合計値10</span>
+                当然ながらランクなんてものもありません。彼らは社会の歯車で、それ以上もそれ以下も無いです。
+                しかしそれぞれに稼ぎの差はある為、階級という面では4〜8まで様々です。一言で推し量るには難しい階級でしょう。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランクG(8級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値2〜4 / 合計値11〜20</span>
+                まだまだひよっこの駆け出しのランクです。いわゆる才能の無い、努力も並以下の方々か環境に恵まれない方がこのランクに居ます。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランク F(7級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値4〜10 / 合計値21〜50</span>
+                仕事ができる…程度のランクです。無能ではありませんが、替えは効きますし上位互換が世には溢れているでしょうね。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランク E(6級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値10〜18 / 合計値51〜90</span>
+                使い勝手とコスパのいい駒になってくるランクです。階級として見ても、一般的に裕福と言える生活は出来るでしょうね。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランク D(5級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値18〜26 / 合計値91〜130</span>
+                十分な実力を持っているランクです。優秀とまでは言えませんが、十分貴重な存在たり得るでしょう。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランク C(4級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値26〜34 / 合計値131〜170</span>
+                中規模程度の会社ならば、十分上の立場に立てるランクです。このぐらいであれば、名もそれなりに売れてくる頃でしょうね。向上心があるなら、上を目指す選択肢は多いと思われます。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランク B(3級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値34〜42 / 合計値171〜210</span>
+                名のある会社や組織 of 長を務められる程の実力はあります。もちろん巨大な会社に就くことも難しく無いでしょう。仕事をするだけで、基本何不自由なく暮らすことができると思われます。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランク A(2級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値42〜50 / 合計値211〜250</span>
+                引く手数多と言ったところでしょうか、優秀な方のランクとなります。才能と努力と運あってこそ、この境地に来れると思ってください。どこかで聞いたことのある名前も、このランクには沢山居るでしょう。
+            </div>
+
+            <div class="rank-block">
+                <span class="rank-title">ランク S(1級)</span>
+                <span class="rank-stat">◉基礎能力水準：平均値50〜60 / 合計値251〜300</span>
+                ここまでにどれ程の道のりがあったでしょうか、我々には分かりません。ですが間違いなく多くの人々の上に立てる地位である事は、揺らぎようの無い事実です。1人でも十分な影響力をもたらすでしょう。
+            </div>
+
+            <div class="rank-block" style="border-left-color: var(--accent-color);">
+                <span class="rank-title" style="color: var(--accent-color);">エリート(1級)</span>
+                <span class="rank-stat" style="color: var(--accent-color);">◉基礎能力水準：平均値70〜80 / 合計値340以上</span>
+                名を知らない人はほとんど居ない、まさに頂点に立つ者達。この境地へ到達するどころか、見る事さえそう叶うものでは無いのです。実力、才能、努力、経験。彼らはこれら全てにおいて文字通り次元が違い、比べる事さえ出来はしないでしょう。
+            </div>
+        </div>
+    </details>
+
+    <!-- ==================== 2. 上限の追加 ==================== -->
+    <details class="archive-box">
+        <summary class="archive-summary">「上限の追加」</summary>
+        <div class="archive-content">
+            <p>今後の様々な展開を考慮し、上限値を設けさせていただきます
+            すべてのLvを90に固定させていただきます
+            上記の設定により、複合ロールによる判定でLv90以上は超過しないものとします
+            (※ダイス数、判定値に数値を加算する効果は適応されます)</p>
+        </div>
+    </details>
+
+    <!-- ==================== 3. 禁忌 ==================== -->
+    <details class="archive-box danger-box">
+        <summary class="archive-summary" style="background-color: #2a1215; color: var(--accent-orange);">「禁忌」</summary>
+        <div class="archive-content">
+            <p>この街にはワールドマスターにより定められた絶対にやってはならない禁忌がございます。
+            勿論企業の治める場所や所属する会社によって、様々な禁忌は存在しうるでしょう
+            しかしこれは、どこに居ようとも適応される市民の義務であるため、決して忘れることのないように。
+            違反者はどれほど些事であったとしても1分以内に我らがクライングシティから"退去"して頂く事になっております。
+            例外は認められません。</p>
+
+            <p><strong>⚫︎生命が完全に停止した状態からの蘇生</strong>
+            脳や心臓が停止し、死亡が確認された状態から本人の記憶・意識・感情を保有した同個体を復元する行為の禁止
+            これはクローン技術やAIなどを用いた複製も違反と見做す</p>
+
+            <p><strong>⚫︎意識と知性を持つ同一個体の同時存在</strong>
+            クローンなどを用いた意識や知性を持った同一存在を12時間以上存在する状態の禁止
+            ただし片方の意識が完全に喪失している場合などは適応されない</p>
+
+            <p><strong>⚫︎不老不死</strong>
+            永久的に若さを保ち、永遠に生きれる状態の禁止
+            ただし持続的に何かを補給しなければならない状態であれば適応されない</p>
+
+            <p><strong>⚫︎過去への時間遡行あるいは未来への時間跳躍または視察</strong>
+            時間を超越しての過去・未来への移動または視認の禁止
+            ただし、クライングシティ基準時間を目安に別次元間にて発生する時間のズレは適応されない</p>
+        </div>
+    </details>
+
+    <!-- ==================== 4. クライングシティ追加説明 ==================== -->
+    <details class="archive-box">
+        <summary class="archive-summary">クライングシティ追加説明</summary>
+        <div class="archive-content">
+            <p>この世界の土地などに関する詳しい説明</p>
+
+            <p><strong>⚫︎外</strong>
+            我らがクライングシティは巨大で膨大ですが、この地の一部でしかありません。
+            クライングシティはそこを"外"と呼称しております。
+            外は人が住むに適さない荒れ果てた土地です。
+            禁忌を犯した者が退去する場所でもありますね。
+            当然外は遺跡などよりも危険で、遺跡に住まう怪物などが平然とうろついている事でしょう。</p>
+
+            <p><strong>⚫︎海</strong>
+            一部区域には海に面している場所もあります。
+            海産物やビーチなどを期待する方々もいらっしゃるかもしれませんね。
+            しかしながら、海もまた外の一つですので無駄な期待は捨てましょう。
+            もし海の怪物に怯えているのならご安心ください。
+            漁師達が毎日恨みと憎悪を武器とし、彼らを狩り殺し続けていますから、問題ありません。</p>
+
+            <p><strong>⚫︎空</strong>
+            基本常に雲で覆われ、たまに雨の降るこの街ですが、外はたまに雲が晴れる事があります。
+            ごく稀ではございますが、晴れの日に重なって不具合か何か別の問題により、クライングシティも1分程度晴れる場合があります。
+            晴れた空を見られた人は、これ以上幸せな日が訪れることは無いでしょう。</p>
+        </div>
+    </details>
+
+    <!-- ==================== 5. 会社に関する追加説明 ==================== -->
+    <details class="archive-box">
+        <summary class="archive-summary">会社に関する追加説明</summary>
+        <div class="archive-content">
+            <p>センス、刻、無所属、一般労働者を除く会社スレッド内の会社は、統括議会と呼ばれています。</p>
+
+            <p><strong>⚫︎統括議会</strong>
+            それぞれの分野において強い影響力を持つ会社。またはそれらの総称。
+            世に溢れる様々な会社を分野別に統括する他、事実上公的な保証を行っています。
+            傘下会社と呼称されることが多いが、実際は認可を下ろしているだけである場合がほとんどであることに注意が必要です。
+            ある一定の時期になると、それぞれのトップが集うという議事会議が行われるが、その周期はほとんどの人が知りません。</p>
+
+            <p><strong>⚫︎議事会議</strong>
+            この会議を行う理由は明白で、強大な会社が互いに衝突することを避けるために行っている。
+            事実、社員間での依頼による対立は起こるものの、会社そのものの衝突は一度も発生していないため、効果はあると言われている。</p>
+
+            <p><strong>⚫︎独立した会社</strong>
+            統括議会またはそのいずれかに認可されていない会社を独立会社と呼びます。
+            独立会社は普通、信用を得るには多大な時間と費用がかかりますが、それでもセンスや刻のように大きな影響力を持つ会社も確かに存在します。
+            独立会社はバックアップを得られないなど、様々なデメリットがあるためメリットの恩恵が必須という稀有な境遇でない限りは、会社を建てるにしても依頼を出すにしても避けるべきでしょう。</p>
+        </div>
+    </details>
+
+    <!-- ==================== 6. 呪力についての追加情報 ==================== -->
+    <details class="archive-box purple-box">
+        <summary class="archive-summary" style="background-color: #1f182a; color: var(--accent-purple);">呪力についての追加情報</summary>
+        <div class="archive-content">
+            <p>100年前の戦争以降、突如として現れた力、呪力
+            その力には様々な可能性と危険性が眠る</p>
+
+            <p><strong>⚫︎呪力印(じゅりょくいん)</strong>
+            呪力を扱う者の中に、先天的にも後天的にも現れる印。
+            この印を持つ者は他呪力使いに比べ圧倒的に強い力を持っており、この印があるというだけでランクC以下は戦うべきでは無いと言われる程。
+            印は身体の左右どちらか片方に現れ、手の甲から腕、瞳などに見られることが多い。
+            この呪力印がどういう条件で発現するかという事に関し、遺伝以外は未だ解明されていない。
+            遺伝はほぼ100%印を持って生まれてくるため、そこが鍵として現在は研究が進められている。</p>
+
+            <p><strong>⚫︎呪力病</strong>
+            呪力印を持つ者のみが発病する病気。
+            印がだんだんと拡大していき、身体から生気を奪ってゆっくりと死に至らしめる。
+            現在この病の治療法は無く、印を持つ者が100%罹る病であることと、確実に死ぬという事のみ分かっている。
+            他者への感染の危険性は無いため、病気というよりは元の印の特性であると考える者が多いが、印そのものが病であると考える者もいる。</p>
+
+            <p><strong>⚫︎クリスタル</strong>
+            エリアC、通称呪力王国のキャメロットの特 特許技術。
+            物体そのものに呪力は宿らないという常識を覆した物。
+            このクリスタルは、持てば誰でも呪力を扱うことが出来るという代物。
+            クリスタルの種類に応じて様々な力を扱えるため、呪力を使える者使えない者問わず人気がある。
+            企業産のため当然高額。</p>
+        </div>
+    </details>
+
+</div>
+
+</body>
+</html>
