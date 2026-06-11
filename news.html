@@ -129,7 +129,7 @@
             color: var(--accent-blue);
         }
 
-        /* --- ナビゲーション（完全にフラットに統一） --- */
+        /* --- ナビゲーション（通常ボタン） --- */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -156,32 +156,35 @@
             color: #fff;
         }
 
-        /* 現在開いているアクティブなページのスタイル */
-        .nav-button.current-page {
-            background-color: #05161a;
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            font-weight: bold;
-            pointer-events: none; 
-            box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
-            position: relative;
+        /* 【修正点】現在開いているアクティブページの強調（最優先で適用されるよう調整） */
+        .nav-grid .nav-button.current-page,
+        .nav-grid .nav-button.current-page:hover {
+            background-color: #05161a !important;
+            border-color: var(--accent-blue) !important;
+            color: var(--accent-blue) !important;
+            font-weight: bold !important;
+            pointer-events: none; /* クリック無効 */
+            box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
         }
-        .nav-button.current-page::before {
+        .nav-grid .nav-button.current-page::before {
             content: '● ';
             font-size: 0.7rem;
             vertical-align: middle;
         }
 
+        /* キャラクターシート制作ボタン（赤グラデーションを維持・固定） */
         .nav-button.highlight {
             grid-column: span 2;
-            background: linear-gradient(90deg, #2d3446, #161a22);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(90deg, #ff3b30, #a20000);
+            border: none;
             font-weight: bold;
             font-size: 1rem;
             margin-top: 5px;
+            color: #fff;
         }
         .nav-button.highlight:hover {
-            border-color: #94a3b8;
+            opacity: 0.9;
+            border: none;
         }
 
         /* --- お知らせリスト（アコーディオン） --- */
@@ -307,24 +310,25 @@
         </ul>
     </div>
 
-    <!-- ナビゲーション：概要ボタンの個別デザイン(home-btn)を廃止し、他と完全に同じフラットに統一 -->
-<div class="nav-grid">
-    <!-- 概要とお知らせは各ページに応じて「current-page」を付け替えてください -->
-    <a href="index.html" class="nav-button">◆概要◆</a> 
-    <a href="news.html" class="nav-button">◆お知らせ◆</a> 
-    <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
-    <a href="company.html" class="nav-button">◆会社◆</a>
-    <a href="weapon.html" class="nav-button">◆武器◆</a>
-    <a href="world_lore.html" class="nav-button">◆世界観◆</a>
-    <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
-    <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
-    
-    <!-- ここは赤グラデーションの強調をキープ！ -->
-    <a href="sheet_make.html" class="nav-button" style="grid-column: span 2; background: linear-gradient(90deg, #ff3b30, #a20000); border: none; font-weight: bold; font-size: 1rem; margin-top: 5px; color: #fff;">キャラクターシート制作ページ ➔</a>
-</div>
+    <!-- ナビゲーション -->
+    <div id="about-menu" class="section-panel">
+        <h2>ナビゲーション</h2>
+        <div class="nav-grid">
+            <a href="index.html" class="nav-button">◆概要◆</a> 
+            <a href="news.html" class="nav-button current-page">◆お知らせ◆</a> <!-- 青色に点灯します -->
+            <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
+            <a href="company.html" class="nav-button">◆会社◆</a>
+            <a href="weapon.html" class="nav-button">◆武器◆</a>
+            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
+            <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
+            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
+            
+            <!-- キャラシート -->
+            <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
+        </div>
     </div>
 
-    <!-- お知らせ一覧エリア（すべてノーカットで再設置） -->
+    <!-- お知らせ一覧エリア -->
     <div id="news-list-section" class="news-container">
 
         <!-- 2026/05/28 (大規模改修告知) -->
