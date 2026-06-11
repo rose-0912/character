@@ -12,7 +12,7 @@
             --accent-color: #ff3b30; /* 警告用赤 */
             --accent-blue: #00bcd4;  /* サイバーブルー */
             --accent-green: #34c759; /* アップデート用緑 */
-            --accent-purple: #af52de;/* 新要素・追加用紫 */
+            --accent-purple: #af52de;/* 新要素用紫 */
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #2d3748;
@@ -30,6 +30,22 @@
             color: var(--text-color);
             line-height: 1.8;
             padding-bottom: 60px;
+            
+            /* ページ遷移用フェードインの初期状態 */
+            opacity: 0;
+            animation: fadeInPage 0.6s ease-out forwards;
+        }
+
+        /* --- ページ遷移用フェードインアニメーション --- */
+        @keyframes fadeInPage {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         header {
@@ -54,15 +70,16 @@
             letter-spacing: 0.1em;
         }
 
-        /* --- お知らせバナー --- */
+        /* --- お知らせバナー（概要と同期した赤ベース仕様） --- */
         .banner-container {
-            background-color: #05161a;
-            border-bottom: 1px solid var(--accent-blue);
+            background-color: #1a0000;
+            border-bottom: 1px solid var(--accent-color);
             overflow: hidden;
             position: relative;
             display: flex;
             align-items: center;
             padding: 10px 0;
+            box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
         }
 
         .banner-track {
@@ -75,7 +92,7 @@
         .banner-item {
             display: inline-block;
             padding-right: 50px;
-            color: var(--accent-blue);
+            color: var(--accent-color);
             font-weight: bold;
             font-size: 0.85rem;
             letter-spacing: 0.05em;
@@ -129,7 +146,7 @@
             color: var(--accent-blue);
         }
 
-        /* --- ナビゲーション（通常ボタン） --- */
+        /* --- ナビゲーション --- */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -156,14 +173,14 @@
             color: #fff;
         }
 
-        /* 【修正点】現在開いているアクティブページの強調（最優先で適用されるよう調整） */
+        /* 現在開いているアクティブページの強調 */
         .nav-grid .nav-button.current-page,
         .nav-grid .nav-button.current-page:hover {
             background-color: #05161a !important;
             border-color: var(--accent-blue) !important;
             color: var(--accent-blue) !important;
             font-weight: bold !important;
-            pointer-events: none; /* クリック無効 */
+            pointer-events: none; 
             box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
         }
         .nav-grid .nav-button.current-page::before {
@@ -172,7 +189,7 @@
             vertical-align: middle;
         }
 
-        /* キャラクターシート制作ボタン（赤グラデーションを維持・固定） */
+        /* キャラクターシート制作ボタン（赤グラデーション強調） */
         .nav-button.highlight {
             grid-column: span 2;
             background: linear-gradient(90deg, #ff3b30, #a20000);
@@ -284,7 +301,8 @@
         }
     </style>
 </head>
-<body>
+<!-- 戻るボタンでのフェード不具合を防止する記述を body に追加 -->
+<body onpageshow="if (event.persisted) window.location.reload();">
 
 <header>
     <div class="main-title">クライングシティ // 通信記録</div>
@@ -293,10 +311,10 @@
 
 <div class="banner-container">
     <div class="banner-track">
-        <span class="banner-item">【通信暗号化】企業直属アーカイブに接続中... 最新のお知らせを読み込んでいます。</span>
-        <span class="banner-item">【注意】知らなくて良いことは知らないままでいるべきです。</span>
-        <span class="banner-item">【通信暗号化】企業直属アーカイブに接続中... 最新のお知らせを読み込んでいます。</span>
-        <span class="banner-item">【注意】知らなくて良いことは知らないままでいるべきです。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
     </div>
 </div>
 
@@ -310,25 +328,21 @@
         </ul>
     </div>
 
-    <!-- ナビゲーション -->
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
             <a href="index.html" class="nav-button">◆概要◆</a> 
-            <a href="news.html" class="nav-button current-page">◆お知らせ◆</a> <!-- 青色に点灯します -->
+            <a href="news.html" class="nav-button current-page">◆お知らせ◆</a> 
             <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
             <a href="company.html" class="nav-button">◆会社◆</a>
             <a href="weapon.html" class="nav-button">◆武器◆</a>
             <a href="world_lore.html" class="nav-button">◆世界観◆</a>
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
             <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
-            
-            <!-- キャラシート -->
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
 
-    <!-- お知らせ一覧エリア -->
     <div id="news-list-section" class="news-container">
 
         <!-- 2026/05/28 (大規模改修告知) -->
@@ -560,7 +574,7 @@
 
                 ◉無所属
                 -1．ならずものの暴虐
-                Lv上昇のポイント効率変化に伴い効果発動条件を判定値8から18に変更
+                Lv上昇のポイント効率変化に伴に効果発動条件を判定値8から18に変更
                 4．負け犬の意地
                 Lv上昇のポイント効率変化に伴い効果発動の条件のLv合計値を8から60に変更
                 HP上昇量を5から10に増加
