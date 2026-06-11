@@ -9,11 +9,11 @@
         :root {
             --bg-color: #0d0f12;
             --panel-bg: #161a22;
-            --accent-color: #ff3b30; 
+            --accent-gray: #b3bac2;  
+            --accent-blue: #00bcd4;  
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #2d3748;
-            --info-blue: #00bcd4;
         }
 
         * {
@@ -32,10 +32,10 @@
 
         /* --- ヘッダー・タイトル --- */
         header {
-            background: linear-gradient(180deg, #1a0505 0%, var(--panel-bg) 100%);
+            background: linear-gradient(180deg, #11141a 0%, var(--panel-bg) 100%);
             padding: 40px 20px;
             text-align: center;
-            border-bottom: 2px solid var(--accent-color);
+            border-bottom: 2px solid var(--accent-gray);
         }
 
         .main-title {
@@ -43,7 +43,7 @@
             font-weight: 900;
             letter-spacing: 0.2em;
             color: #fff;
-            text-shadow: 0 0 10px var(--accent-color);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
         }
 
         .sub-title {
@@ -53,10 +53,10 @@
             letter-spacing: 0.1em;
         }
 
-        /* --- 1. お知らせバナー（隙間なし無限ループ） --- */
+        /* --- お知らせバナー --- */
         .banner-container {
-            background-color: #1a0000;
-            border-bottom: 1px solid var(--accent-color);
+            background-color: #11141a;
+            border-bottom: 1px solid var(--border-color);
             overflow: hidden;
             position: relative;
             display: flex;
@@ -74,7 +74,7 @@
         .banner-item {
             display: inline-block;
             padding-right: 50px;
-            color: var(--accent-color);
+            color: var(--text-muted);
             font-weight: bold;
             font-size: 0.85rem;
             letter-spacing: 0.05em;
@@ -103,7 +103,7 @@
         h2 {
             font-size: 1.2rem;
             color: #fff;
-            border-left: 4px solid var(--accent-color);
+            border-left: 4px solid var(--accent-gray);
             padding-left: 10px;
             margin-bottom: 15px;
             letter-spacing: 0.05em;
@@ -116,7 +116,7 @@
             white-space: pre-line;
         }
 
-        /* --- 2. ページ内目次 --- */
+        /* --- ページ内目次 --- */
         .toc-list {
             list-style: none;
         }
@@ -133,10 +133,10 @@
             padding-bottom: 4px;
         }
         .toc-list a:hover {
-            color: var(--accent-color);
+            color: var(--accent-gray);
         }
 
-        /* --- 3. 別ページ一覧（リンクナビ） --- */
+        /* --- ナビゲーション（フラットに統一） --- */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -158,21 +158,29 @@
         }
 
         .nav-button:hover {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
+            background-color: #2d3446;
+            border-color: var(--accent-gray);
             color: #fff;
         }
 
-        .nav-button.info-btn {
-            background-color: #1a2936;
-            border-color: var(--info-blue);
-            color: #e0f7fa;
+        /* 現在開いているアクティブなページのスタイル（概要用） */
+        .nav-button.current-page {
+            background-color: #11141a;
+            border-color: var(--accent-gray);
+            color: #fff;
+            font-weight: bold;
+            pointer-events: none; 
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+            position: relative;
         }
-        .nav-button.info-btn:hover {
-            background-color: var(--info-blue);
-            color: #000;
+        .nav-button.current-page::before {
+            content: '● ';
+            font-size: 0.7rem;
+            color: var(--accent-gray);
+            vertical-align: middle;
         }
 
+        /* キャラクターシート制作ボタン（赤グラデーションを維持・固定） */
         .nav-button.highlight {
             grid-column: span 2;
             background: linear-gradient(90deg, #ff3b30, #a20000);
@@ -180,11 +188,16 @@
             font-weight: bold;
             font-size: 1rem;
             margin-top: 5px;
+            color: #fff;
+        }
+        .nav-button.highlight:hover {
+            opacity: 0.9;
+            border: none;
         }
 
-        /* --- 4. 新規お知らせ表示エリア --- */
+        /* --- 新規お知らせ表示エリア --- */
         .news-box {
-            border-left: 4px solid var(--info-blue) !important;
+            border-left: 4px solid var(--accent-blue) !important;
         }
         .news-list {
             list-style: none;
@@ -203,15 +216,16 @@
             margin-bottom: 4px;
         }
         .news-date {
-            color: var(--info-blue);
+            color: var(--accent-blue);
             font-weight: bold;
             font-family: monospace;
         }
         .news-badge {
-            background-color: var(--accent-color);
-            color: #fff;
+            background-color: var(--border-color);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
             font-size: 0.7rem;
-            padding: 1px 6px;
+            padding: 0px 5px;
             border-radius: 3px;
             font-weight: bold;
         }
@@ -234,22 +248,25 @@
 </head>
 <body>
 
+<!-- タイトルヘッダー -->
 <header>
     <div class="main-title">クライングシティ</div>
     <div class="sub-title">停滞した世界に抗うディストピアTRPG</div>
 </header>
 
+<!-- お知らせバナー -->
 <div class="banner-container">
     <div class="banner-track">
-        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【通達】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
-        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【通達】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
     </div>
 </div>
 
 <div class="container">
 
+    <!-- ページでの目次 -->
     <div class="section-panel">
         <h2>目次</h2>
         <ul class="toc-list">
@@ -260,11 +277,12 @@
         </ul>
     </div>
 
+    <!-- 別ページ一覧 -->
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
-            <a href="index.html" class="nav-button">◆概要◆</a>
-            <a href="news.html" class="nav-button info-btn">◆お知らせ◆</a>
+            <a href="index.html" class="nav-button current-page">◆概要◆</a> 
+            <a href="news.html" class="nav-button">◆お知らせ◆</a>
             <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
             <a href="company.html" class="nav-button">◆会社◆</a>
             <a href="weapon.html" class="nav-button">◆武器◆</a>
@@ -272,29 +290,32 @@
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
             <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
             
+            <!-- キャラシート（赤グラデーションを保持） -->
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
 
+    <!-- 新規お知らせ表示エリア -->
     <div id="recent-news" class="section-panel news-box">
-        <h2 style="border-left-color: var(--info-blue);">新規お知らせ</h2>
+        <h2 style="border-left-color: var(--accent-blue);">新規お知らせ</h2>
         <ul class="news-list">
             <li class="news-item">
                 <div class="news-meta">
-                    <span class="news-date">2026.06.12</span>
+                    <span class="news-date">2026.05.28</span>
                     <span class="news-badge">NEW</span>
                 </div>
-                <div class="news-content">世界観設定に「ワールドマスター」に関する不穏な噂を追記しました。確認は自己責任で。</div>
+                <div class="news-content">キャラクターシート制作に関する大規模改修の告知を掲載しました。</div>
             </li>
             <li class="news-item">
                 <div class="news-meta">
-                    <span class="news-date">2026.06.01</span>
+                    <span class="news-date">2026.05.28</span>
                 </div>
-                <div class="news-content">武器データのバランス調整を行いました。「一般労働所」支給の装備は据え置きです。</div>
+                <div class="news-content">無所属の特殊能力追加と説明文の軽微な変更を行いました。</div>
             </li>
         </ul>
     </div>
 
+    <!-- 本文：はじめに -->
     <div id="intro" class="section-panel">
         <h2>◆はじめに◆</h2>
         <p>クライングシティは閉鎖され自由を奪われた人々、科学を超越し倫理を失った科学、未だ明かされていない未知をテーマとしたディストピアTRPGです。
@@ -306,6 +327,7 @@
         それでは、幸運を。</p>
     </div>
 
+    <!-- 本文：この世界について -->
     <div id="world" class="section-panel">
         <h2>◆この世界について◆</h2>
         <p>技術と科学で飽和された都市、クライングシティへようこそ。
@@ -321,8 +343,8 @@
         どんな仕事をしていようと彼らは一般労働職員であり、それ以上の名誉も自由もない。
         退屈で意味のない人生そのものです。
 
-        では会社、及び会社員とは何か.
-        彼らを簡単に説明するならば特殊隊員と表現するのが一番近いかもしれません。
+        では会社、及び会社員とは何か。
+        彼らは簡単に説明するならば特殊隊員と表現するのが一番近いかもしれません。
         当然この特殊という意味が決して良い意味では無いという事はご存じかもしれませんが、念のために記載しておきます。
         この特殊という意味は『通常ではありえない』という意味合いであり、特別だとか好待遇だとかそういった類のものではありません。
         会社と呼ばれるものはそう多くはありませんが、種類があるという事は会社次第で仕事内容は多少変化します。
