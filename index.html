@@ -9,7 +9,7 @@
         :root {
             --bg-color: #0d0f12;
             --panel-bg: #161a22;
-            --accent-color: #ff3b30; /* バナーや強調に使うネオンレッド */
+            --accent-color: #ff3b30; /* 警告用ネオンレッド */
             --accent-gray: #b3bac2;  
             --accent-blue: #00bcd4;  
             --text-color: #e2e8f0;
@@ -29,6 +29,22 @@
             color: var(--text-color);
             line-height: 1.8;
             padding-bottom: 60px;
+            
+            /* ページ遷移用フェードインの初期状態 */
+            opacity: 0;
+            animation: fadeInPage 0.6s ease-out forwards;
+        }
+
+        /* --- ページ遷移用フェードインアニメーション --- */
+        @keyframes fadeInPage {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* --- ヘッダー・タイトル --- */
@@ -54,9 +70,9 @@
             letter-spacing: 0.1em;
         }
 
-        /* --- 1. お知らせバナー（赤色に修正） --- */
+        /* --- お知らせバナー（ネオンレッド） --- */
         .banner-container {
-            background-color: #1a0000; /* 赤色バナーベース */
+            background-color: #1a0000; 
             border-bottom: 1px solid var(--accent-color);
             overflow: hidden;
             position: relative;
@@ -76,7 +92,7 @@
         .banner-item {
             display: inline-block;
             padding-right: 50px;
-            color: var(--accent-color); /* ネオンレッドのテキスト */
+            color: var(--accent-color); 
             font-weight: bold;
             font-size: 0.85rem;
             letter-spacing: 0.05em;
@@ -118,7 +134,7 @@
             white-space: pre-line;
         }
 
-        /* --- 2. ページ内目次 --- */
+        /* --- ページ内目次 --- */
         .toc-list {
             list-style: none;
         }
@@ -138,7 +154,7 @@
             color: var(--accent-gray);
         }
 
-        /* --- 3. ナビゲーション --- */
+        /* --- ナビゲーション --- */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -181,7 +197,7 @@
             vertical-align: middle;
         }
 
-        /* キャラクターシート制作ボタン（赤グラデーションをキープ） */
+        /* キャラクターシート制作ボタン（赤グラデーション強調） */
         .nav-button.highlight {
             grid-column: span 2;
             background: linear-gradient(90deg, #ff3b30, #a20000);
@@ -196,7 +212,7 @@
             border: none;
         }
 
-        /* --- 4. 新規お知らせ表示エリア --- */
+        /* --- 新規お知らせ表示エリア --- */
         .news-box {
             border-left: 4px solid var(--accent-blue) !important;
         }
@@ -247,15 +263,14 @@
         }
     </style>
 </head>
-<body>
+<!-- 戻るボタンでのフェード不具合を防止する記述を body に追加 -->
+<body onpageshow="if (event.persisted) window.location.reload();">
 
-<!-- タイトルヘッダー -->
 <header>
     <div class="main-title">クライングシティ</div>
     <div class="sub-title">停滞した世界に抗うディストピアTRPG</div>
 </header>
 
-<!-- お知らせバナー（赤色に復元） -->
 <div class="banner-container">
     <div class="banner-track">
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
@@ -267,7 +282,6 @@
 
 <div class="container">
 
-    <!-- ページでの目次 -->
     <div class="section-panel">
         <h2>目次</h2>
         <ul class="toc-list">
@@ -278,7 +292,6 @@
         </ul>
     </div>
 
-    <!-- 別ページ一覧 -->
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
@@ -290,13 +303,10 @@
             <a href="world_lore.html" class="nav-button">◆世界観◆</a>
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
             <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
-            
-            <!-- キャラシート -->
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
 
-    <!-- 新規お知らせ表示エリア -->
     <div id="recent-news" class="section-panel news-box">
         <h2 style="border-left-color: var(--accent-blue);">新規お知らせ</h2>
         <ul class="news-list">
@@ -316,7 +326,6 @@
         </ul>
     </div>
 
-    <!-- 本文：はじめに -->
     <div id="intro" class="section-panel">
         <h2>◆はじめに◆</h2>
         <p>クライングシティは閉鎖され自由を奪われた人々、科学を超越し倫理を失った科学、未だ明かされていない未知をテーマとしたディストピアTRPGです。
@@ -331,7 +340,6 @@
         それでは、幸運を。</p>
     </div>
 
-    <!-- 本文：この世界について（読みやすく改行を最適化） -->
     <div id="world" class="section-panel">
         <h2>◆この世界について◆</h2>
         <p>技術と科学で飽和された都市、クライングシティへようこそ。
