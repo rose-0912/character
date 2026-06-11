@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クライングシティ - お知らせ</title>
+    <style>
+        /* --- 基本設定 & カラー（システムログ風のブルーアクセント） --- */
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: #161a22;
+            --accent-blue: #00bcd4; /* サイバーブルー */
+            --accent-red: #ff3b30;  /* 警告用赤 */
+            --accent-green: #34c759;/* アップデート用緑 */
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding-bottom: 60px;
+        }
+
+        /* --- ヘッダー --- */
+        header {
+            background: linear-gradient(180deg, #05161a 0%, var(--panel-bg) 100%);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        .main-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            color: #fff;
+            text-shadow: 0 0 10px var(--accent-blue);
+        }
+
+        .sub-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* --- コンテナレイアウト --- */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 戻るボタン */
+        .back-link {
+            display: inline-block;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+        .back-link:hover {
+            color: #fff;
+        }
+
+        /* --- お知らせリスト（アコーディオン仕様） --- */
+        .news-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        details {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        details[open] {
+            border-color: var(--accent-blue);
+        }
+
+        /* タップするヘッダー部分 */
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            list-style: none; /* デフォルトの矢印を消す */
+            position: relative;
+            outline: none;
+        }
+        
+        /* 矢印を自作 */
+        summary::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+        details[open] summary::after {
+            transform: translateY(-50%) rotate(180deg);
+            color: var(--accent-blue);
+        }
+
+        /* スマホでも綺麗に並ぶメタ情報エリア */
+        .meta-area {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        /* バッジのデザイン */
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .badge.important { background-color: var(--accent-red); }
+        .badge.update { background-color: var(--accent-green); }
+        .badge.other { background-color: #555; }
+
+        .news-title {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: bold;
+            padding-right: 20px; /* 矢印と被らないように */
+        }
+
+        /* 中身の本文エリア */
+        .news-content {
+            padding: 15px;
+            background-color: #0f1217;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            white-space: pre-line; /* 改行をそのまま反映 */
+        }
+
+        /* フッター付近のナビ */
+        .footer-nav {
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="main-title">クライングシティ // 通信記録</div>
+    <div class="sub-title">都市管理企業からの通達・お知らせ一覧</div>
+</header>
+
+<div class="container">
+
+    <a href="index.html" class="back-link">➔ 概要ページに戻る</a>
+
+    <div class="news-container">
+
+        <!-- お知らせ 1（最初から開いておきたい場合は <details open> にする） -->
+        <details open>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2026.06.12</span>
+                    <span class="badge important">重要</span>
+                </div>
+                <div class="news-title">世界観設定「ワールドマスター」に関する追記</div>
+            </summary>
+            <div class="news-content">
+                企業より通達。
+                世界観設定ページに、最上位階級とされる「ワールドマスター」に関する不穏な噂を追記しました。
+                
+                一般職員および会社員は、知らなくて良いことは知らないままでいるべきですが、どうしても命を賭して未知に触れたい放浪者諸君は、自己責任で内容を確認してください。
+                
+                また、これに伴う一般労働所の安全基準に変更はありません。日々の単調な業務を全うしてください。
+            </div>
+        </details>
+
+        <!-- お知らせ 2 -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2026.06.01</span>
+                    <span class="badge update">UPDATE</span>
+                </div>
+                <div class="news-title">会社員用 支給武器データのバランス調整について</div>
+            </summary>
+            <div class="news-content">
+                戦闘および探索における一部銃器のダイス判定・ダメージ効率のバランス調整を行いました。
+                
+                【調整内容】
+                ・特殊隊員用の一部近接武器の威力を上方修正
+                ・警察・治安維持組織向け装備の装填数を微調整
+                
+                ※なお、一般労働職員に支給される安全な工具類、および防護服等のスペックに一切の変更はございません。
+            </div>
+        </details>
+
+        <!-- お知らせ 3 -->
+        <details>
+            <summary>
+                <div class="meta-area">
+                    <span class="date">2026.05.15</span>
+                    <span class="badge other">その他</span>
+                </div>
+                <div class="news-title">ディストピアTRPG『クライングシティ』ポータル公開</div>
+            </summary>
+            <div class="news-content">
+                技術と科学で飽和された都市、クライングシティの案内ポータルサイトを公開しました。
+                
+                当サイトでは、概要、キャラクター制作ルール、所属する「会社」の一覧、武器データなどを順次公開していく予定です。
+                地獄のような世界で、己だけを信じ前へと進むPCたちの道標となれば幸いです。
+                それでは、幸運を。
+            </div>
+        </details>
+
+    </div>
+
+    <div class="footer-nav">
+        <a href="index.html" class="back-link">➔ 概要ページに戻る</a>
+    </div>
+
+</div>
+
+</body>
+</html>
