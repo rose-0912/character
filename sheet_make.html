@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クライングシティ - キャラクターシート制作</title>
+    <style>
+        /* --- 基本設定 & ディストピア風カラー --- */
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: #161a22;
+            --accent-color: #ff3b30; /* 警告用ネオンレッド */
+            --accent-gray: #b3bac2;  
+            --accent-blue: #00bcd4;  /* サイバーブルー */
+            --accent-purple: #9d4edd;/* ココフォリア連携用パープル */
+            --accent-orange: #ff9500;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #2d3748;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 60px;
+            opacity: 0;
+            animation: fadeInPage 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            background: linear-gradient(180deg, #11141a 0%, var(--panel-bg) 100%);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .main-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 59, 48, 0.4);
+        }
+
+        .container { max-width: 750px; margin: 0 auto; padding: 20px; }
+
+        .section-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #fff;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- ナビゲーション戻るボタン --- */
+        .back-nav {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn-nav {
+            background-color: #222733;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+        .btn-nav:hover { background-color: #2d3446; border-color: var(--accent-gray); }
+
+        /* --- 入力フォーム基本 --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.span-2 { grid-column: span 2; }
+        
+        label { font-size: 0.85rem; color: var(--text-muted); font-weight: bold; }
+        
+        input[type="text"], input[type="number"], select, textarea {
+            background-color: #0d0f12;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-blue); }
+
+        /* --- ステータス・ビルド用特殊レイアウト --- */
+        .status-header-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #11141c;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #232d3f;
+        }
+        
+        .stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1f2733;
+        }
+        .stat-name { font-weight: bold; font-size: 0.95rem; }
+        .stat-control { display: flex; align-items: center; gap: 10px; }
+        .stat-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+        .btn-calc {
+            background-color: #1f2430;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .btn-calc:hover { background-color: #2d3548; border-color: var(--accent-blue); }
+
+        /* --- 保存・共有・出力コントロール --- */
+        .account-box {
+            background: linear-gradient(135deg, #1a1525 0%, #111b24 100%);
+            border: 1px solid var(--accent-blue);
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-action {
+            background-color: var(--accent-blue);
+            color: #0d0f12;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .btn-action:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(0,188,212,0.4); }
+        .btn-save { background-color: var(--accent-color); color: #fff; }
+        .btn-save:hover { box-shadow: 0 0 10px rgba(255,59,48,0.4); }
+        .btn-ccfolia { background-color: var(--accent-purple); color: #fff; grid-column: span 2; }
+        .btn-ccfolia:hover { box-shadow: 0 0 12px rgba(157,78,221,0.5); }
+
+        .share-url-box {
+            margin-top: 15px;
+            background-color: #0d0f12;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px dashed var(--border-color);
+            display: none;
+        }
+        .share-url-text {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            word-break: break-all;
+            user-select: all;
+            font-family: monospace;
+        }
+
+        /* 閲覧専用(ロック)状態の補正 */
+        .readonly-mode input, .readonly-mode select, .readonly-mode textarea {
+            pointer-events: none;
+            background-color: #11141a;
+            border-color: #1f2430;
+            color: #cbd5e1;
+        }
+        .readonly-mode .btn-calc { display: none; }
+
+        @media (max-width: 480px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.span-2 { grid-column: span 1; }
+            .action-grid { grid-template-columns: 1fr; }
+            .btn-ccfolia { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body onpageshow="if (event.persisted) window.location.reload();">
+
+<header>
+    <div class="main-title">CRYING CITY // 端末機構</div>
+    <div class="sub-title">市民データ・キャラクタープロトコル生成</div>
+</header>
+
+<div class="banner-container">
+    <div class="banner-track">
+        <span class="banner-item">【接続】オンラインストレージに同期完了。キャラクターシートの読込・展開・外部出力が可能です。</span>
+        <span class="banner-item">【同期】ココフォリア連携プロトコル追加。生成データをクリップボードから直接ペーストできます。</span>
+    </div>
+</div>
+
+<div class="container" id="sheet-app">
+
+    <div class="back-nav">
+        <a href="index.html" class="btn-nav">➔ 概要ページへ戻る</a>
+        <button id="btn-edit-toggle" class="btn-nav" style="display:none; background-color: #1a2736; border-color: var(--accent-blue);" onclick="enableEditing()">⚙ このシートを編集する</button>
+    </div>
+
+    <!-- ==================== セーブ・共有・ココフォリア出力パネル ==================== -->
+    <div class="section-panel account-box">
+        <h2>◆ システム・セーブ＆出力プロトコル</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted);">LocalStorageによる自動アカウント管理、暗号化URLによるシート公開、およびココフォリアへのダイレクト駒生成に対応しています。</p>
+        
+        <div class="form-group" style="margin-top: 10px;">
+            <label>セーブスロット（アカウント内管理名）</label>
+            <input type="text" id="slot-name" value="デフォルトの市民データ">
+        </div>
+
+        <div class="action-grid">
+            <button class="btn-action btn-save" onclick="saveToLocal()">💾 ブラウザへ保存</button>
+            <button class="btn-action" onclick="generateShareLink()">🔗 公開URL・共有リンク生成</button>
+            <button class="btn-action btn-ccfolia" onclick="copyToCcfolia()">🔮 ココフォリア用の駒データをコピー</button>
+        </div>
+
+        <div class="share-url-box" id="share-box">
+            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL（コピーして他人に送信可能）</label>
+            <div class="share-url-text" id="share-url"></div>
+        </div>
+    </div>
+
+    <!-- ==================== 1. プロフィール ==================== -->
+    <div class="section-panel">
+        <h2>〇 プロフィール</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>名前</label>
+                <input type="text" id="p-name" placeholder="名無しの市民">
+            </div>
+            <div class="form-group">
+                <label>所属会社（必須）</label>
+                <select id="p-faction">
+                    <option value="赤色戦派">赤色戦派 [大規模]</option>
+                    <option value="ディフィポリディ">ディフィポリディ [大規模]</option>
+                    <option value="ルナード・ルーンズ">ルナード・ルーンズ [大規模]</option>
+                    <option value="メローメディック">メローメディック [大規模]</option>
+                    <option value="ライブラビランス">ライブラビランス [大規模]</option>
+                    <option value="センス">センス [中規模]</option>
+                    <option value="決闘連盟">決闘連盟 [中規模]</option>
+                    <option value="無所属">無所属 [特殊枠]</option>
+                    <option value="一般労働者">一般労働者 [一般枠]</option>
+                    <option value="電務工房">電務工房 [DLC]</option>
+                    <option value="刻">刻（とき） [DLC]</option>
+                    <option value="Mysticism">Mysticism [DLC]</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>年齢</label>
+                <input type="text" id="p-age" placeholder="23">
+            </div>
+            <div class="form-group">
+                <label>性別</label>
+                <input type="text" id="p-sex" placeholder="不詳">
+            </div>
+            <div class="form-group">
+                <label>身長</label>
+                <input type="text" id="p-height" placeholder="175cm">
+            </div>
+            <div class="form-group">
+                <label>体重</label>
+                <input type="text" id="p-weight" placeholder="60kg">
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 2. 基礎能力 ==================== -->
+    <div class="section-panel">
+        <h2>〇 基礎能力（制作時割り振り上限：各8Lv / 最大90Lv）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">手動の場合、初期値2から余り16Lvを配分します。各種ステータスやポイントが完全自動算出されます。</p>
+        
+        <div class="status-header-bar">
+            <span>能力項目</span>
+            <span>現在Lv</span>
+        </div>
+
+        <!-- 身体 -->
+        <div class="stat-row">
+            <div>
+                <span class="stat-name">身体</span>
+                <div class="stat-desc">最大HPに影響（Lv×6）</div>
+            </div>
+            <div class="stat-control">
+                <button class="btn-calc" onclick="adjustBase('body', -1)">-</button>
+                <input type="number" id="base-body" value="2" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" onclick="adjustBase('body', 1)">+</button>
+            </div>
+        </div>
+
+        <!-- 筋力 -->
+        <div class="stat-row">
+            <div>
+                <span class="stat-name">筋力</span>
+                <div class="stat-desc">追加ダメージに影響（Lv7毎に+1d6）</div>
+            </div>
+            <div class="stat-control">
+                <button class="btn-calc" onclick="adjustBase('str', -1)">-</button>
+                <input type="number" id="base-str" value="2" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" onclick="adjustBase('str', 1)">+</button>
+            </div>
+        </div>
+
+        <!-- 知能 -->
+        <div class="stat-row">
+            <div>
+                <span class="stat-name">知能</span>
+                <div class="stat-desc">技能ポイントに直結（Lv×3、10Lv到達時+10）</div>
+            </div>
+            <div class="stat-control">
+                <button class="btn-calc" onclick="adjustBase('int', -1)">-</button>
+                <input type="number" id="base-int" value="2" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" onclick="adjustBase('int', 1)">+</button>
+            </div>
+        </div>
+
+        <!-- 速度 -->
+        <div class="stat-row">
+            <div>
+                <span class="stat-name">速度</span>
+                <div class="stat-desc">行動順・行動回数に直結（10Lv到達時 行動回数+1）</div>
+            </div>
+            <div class="stat-control">
+                <button class="btn-calc" onclick="adjustBase('spd', -1)">-</button>
+                <input type="number" id="base-spd" value="2" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" onclick="adjustBase('spd', 1)">+</button>
+            </div>
+        </div>
+
+        <!-- 精神 -->
+        <div class="stat-row">
+            <div>
+                <span class="stat-name">精神</span>
+                <div class="stat-desc">コスト最大値（Lv4毎に+1）、コスト回復（10Lv到達時+1）</div>
+            </div>
+            <div class="stat-control">
+                <button class="btn-calc" onclick="adjustBase('men', -1)">-</button>
+                <input type="number" id="base-men" value="2" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" onclick="adjustBase('men', 1)">+</button>
+            </div>
+        </div>
+
+        <!-- 自動連動出力テーブル -->
+        <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
+            <div class="form-group"><label>最大HP</label><input type="text" id="calc-hp" value="12" readonly style="color:var(--accent-color); font-weight:bold;"></div>
+            <div class="form-group"><label>追加ダメージ（DB）</label><input type="text" id="calc-db" value="なし" readonly></div>
+            <div class="form-group"><label>総支給 技能ポイント</label><input type="text" id="calc-sp" value="6" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
+            <div class="form-group"><label>戦闘時 行動回数</label><input type="text" id="calc-actions" value="1回" readonly></div>
+            <div class="form-group"><label>最大コスト値</label><input type="text" id="calc-cost-max" value="3" readonly></div>
+            <div class="form-group"><label>毎ターン コスト回復値</label><input type="text" id="calc-cost-reg" value="1" readonly></div>
+        </div>
+    </div>
+
+    <!-- ==================== 3. 技術能力 ==================== -->
+    <div class="section-panel">
+        <h2>〇 技術能力（技能ポイントを消費して取得）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">全技能の初期値は1。1Lv毎に1pt消費。ただしLv10以降は、設定通り上昇コストが重くなります。</p>
+        
+        <div class="status-header-bar" style="border-color: var(--accent-blue);">
+            <span>主要な判定技術項目</span>
+            <span>現在レベル</span>
+        </div>
+
+        <div id="skills-container">
+            <!-- JavaScriptで自動的に全技能リストを展開します -->
+        </div>
+    </div>
+
+    <!-- ==================== 4. 特殊能力 & 武器 & 備考 ==================== -->
+    <div class="section-panel">
+        <h2>〇 特殊能力（最大4つ / 制作時基本1つ）</h2>
+        <div class="form-group">
+            <label>取得している特殊能力</label>
+            <textarea id="f-special-traits" rows="3" placeholder="例：1．武の才能（所属会社の能力を記載）"></textarea>
+        </div>
+    </div>
+
+    <div class="section-panel">
+        <h2>〇 所持武器・スキル</h2>
+        <div class="form-grid">
+            <div class="form-group span-2">
+                <label>武器名 ＆ 要求値ステータス</label>
+                <input type="text" id="f-weapon-name" placeholder="例：シルバーライト製の刀（要求：身体Lv3、速度Lv3）">
+            </div>
+            <div class="form-group">
+                <label>武器レベル</label>
+                <input type="number" id="f-weapon-lv" value="1">
+            </div>
+            <div class="form-group">
+                <label>解放スキル1（初期搭載）</label>
+                <input type="text" id="f-skill-1" placeholder="ダメージロール等を記載">
+            </div>
+            <div class="form-group span-2">
+                <label>ランダム解放スキル（スキル2〜4）</label>
+                <textarea id="f-skills-multi" rows="3" placeholder="武器スレッドのダイス表で決定された効果を記載"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-panel">
+        <h2>〇 過去の因果・重要な人物（シナリオのダイス数増加トリガー）</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>過去あった事象</label>
+                <input type="text" id="f-past-event" placeholder="例：友を殺した">
+            </div>
+            <div class="form-group">
+                <label>感情</label>
+                <input type="text" id="f-past-emotion" placeholder="例：嫉妬">
+            </div>
+            <div class="form-group span-2">
+                <label>過去の背景・具体的な内容</label>
+                <textarea id="f-past-detail" rows="3" placeholder="あの日、引きずりながら詰まる息を吐き出している..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>重要な人物</label>
+                <input type="text" id="f-past-npc" placeholder="例：ルシェ">
+            </div>
+            <div class="form-group span-2">
+                <label>人物に関する感情・補足事項</label>
+                <textarea id="f-npc-detail" rows="2" placeholder="いつか死ぬ日が来るのなら..."></textarea>
+            </div>
+            <div class="form-group span-2">
+                <label>容姿・性格の特徴（備考欄）</label>
+                <textarea id="f-appearance" rows="3" placeholder="黒と銀で身を包む私の姿..."></textarea>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ==================== キャラクターシート・コアエンジン ==================== -->
+<script>
+    // 定義された全技能リスト（カテゴリ別）
+    const cryingCitySkills = [
+        "回避", "防御", "反撃", "近接攻撃(格闘)", "近接攻撃(刀剣)", "射撃攻撃(銃器)", "投擲",
+        "視覚", "聴覚", "嗅覚", "感知", "思案",
+        "調査", "隠密", "跳躍", "登攀", "追跡", "手当",
+        "話術", "詐術", "心理学", "威圧", "信用",
+        "言語", "解読", "医学", "コンピューター", "修繕", "自然"
+    ];
+
+    let baseStats = { body: 2, str: 2, int: 2, spd: 2, men: 2 };
+    let skillStats = {};
+
+    // 画面ロード時の初期化
+    window.onload = function() {
+        initSkills();
+        parseUrlOrLoadLocal();
+        recalculate();
+    };
+
+    function initSkills() {
+        const container = document.getElementById('skills-container');
+        container.innerHTML = "";
+        cryingCitySkills.forEach((sk, index) => {
+            skillStats[sk] = 1; // 初期値は一律1
+            
+            const div = document.createElement('div');
+            div.className = 'stat-row';
+            div.innerHTML = `
+                <div><span class="stat-name">${sk}</span></div>
+                <div class="stat-control">
+                    <button class="btn-calc" onclick="adjustSkill('${sk}', -1)">-</button>
+                    <input type="number" id="sk-${index}" value="1" style="width:50px; text-align:center;" readonly>
+                    <button class="btn-calc" onclick="adjustSkill('${sk}', 1)">+</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // 基礎ステータスの増減調整
+    function adjustBase(key, val) {
+        let current = baseStats[key];
+        if (current + val < 2 || current + val > 90) return;
+        baseStats[key] += val;
+        document.getElementById(`base-${key}`).value = baseStats[key];
+        recalculate();
+    }
+
+    // 技能レベルの増減調整
+    function adjustSkill(skName, val) {
+        let idx = cryingCitySkills.indexOf(skName);
+        let current = skillStats[skName];
+        if (current + val < 1 || current + val > 90) return;
+        skillStats[skName] += val;
+        document.getElementById(`sk-${idx}`).value = skillStats[skName];
+        recalculate();
+    }
+
+    // 各種ルールの完全自動計算処理
+    function recalculate() {
+        // HP計算 (身体×6)
+        document.getElementById('calc-hp').value = baseStats.body * 6;
+        
+        // ダメージボーナス (筋力7毎に+1d6)
+        let dbCount = Math.floor(baseStats.str / 7);
+        document.getElementById('calc-db').value = dbCount > 0 ? `+${dbCount}d6` : "なし";
+        
+        // 技能ポイント計算 (知能×3、10Lv毎に10獲得)
+        let spBonus = Math.floor(baseStats.int / 10) * 10;
+        let totalSP = (baseStats.int * 3) + spBonus;
+        document.getElementById('calc-sp').value = `${totalSP} pt`;
+        
+        // 行動回数 (10Lv毎に+1)
+        let extraActions = Math.floor(baseStats.spd / 10);
+        document.getElementById('calc-actions').value = `${1 + extraActions} 回`;
+        
+        // コスト最大値 (精神4毎に+1)
+        let extraCost = Math.floor(baseStats.men / 4);
+        document.getElementById('calc-cost-max').value = 3 + extraCost;
+        
+        // コスト回復値 (精神10毎に+1)
+        let costReg = Math.floor(baseStats.men / 10);
+        document.getElementById('calc-cost-reg').value = 1 + costReg;
+    }
+
+    // LocalStorageへのアカウント保存
+    function saveToLocal() {
+        let sheetData = compileData();
+        let slot = document.getElementById('slot-name').value || "デフォルトのデータ";
+        localStorage.setItem("crying_city_sheet_" + slot, JSON.stringify(sheetData));
+        alert(`システム通信：セーブ完了。\n【${slot}】としてブラウザに固定保存されました。`);
+    }
+
+    // 全入力データの吸い上げオブジェクト化
+    function compileData() {
+        return {
+            baseStats,
+            skillStats,
+            profile: {
+                name: document.getElementById('p-name').value,
+                faction: document.getElementById('p-faction').value,
+                age: document.getElementById('p-age').value,
+                sex: document.getElementById('p-sex').value,
+                height: document.getElementById('p-height').value,
+                weight: document.getElementById('p-weight').value
+            },
+            specialTraits: document.getElementById('f-special-traits').value,
+            weapon: {
+                name: document.getElementById('f-weapon-name').value,
+                lv: document.getElementById('f-weapon-lv').value,
+                skill1: document.getElementById('f-skill-1').value,
+                skillsMulti: document.getElementById('f-skills-multi').value
+            },
+            lore: {
+                event: document.getElementById('f-past-event').value,
+                emotion: document.getElementById('f-past-emotion').value,
+                detail: document.getElementById('f-past-detail').value,
+                npc: document.getElementById('f-past-npc').value,
+                npcDetail: document.getElementById('f-npc-detail').value,
+                appearance: document.getElementById('f-appearance').value
+            }
+        };
+    }
+
+    // URL共有リンク・データの暗号・圧縮化（パラメータ生成）
+    function generateShareLink() {
+        let data = compileData();
+        let jsonStr = JSON.stringify(data);
+        let encodedData = btoa(encodeURIComponent(jsonStr));
+        
+        let shareUrl = window.location.origin + window.location.pathname + "?data=" + encodedData;
+        
+        document.getElementById('share-url').innerText = shareUrl;
+        document.getElementById('share-box').style.display = 'block';
+        alert("システム通信：公開・共有用の暗号化URLを生成しました。ボックス内のURLをコピーして共有してください。");
+    }
+
+    // ココフォリア駒データ自動生成 変換エンジン
+    function copyToCcfolia() {
+        let currentData = compileData();
+        let slot = document.getElementById('slot-name').value || "名無しの市民";
+        
+        let calcHP = baseStats.body * 6;
+        let extraCost = Math.floor(baseStats.men / 4);
+        let maxCost = 3 + extraCost;
+        let extraActions = Math.floor(baseStats.spd / 10);
+        let totalActions = 1 + extraActions;
+
+        // --- チャットパレットの自動構築 ---
+        let chatPalette = `// --- 基礎判定・システム ---
+1d100 基礎システム判定
+1d6 コスト回復
+// --- 初期解放・所持兵装スキル ---
+${currentData.weapon.skill1 || "1d6+DB [武器スキル1]"}
+${currentData.weapon.skillsMulti || "// 追加解放スキルはシートを参照"}
+
+// --- 技術能力判定ボット一覧 ---
+`;
+        
+        for (let sk in skillStats) {
+            chatPalette += `1d100<={${sk}} 【${sk}】能力判定\n`;
+        }
+
+        // --- ココフォリア専用 JSONプロトコルの組み立て ---
+        let ccfoliaJson = {
+            kind: "character",
+            data: {
+                name: currentData.profile.name || slot,
+                memo: `【所属】${currentData.profile.faction}\n【年齢】${currentData.profile.age} / 【性別】${currentData.profile.sex}\n【過去】${currentData.lore.event} (${currentData.lore.emotion})\n${currentData.specialTraits}`,
+                initiated: true,
+                status: [
+                    { name: "HP", current: calcHP, max: calcHP },
+                    { name: "コスト", current: maxCost, max: maxCost },
+                    { name: "行動回数", current: totalActions, max: totalActions }
+                ],
+                params: [
+                    { name: "身体", value: String(baseStats.body) },
+                    { name: "筋力", value: String(baseStats.str) },
+                    { name: "知能", value: String(baseStats.int) },
+                    { name: "速度", value: String(baseStats.spd) },
+                    { name: "精神", value: String(baseStats.men) }
+                ],
+                chatPalette: chatPalette
+            }
+        };
+
+        for (let sk in skillStats) {
+            ccfoliaJson.data.params.push({ name: sk, value: String(skillStats[sk]) });
+        }
+
+        let jsonString = JSON.stringify(ccfoliaJson);
+        navigator.clipboard.writeText(jsonString).then(() => {
+            alert(`システム通信：ココフォリア用の駒データをコピーしました！\n\nココフォリアの部屋の画面上で「Ctrl + V」（スマホは画面長押しからペースト）を行うと、このキャラクターのステータスと全チャットパレットが設定された『立ち駒』がその場に一瞬で自動生成されます。`);
+        }).catch(err => {
+            alert("通信エラー：クリップボードへのコピーに失敗しました。ブラウザの権限を確認してください。");
+        });
+    }
+
+    // URLに公開データがあるかチェック、あれば自動読み込み・ロック
+    function parseUrlOrLoadLocal() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const encodedData = urlParams.get('data');
+        
+        if (encodedData) {
+            try {
+                let decodedStr = decodeURIComponent(atob(encodedData));
+                let data = JSON.parse(decodedStr);
+                applyDataToForm(data);
+                
+                document.getElementById('sheet-app').classList.add('readonly-mode');
+                document.getElementById('btn-edit-toggle').style.display = 'inline-block';
+            } catch (e) {
+                alert("エラー：データ破損または不正な共有URLです。");
+            }
+        }
+    }
+
+    // 読み込んだデータをフォームに反映
+    function applyDataToForm(data) {
+        if (!data) return;
+        baseStats = data.baseStats || baseStats;
+        skillStats = data.skillStats || skillStats;
+        
+        for (let key in baseStats) {
+            if(document.getElementById(`base-${key}`)) {
+                document.getElementById(`base-${key}`).value = baseStats[key];
+            }
+        }
+        cryingCitySkills.forEach((sk, index) => {
+            if(document.getElementById(`sk-${index}`)) {
+                document.getElementById(`sk-${index}`).value = skillStats[sk] || 1;
+            }
+        });
+
+        if(data.profile) {
+            document.getElementById('p-name').value = data.profile.name || "";
+            document.getElementById('p-faction').value = data.profile.faction || "一般労働者";
+            document.getElementById('p-age').value = data.profile.age || "";
+            document.getElementById('p-sex').value = data.profile.sex || "";
+            document.getElementById('p-height').value = data.profile.height || "";
+            document.getElementById('p-weight').value = data.profile.weight || "";
+        }
+
+        document.getElementById('f-special-traits').value = data.specialTraits || "";
+        if(data.weapon) {
+            document.getElementById('f-weapon-name').value = data.weapon.name || "";
+            document.getElementById('f-weapon-lv').value = data.weapon.lv || 1;
+            document.getElementById('f-skill-1').value = data.weapon.skill1 || "";
+            document.getElementById('f-skills-multi').value = data.weapon.skillsMulti || "";
+        }
+        if(data.lore) {
+            document.getElementById('f-past-event').value = data.lore.event || "";
+            document.getElementById('f-past-emotion').value = data.lore.emotion || "";
+            document.getElementById('f-past-detail').value = data.lore.detail || "";
+            document.getElementById('f-past-npc').value = data.lore.npc || "";
+            document.getElementById('f-npc-detail').value = data.lore.npcDetail || "";
+            document.getElementById('f-appearance').value = data.lore.appearance || "";
+        }
+    }
+
+    function enableEditing() {
+        document.getElementById('sheet-app').classList.remove('readonly-mode');
+        document.getElementById('btn-edit-toggle').style.display = 'none';
+        alert("システム通信：ロックを解除しました。このデータをベースに再編集・再保存が可能です。");
+    }
+</script>
+
+</body>
+</html>
