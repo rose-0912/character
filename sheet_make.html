@@ -298,7 +298,7 @@
                 <input type="text" id="p-name" placeholder="名無しの市民">
             </div>
             <div class="form-group">
-                <label>所属会社（所属）</label>
+                <label>所属会社（所属：必須設定）</label>
                 <select id="p-faction">
                     <option value="赤色戦派">赤色戦派 [大規模]</option>
                     <option value="ディフィポリディ">ディフィポリディ [大規模]</option>
@@ -319,6 +319,10 @@
                 <input type="text" id="p-title" placeholder="例：白銀">
             </div>
             <div class="form-group">
+                <label>キャラクターレベル (1〜90)</label>
+                <input type="number" id="p-level" value="1" min="1" max="90" oninput="recalculate()">
+            </div>
+            <div class="form-group">
                 <label>年齢</label>
                 <input type="text" id="p-age" placeholder="23">
             </div>
@@ -334,8 +338,8 @@
                 <label>体重</label>
                 <input type="text" id="p-weight" placeholder="60kg">
             </div>
-            <div class="form-group">
-                <label>獲得称号（ココフォリア出力用項目）</label>
+            <div class="form-group span-2">
+                <label>獲得称号（シナリオクリア報酬等）</label>
                 <input type="text" id="p-earned-title" placeholder="特になし">
             </div>
         </div>
@@ -343,65 +347,79 @@
 
     <!-- ==================== 2. 基礎能力 ==================== -->
     <div class="section-panel">
-        <h2>〇 基礎能力</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">手動で配分するか、下のボタンからダイスを自動で振って決定します。</p>
+        <h2>〇 基礎能力（割り振りポイント総数：キャラクターレベル × 5）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。獲得した基本能力ポイントを消費して各能力に割り振ります。（※能力Lvの上限は基本キャラクターレベルまでとなります）</p>
         
-        <button class="btn-dice" onclick="rollRandomBaseStats()">🎲 基礎能力をダイスで決定する (各能力2d4ロール / 2〜8Lv)</button>
+        <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
+            <div class="form-group">
+                <label>現在のキャラクターLvに紐づく所属階級・ランクの目安</label>
+                <input type="text" id="calc-rank-status" value="一般労働階級" readonly style="color:var(--accent-blue); font-weight:bold;">
+            </div>
+            <div class="form-group">
+                <label style="color: var(--accent-orange);">⚠️ 未割り振りの基本能力ポイント</label>
+                <input type="text" id="calc-rem-base-pt" value="5 pt" readonly style="font-weight:bold; font-size:1.1rem; text-align:center; color: var(--accent-orange);">
+            </div>
+        </div>
 
         <div class="status-header-bar">
             <span>能力項目</span>
             <span>現在Lv</span>
         </div>
 
+        <!-- 身体 -->
         <div class="stat-row">
             <div><span class="stat-name">身体</span><div class="stat-desc">最大HPに影響（Lv×6）</div></div>
             <div class="stat-control">
                 <button class="btn-calc" onclick="adjustBase('body', -1)">-</button>
-                <input type="number" id="base-body" value="2" style="width:50px; text-align:center;" readonly>
-                <button class="btn-calc" onclick="adjustBase('body', 1)">+</button>
+                <input type="number" id="base-body" value="1" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" id="btn-base-plus-body" onclick="adjustBase('body', 1)">+</button>
             </div>
         </div>
 
+        <!-- 筋力 -->
         <div class="stat-row">
-            <div><span class="stat-name">筋力</span><div class="stat-desc">追加ダメージに影響（Lv7毎に+1d6）</div></div>
+            <div><span class="stat-name">筋力</span><div class="stat-desc">追加ダメージに影響（Lv7につき+1d6ダメージロール加算）</div></div>
             <div class="stat-control">
                 <button class="btn-calc" onclick="adjustBase('str', -1)">-</button>
-                <input type="number" id="base-str" value="2" style="width:50px; text-align:center;" readonly>
-                <button class="btn-calc" onclick="adjustBase('str', 1)">+</button>
+                <input type="number" id="base-str" value="1" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" id="btn-base-plus-str" onclick="adjustBase('str', 1)">+</button>
             </div>
         </div>
 
+        <!-- 知能 -->
         <div class="stat-row">
-            <div><span class="stat-name">知能</span><div class="stat-desc">技能ポイントに直結（Lv×3、10Lv到達時+10）</div></div>
+            <div><span class="stat-name">知能</span><div class="stat-desc">技能ポイントに直結（Lv×3 ＋ Lv10につき追加10ポイント獲得）</div></div>
             <div class="stat-control">
                 <button class="btn-calc" onclick="adjustBase('int', -1)">-</button>
-                <input type="number" id="base-int" value="2" style="width:50px; text-align:center;" readonly>
-                <button class="btn-calc" onclick="adjustBase('int', 1)">+</button>
+                <input type="number" id="base-int" value="1" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" id="btn-base-plus-int" onclick="adjustBase('int', 1)">+</button>
             </div>
         </div>
 
+        <!-- 速度 -->
         <div class="stat-row">
-            <div><span class="stat-name">速度</span><div class="stat-desc">行動順・行動回数に直結（10Lv到達時 行動回数+1）</div></div>
+            <div><span class="stat-name">速度</span><div class="stat-desc">行動順・戦闘時の最大行動回数に直結（Lv20につき行動回数+1）</div></div>
             <div class="stat-control">
                 <button class="btn-calc" onclick="adjustBase('spd', -1)">-</button>
-                <input type="number" id="base-spd" value="2" style="width:50px; text-align:center;" readonly>
-                <button class="btn-calc" onclick="adjustBase('spd', 1)">+</button>
+                <input type="number" id="base-spd" value="1" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" id="btn-base-plus-spd" onclick="adjustBase('spd', 1)">+</button>
             </div>
         </div>
 
+        <!-- 精神 -->
         <div class="stat-row">
-            <div><span class="stat-name">精神</span><div class="stat-desc">コスト最大値（Lv4毎に+1）、コスト回復（10Lv到達時+1）</div></div>
+            <div><span class="stat-name">精神</span><div class="stat-desc">コスト最大値（Lv4につき+1）、コスト回復（Lv10につき+1）</div></div>
             <div class="stat-control">
                 <button class="btn-calc" onclick="adjustBase('men', -1)">-</button>
-                <input type="number" id="base-men" value="2" style="width:50px; text-align:center;" readonly>
-                <button class="btn-calc" onclick="adjustBase('men', 1)">+</button>
+                <input type="number" id="base-men" value="1" style="width:50px; text-align:center;" readonly>
+                <button class="btn-calc" id="btn-base-plus-men" onclick="adjustBase('men', 1)">+</button>
             </div>
         </div>
 
         <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
-            <div class="form-group"><label>最大HP</label><input type="text" id="calc-hp" value="12" readonly style="color:var(--accent-color); font-weight:bold;"></div>
+            <div class="form-group"><label>最大HP</label><input type="text" id="calc-hp" value="6" readonly style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="form-group"><label>追加ダメージ（DB）</label><input type="text" id="calc-db" value="なし" readonly></div>
-            <div class="form-group"><label>知能由来の基本技能ポイント</label><input type="text" id="calc-sp" value="6" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
+            <div class="form-group"><label>知能由来の基本技能ポイント</label><input type="text" id="calc-sp" value="3" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
             <div class="form-group"><label>戦闘時 行動回数</label><input type="text" id="calc-actions" value="1回" readonly></div>
             <div class="form-group"><label>最大コスト値</label><input type="text" id="calc-cost-max" value="3" readonly></div>
             <div class="form-group"><label>毎ターン コスト回復値（回復値）</label><input type="text" id="calc-cost-reg" value="1" readonly></div>
@@ -410,7 +428,8 @@
 
     <!-- ==================== 3. 技術能力 ==================== -->
     <div class="section-panel">
-        <h2>〇 技術能力（リアルタイム消費管理・上限自動ロック機能付き）</h2>
+        <h2>〇 技術能力（技能ポイントを消費して取得）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は一律Lv1。レベルを1上げるために1pt必要です。（※Lv10以降は、設定通り1レベル上げるためのコストが重くなります）</p>
         
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
@@ -434,40 +453,42 @@
 
     <!-- ==================== 4. 特殊能力 & 武器 & 備考 ==================== -->
     <div class="section-panel">
-        <h2>〇 特殊能力（最大4つ）</h2>
+        <h2>〇 特殊能力（最大4つ // キャラクター制作時は原則1つのみ設定可能）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※2つ目以降の特殊能力スロットは、キャラクターLvがそれぞれ15、20、40へ到達した時点で追加獲得できます。</p>
         <div class="form-group">
-            <textarea id="f-special-traits" rows="3" placeholder="例：1．武の才能"></textarea>
+            <textarea id="f-special-traits" rows="3" placeholder="例：1．武の才能（所属している会社の固有特殊能力をここに記載してください）"></textarea>
         </div>
     </div>
 
     <div class="section-panel">
         <h2>〇 所持武器・スキル・弾数管理（ココフォリアステータス連動）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※武器を保有するためには、各武器に設定された要求基礎能力値を満たしている必要があります。武器Lvが上昇すると要求値が2倍になり、ダメージロールダイス数も同様に2倍されます。</p>
         <div class="form-grid">
-            <div class="form-group span-2"><label>武器名 ＆ 要求値ステータス</label><input type="text" id="f-weapon-name" placeholder="例：シルバーライト製の刀"></div>
-            <div class="form-group"><label>武器レベル</label><input type="number" id="f-weapon-lv" value="1"></div>
-            <div class="form-group"><label>解放スキル1（初期搭載）</label><input type="text" id="f-skill-1" placeholder="ダメージロール等"></div>
+            <div class="form-group span-2"><label>武器名 ＆ 要求値ステータス</label><input type="text" id="f-weapon-name" placeholder="例：シルバーライト製の刀（要求：身体Lv3、速度Lv3）"></div>
+            <div class="form-group"><label>武器レベル (初期値1 / 技能pt5消費で上昇)</label><input type="number" id="f-weapon-lv" value="1" min="1" max="5"></div>
+            <div class="form-group"><label>解放スキル1（初期搭載）</label><input type="text" id="f-skill-1" placeholder="ダメージロール等を記載"></div>
             <div class="form-group"><label>総弾丸数 (最大:射撃Lv×5 // 弓矢含む)</label><input type="number" id="f-bullet-total" value="0"></div>
             <div class="form-group"><label>装弾数 (銃器等のマガジン容量)</label><input type="number" id="f-bullet-magazine" value="0"></div>
-            <div class="form-group span-2"><label>ランダム解放スキル（スキル2〜4）</label><textarea id="f-skills-multi" rows="3"></textarea></div>
+            <div class="form-group span-2"><label>ランダム解放スキル（スキル2〜4 // 各武器Lv2、3、4到達で順次解放）</label><textarea id="f-skills-multi" rows="3" placeholder="武器スレッドのダイス表または修繕Lv×10による任意選択結果を記載"></textarea></div>
         </div>
     </div>
 
     <div class="section-panel">
-        <h2>〇 過去の因果・重要な人物</h2>
+        <h2>〇 過去の因果・重要な人物（シナリオ中の合致判定でダイス数＋1）</h2>
         <div class="form-grid">
-            <div class="form-group"><label>過去あった事象</label><input type="text" id="f-past-event"></div>
-            <div class="form-group"><label>感情</label><input type="text" id="f-past-emotion"></div>
-            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>過去の背景・具体的な内容</label><textarea id="f-past-detail" rows="3"></textarea></div></div>
-            <div class="form-group"><label>重要な人物</label><input type="text" id="f-past-npc"></div>
-            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>人物に関する感情・補足事項</label><textarea id="f-npc-detail" rows="2"></textarea></div></div>
-            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>容姿・性格の特徴（備考欄）</label><textarea id="f-appearance" rows="3"></textarea></div></div>
+            <div class="form-group"><label>過去あった事象の名称</label><input type="text" id="f-past-event" placeholder="例：友を殺した">
+</div>
+            <div class="form-group"><label>それに付随する感情</label><input type="text" id="f-past-emotion" placeholder="例：嫉妬"></div>
+            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>過去の背景・具体的な内容（罪や恥の背景）</label><textarea id="f-past-detail" rows="3" placeholder="はじめ、○○とは互いにライバルとして研鑽し合う仲であったが……"></textarea></div></div>
+            <div class="form-group"><label>重要な人物</label><input type="text" id="f-past-npc" placeholder="例：○○ / △△"></div>
+            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>人物に関する感情・補足事項</label><textarea id="f-npc-detail" rows="2" placeholder="○○：元々仲が良くライバル関係だった。 △△：○○と恋仲。いつか死ぬ日が来るのなら……"></textarea></div></div>
+            <div class="form-grid span-2" style="gap:15px; grid-template-columns: 1fr;"><div class="form-group"><label>容姿・性格の特徴（備考欄：自由記入欄）</label><textarea id="f-appearance" rows="3" placeholder="黒と銀で身を包む私の姿……性格、行動理念など"></textarea></div></div>
         </div>
     </div>
 
     <!-- ==================== 5. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box">
         <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted);">このブラウザ（端末内）に保存されている登録市民データです。名前をクリックすると一瞬で読み込みます。</p>
         <div class="closet-list" id="closet-list-area"></div>
     </div>
 
@@ -484,7 +505,7 @@
         "言語", "解読", "医学", "コンピューター", "修繕", "自然"
     ];
 
-    let baseStats = { body: 2, str: 2, int: 2, spd: 2, men: 2 };
+    let baseStats = { body: 1, str: 1, int: 1, spd: 1, men: 1 };
     let skillStats = {};
     let skillModifiers = {}; 
     const storagePrefix = "crying_city_sheet_";
@@ -520,27 +541,22 @@
         });
     }
 
-    function roll2d4() {
-        return (Math.floor(Math.random() * 4) + 1) + (Math.floor(Math.random() * 4) + 1);
-    }
-
-    function rollRandomBaseStats() {
-        if(confirm("システム通信：ダイス判定プロトコルを起動します。現在の数値が上書きされます。")) {
-            baseStats.body = roll2d4();
-            baseStats.str = roll2d4();
-            baseStats.int = roll2d4();
-            baseStats.spd = roll2d4();
-            baseStats.men = roll2d4();
-            for (let key in baseStats) {
-                document.getElementById(`base-${key}`).value = baseStats[key];
-            }
-            recalculate();
-        }
-    }
-
     function adjustBase(key, val) {
         let current = baseStats[key];
-        if (current + val < 2 || current + val > 90) return;
+        let charLevel = parseInt(document.getElementById('p-level').value) || 1;
+        
+        // 基礎能力値の上限は原則キャラクターレベル
+        if (current + val < 1 || (val > 0 && current + val > charLevel)) return;
+        
+        // 割り振りポイントの残数チェック
+        if (val > 0) {
+            let currentRemaining = parseFloat(document.getElementById('calc-rem-base-pt').value) || 0;
+            if (currentRemaining < 1) {
+                alert("基本能力ポイントが不足しています。キャラクターレベルを上げるか、配分を見直してください。");
+                return;
+            }
+        }
+        
         baseStats[key] += val;
         document.getElementById(`base-${key}`).value = baseStats[key];
         recalculate();
@@ -577,10 +593,41 @@
     }
 
     function recalculate() {
+        let charLevel = parseInt(document.getElementById('p-level').value) || 1;
+        
+        // --- 階級とランクの自動目安設定 ---
+        let rankText = "一般労働階級";
+        if (charLevel >= 2 && charLevel <= 4) rankText = "ランクG(8級)";
+        else if (charLevel >= 5 && charLevel <= 10) rankText = "ランク F(7級)";
+        else if (charLevel >= 11 && charLevel <= 20) rankText = "ランク E(6級)";
+        else if (charLevel >= 21 && charLevel <= 34) rankText = "ランク D(5級)";
+        else if (charLevel >= 35 && charLevel <= 50) rankText = "ランク C(4級)";
+        else if (charLevel >= 51 && charLevel <= 62) rankText = "ランク B(3級)";
+        else if (charLevel >= 63 && charLevel <= 70) rankText = "ランク A(2級)";
+        else if (charLevel >= 71 && charLevel <= 80) rankText = "ランク S(1級)";
+        else if (charLevel >= 81) rankText = "エリート(1級)";
+        document.getElementById('calc-rank-status').value = rankText;
+
+        // --- 基本能力割り振りポイント計算（キャラクターLv × 5） ---
+        let totalBasePoints = charLevel * 5;
+        let usedBasePoints = (baseStats.body - 1) + (baseStats.str - 1) + (baseStats.int - 1) + (baseStats.spd - 1) + (baseStats.men - 1);
+        let remBasePoints = totalBasePoints - usedBasePoints;
+        document.getElementById('calc-rem-base-pt').value = remBasePoints + " pt";
+
+        // 基本能力値プラスボタンの自動ロック（ポイント切れ、または各能力が現在のキャラLv上限に達した場合）
+        for (let key in baseStats) {
+            let plusBtn = document.getElementById(`btn-base-plus-${key}`);
+            if (plusBtn) {
+                plusBtn.disabled = (remBasePoints < 1 || baseStats[key] >= charLevel);
+            }
+        }
+
+        // --- 各種派生ステータス自動計算 ---
         document.getElementById('calc-hp').value = baseStats.body * 6;
         let dbCount = Math.floor(baseStats.str / 7);
         document.getElementById('calc-db').value = dbCount > 0 ? `+${dbCount}d6` : "なし";
         
+        // 知能由来技能ポイント: Lv×3 ＋ Lv10につき追加10ポイント
         let spBonus = Math.floor(baseStats.int / 10) * 10;
         let basicSP = (baseStats.int * 3) + spBonus;
         document.getElementById('calc-sp').value = `${basicSP} pt`;
@@ -601,10 +648,15 @@
             if (plusBtn) plusBtn.disabled = (remainingSP < nextCost);
         });
 
-        let extraActions = Math.floor(baseStats.spd / 10);
+        // 速度Lv20につき戦闘中の行動回数+1
+        let extraActions = Math.floor(baseStats.spd / 20);
         document.getElementById('calc-actions').value = `${1 + extraActions} 回`;
+        
+        // 精神Lv4につきコスト最大値+1
         let extraCost = Math.floor(baseStats.men / 4);
         document.getElementById('calc-cost-max').value = 3 + extraCost;
+        
+        // 精神Lv10につきターン終了時のコスト回復値+1
         let costReg = Math.floor(baseStats.men / 10);
         document.getElementById('calc-cost-reg').value = 1 + costReg;
     }
@@ -679,6 +731,7 @@
             profile: {
                 name: document.getElementById('p-name').value,
                 faction: document.getElementById('p-faction').value,
+                level: parseInt(document.getElementById('p-level').value) || 1,
                 age: document.getElementById('p-age').value,
                 sex: document.getElementById('p-sex').value,
                 height: document.getElementById('p-height').value,
@@ -715,20 +768,17 @@
         alert("システム通信：共有用URLを生成しました！");
     }
 
-    // ==================== 【公式JSON完全互換】ココフォリア出力プロトコル ====================
     function copyToCcfolia() {
         let d = compileData();
         let slot = d.profile.name || "名無しの市民";
         
         let calcHP = baseStats.body * 6;
         let costMax = 3 + Math.floor(baseStats.men / 4);
-        let actionsMax = 1 + Math.floor(baseStats.spd / 10);
-        let regCost = 1 + Math.floor(baseStats.men / 10);
+        let actionsMax = 1 + Math.floor(baseStats.spd / 20); // 速度Lv20につき+1
+        let regCost = 1 + Math.floor(baseStats.men / 10); // 精神Lv10につき+1
 
-        // ① メモ欄の指定フォーマット整形
         let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${d.profile.title || ""}\n特殊能力： ${d.specialTraits || ""}\n武器： ${d.weapon.name || ""}\n所属： ${d.profile.faction || ""}\n年齢： ${d.profile.age || ""}\n身長： ${d.profile.height || ""}\n体重： ${d.profile.weight || ""}\n性別： ${d.profile.sex || ""}\n\n\n獲得称号\n${d.profile.earnedTitle || ""}`;
 
-        // ② チャットパレット（commands）の構築
         let commands = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
 
         cryingCitySkills.forEach(sk => {
@@ -743,7 +793,7 @@
 
             let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
             
-            if (sk.startsWith("近接攻撃") || sk.startsWith("射撃攻撃") || sk === "投擲") {
+            if (sk.includes("攻撃") || sk === "投擲") {
                 commands += `${totalSkillLv}d6 【${sk}】\n`;
             } else {
                 commands += `${totalSkillLv}d6>= 【${sk}】\n`;
@@ -752,12 +802,11 @@
 
         commands += `\n// --- 所持兵装独自スキル ---\n${d.weapon.skill1 || ""}\n${d.weapon.skillsMulti || ""}`;
 
-        // ③ ココフォリア規格（label / value / max / commands）に完全準拠したJSONオブジェクト
         let ccfoliaJson = {
             kind: "character",
             data: {
                 name: slot,
-                initiative: baseStats.spd, // 速度実値をイニシアティブに自動割当
+                initiative: baseStats.spd, 
                 externalUrl: window.location.href,
                 iconUrl: "",
                 memo: memo,
@@ -782,7 +831,7 @@
 
         navigator.clipboard.writeText(JSON.stringify(ccfoliaJson)).then(() => {
             alert("システム通信：ココフォリア規格に完全適合した駒データをコピーしました！部屋の画面上でペースト(Ctrl+V)してください。");
-        }).catch(err => { alert("コピーエラー。"); });
+        }).catch(err => { alert("コピーエラー。ブラウザのセキュリティ設定を確認してください。"); });
     }
 
     function parseUrlOrLoadLocal() {
@@ -824,6 +873,7 @@
         if(data.profile) {
             document.getElementById('p-name').value = data.profile.name || "";
             document.getElementById('p-faction').value = data.profile.faction || "一般労働者";
+            document.getElementById('p-level').value = data.profile.level || 1;
             document.getElementById('p-age').value = data.profile.age || "";
             document.getElementById('p-sex').value = data.profile.sex || "";
             document.getElementById('p-height').value = data.profile.height || "";
