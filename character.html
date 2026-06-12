@@ -12,7 +12,7 @@
             --accent-color: #ff3b30; /* 警告用ネオンレッド */
             --accent-gray: #b3bac2;  
             --accent-blue: #00bcd4;  /* サイバーブルー */
-            --accent-orange: #ff9500;/* プロフィール・重要項目用 */
+            --accent-green: #34c759; /* エメラルドグリーン */
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #2d3748;
@@ -111,7 +111,7 @@
         h2 {
             font-size: 1.2rem;
             color: #fff;
-            border-left: 4px solid var(--accent-gray);
+            border-left: 4px solid var(--accent-blue);
             padding-left: 10px;
             margin-bottom: 15px;
             letter-spacing: 0.05em;
@@ -119,10 +119,10 @@
 
         h3 {
             font-size: 1rem;
-            color: var(--accent-orange);
-            margin: 15px 0 5px 0;
-            display: flex;
-            align-items: center;
+            color: #fff;
+            margin: 20px 0 10px 0;
+            padding-bottom: 3px;
+            border-bottom: 1px dashed var(--border-color);
         }
 
         p {
@@ -130,6 +130,15 @@
             margin-bottom: 15px;
             text-align: justify;
             white-space: pre-line;
+        }
+
+        blockquote {
+            background-color: #0d0f12;
+            border-left: 3px solid var(--accent-color);
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            border-radius: 0 4px 4px 0;
         }
 
         /* --- ナビゲーション --- */
@@ -180,131 +189,10 @@
             color: #fff;
         }
 
-        /* --- プロフィール箇条書き、特殊ルール枠 --- */
-        .rule-box {
-            background-color: #12151c;
-            border: 1px dashed var(--border-color);
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-        .bullet-list {
-            padding-left: 20px;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-        }
-
-        /* --- 技術能力切り替えクイックリストボタン --- */
-        .list-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            list-style: none;
-            padding: 5px 0;
-            margin-bottom: 15px;
-        }
-        .list-grid li button {
-            width: 100%;
-            background-color: #12151c;
-            color: var(--text-color);
-            border: none;
-            padding: 8px 5px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            border-left: 3px solid var(--accent-blue);
-            text-align: center;
-            transition: background 0.2s;
-        }
-        .list-grid li button:hover { background-color: #1c2230; }
-
-        /* --- 技術能力横カルーセルスライダー --- */
-        .slider-wrapper {
-            position: relative;
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-        }
-        .slide-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 36px;
-            height: 36px;
-            background-color: rgba(22, 26, 34, 0.95);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            font-size: 0.8rem;
-            transition: all 0.3s;
-        }
-        .slide-arrow:hover { border-color: var(--accent-blue); color: var(--accent-blue); background-color: #12151c; }
-        .arrow-prev { left: -12px; }
-        .arrow-next { right: -12px; }
-
-        .slider-container {
-            width: 100%;
-            overflow-x: auto;
-            display: flex;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            scrollbar-width: none;
-        }
-        .slider-container::-webkit-scrollbar { display: none; }
-
-        .tech-card {
-            flex: 0 0 100%;
-            width: 100%;
-            scroll-snap-align: start;
-            background-color: #1a202c;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow: hidden;
-            padding: 15px;
-        }
-        .tech-card-header {
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 6px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .tech-sub-list {
-            list-style: none;
-        }
-        .tech-item {
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-        }
-        .tech-item:last-child { margin-bottom: 0; }
-        .tech-name {
-            font-weight: bold;
-            color: var(--accent-blue);
-            display: block;
-        }
-        .tech-desc {
-            color: var(--text-color);
-            padding-left: 10px;
-            border-left: 2px solid #3a475c;
-            display: block;
-            margin-top: 2px;
-        }
-
         @media (max-width: 480px) {
             .nav-grid { grid-template-columns: 1fr; }
-            .list-grid { grid-template-columns: repeat(2, 1fr); }
             .nav-button.highlight { grid-column: span 1; }
             .main-title { font-size: 1.6rem; }
-            .slide-arrow { width: 32px; height: 32px; }
         }
     </style>
 </head>
@@ -312,21 +200,21 @@
 
 <header>
     <div class="main-title">クライングシティ</div>
-    <div class="sub-title">市民（プレイヤーキャラクター）登録・制作ガイド</div>
+    <div class="sub-title">市民登録プロトコル // キャラクター制作・判定構築ガイド</div>
 </header>
 
 <div class="banner-container">
     <div class="banner-track">
-        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
     </div>
 </div>
 
 <div class="container">
 
-    <!-- ナビゲーション（キャラクター制作が current-page） -->
+    <!-- ナビゲーション -->
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
@@ -335,199 +223,277 @@
             <a href="character.html" class="nav-button current-page">◆キャラクター制作◆</a>
             <a href="company.html" class="nav-button">◆会社◆</a>
             <a href="weapon.html" class="nav-button">◆武器◆</a>
+            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
-            <a href="npc_list.html" class="nav-button">◆重要人物一覧◆</a>
+            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
 
     <!-- 〇プロフィール -->
     <div class="section-panel">
-        <h2>〇 プロフィール設定</h2>
+        <h2>〇プロフィール</h2>
         <p>あなたが操作することになるキャラクター、市民の作り方について説明していきます。
-        一般的なプロフィールとして、以下の6つの項目を決定します。</p>
-        <div class="rule-box" style="color: var(--accent-orange); font-weight: bold;">
-            名前、年齢、性別、身長、体重、所属
-        </div>
-        <p>これらすべてを埋める必要はありませんが、<strong>「所属」のみ後述する特殊能力の決定に繋がるため必須項目</strong>となります。</p>
+        一般的なプロフィールとして以下の項目を決めます。
+        名前、年齢、性別、身長、体重、所属の6つです。
+        これらすべてを埋める必要はありませんが、所属のみ後述する内容により必須となります。</p>
     </div>
 
-    <!-- 〇能力（基礎能力） -->
+    <!-- 〇レベル -->
     <div class="section-panel">
-        <h2>〇 基礎能力の決定</h2>
-        <p>キャラクターには3つの能力があります。はじめに基礎能力（ステータス）を決めていきましょう。
-        基礎能力は全部で<strong>身体、筋力、知能、速度、精神</strong>の5つに分類され、初期数値はすべて基本2Lvからスタートします。
-        Lv（レベル）の割り振り方は以下の2種類から選択可能です。</p>
+        <h2>〇レベル</h2>
+        <p>キャラクターシートにて記載される全ての数値をLv(レベル)と呼称します。
+        Lvはこのゲームの判定方法に大きく関わってくるので、慎重に選びましょう。
+        まずはキャラクターLvを決めましょう。
+        キャラクターLvは1〜90まであり、この数値が高いほど強力な存在になります。
+        キャラクターLvは90が上限ですが、特殊能力などの外部効果で最大Lv100まで強化されるでしょう。
+        シナリオをクリアした際にキャラクターLvは上昇しますが、シナリオ推奨Lvから差1につき本来用意されていた報酬を増減します。(報酬最大減少量-10/報酬最大増加量+10)
+        対象とのLvの差だけ判定に有利、不利な補正が入る事になります。
+        AND、この数値を参照して基本能力を決めていきます。</p>
+    </div>
+
+    <!-- ○階級とランク -->
+    <div class="section-panel">
+        <h2>○階級とランク</h2>
+        <p>社員の皆様にはランク、そしてこの世界の全員には階級が付いています。
+        会社に所属していない金持ちなだけの方は基本ランクなんてものは付きませんが、階級は彼らにも存在します。
+        ここではその位を、ランクを中心にキャラクターLv別に簡潔に分かりやすくまとめさせていただきました。</p>
+
+        <h3>一般労働階級</h3>
+        <p>当然ながらランクなんてものもありません。
+        彼らは社会の歯車で、それ以上もそれ以下も無いです。
+        しかしそれぞれに稼ぎの差はある為、階級という面では4〜8まで様々です。
+        一言で推し量るには難しい階級でしょう。
+        ◉平均キャラクターLv1</p>
+
+        <h3>ランクG(8級)</h3>
+        <p>まだまだひよっこの駆け出しのランクです。
+        いわゆる才能の無い、努力も並以下の方々か環境に恵まれない方がこのランクに居ます。
+        ◉平均キャラクターLv2〜4</p>
+
+        <h3>ランク F(7級)</h3>
+        <p>仕事ができる…程度のランクです。
+        無能ではありませんが、替えは効きますし上位互換が世には溢れているでしょうね。
+        ◉平均キャラクターLv5〜10</p>
+
+        <h3>ランク E(6級)</h3>
+        <p>使い勝手とコスパのいい駒になってくるランクです。
+        階級として見ても、一般的に裕福と言える生活は出来るでしょうね。
+        ◉平均キャラクターLv11〜20</p>
+
+        <h3>ランク D(5級)</h3>
+        <p>十分な実力を持っているランクです。
+        優秀とまでは言えませんが、十分貴重な存在たり得るでしょう。
+        ◉平均キャラクターLv21〜34</p>
+
+        <h3>ランク C(4級)</h3>
+        <p>中規模程度の会社ならば、十分上の立場に立てるランクです。
+        このぐらいであれば、名もそれなりに売れてくる頃でしょうね。
+        向上心があるなら、上を目指す選択肢は多いと思われます。
+        ◉平均キャラクターLv35〜50</p>
+
+        <h3>ランク B(3級)</h3>
+        <p>名のある会社や組織の長を務められる程の実力はあります。
+        もちろん巨大な会社に就くことも難しく無いでしょう。
+        仕事をするだけで、基本何不自由なく暮らすことができると思われます。
+        ◉平均キャラクターLv51〜62</p>
+
+        <h3>ランク A(2級)</h3>
+        <p>引く手数多と言ったところでしょうか、優秀な方のランクとなります。
+        才能と努力と運あってこそ、この境地に来れると思ってください。
+        どこかで聞いたことのある名前も、このランクには沢山居るでしょう。
+        ◉平均キャラクターLv63〜70</p>
+
+        <h3>ランク S(1級)</h3>
+        <p>ここまでにどれ程の道のりがあったでしょうか、我々には分かりません。
+        ですが間違いなく多くの人々の上に立てる地位である事は、揺らぎようの無い事実です。
+        1人でも十分な影響力をもたらすでしょう。
+        ◉平均キャラクターLv70〜80</p>
+
+        <h3>エリート(1級)</h3>
+        <p>名を知らない人はほとんど居ない、まさに頂点に立つ者達。
+        この境地へ到達するどころか、見る事さえそう叶うものでは無いのです。
+        実力、才能、努力、経験。
+        彼らはこれら全てにおいて文字通り次元が違い、比べる事さえ出来はしないでしょう。
+        ◉平均キャラクターLv81以上</p>
+    </div>
+
+    <!-- 〇能力 -->
+    <div class="section-panel">
+        <h2>〇能力</h2>
+        <p>キャラクターには3つの能力があります。</p>
+
+        <h3>・基本能力</h3>
+        <p>はじめに基礎能力を決めていきましょう。
+        基礎能力は全部で身体、筋力、知能、速度、精神の5つに分類されます。
+        それぞれ初期数値は1でここから数値を割り振っていきます。
+        割り振り方はキャラクターLv×5だけ獲得した基本能力ポイントを使って増加させます。
+        ただし、キャラクターレベル以上に基本能力Lvを上げることはできません。
+        ただしこの初期値、AND割り振りと上限はあくまで基本とするものであり変動させることも可能です。
+        その際は上限を超えても問題ありません。</p>
+
+        <p>基礎能力にはそれぞれ対応した数値があります。
+        〈身体〉Lv×6だけHPの最大値が増加
+        〈筋力〉Lv7につき+DBと記載のあるダメージロールに+1d6の追加ダメージ
+        〈知能〉Lv×3だけ技能ポイントを得る、Lv10につき追加技能ポイントを10獲得
+        〈速度〉Lvの値だけ行動順が早くなる、Lv20につき戦闘中の行動回数+1
+        〈精神〉Lv4につきコスト最大値+1、Lv10につきターン終了時のコスト回復値+1</p>
+
+        <blockquote><strong>HP：</strong>ダメージを受けるとこの数値が減少する、0になると死亡する
+        <strong>ダメージロール：</strong>攻撃や何らかの衝撃など様々な要因でHPが減少する際に行われるロール
+        <strong>技能ポイント：</strong>技術能力のLv上昇に使用される
+        <strong>行動順：</strong>大抵の場合は戦闘に用いられるが、何かの順番を決める際に使われる事もある
+        <strong>行動回数：</strong>戦闘中に行える技術能力や特殊能力の使用が数値分可能、別途記載がない限り1回につき1行動となる
+        <strong>コスト：</strong>初期値3。戦闘中の強攻撃や特殊能力などの強力な行動使用時に消費される、ターン終了時1回復する
+        <strong>コスト回復値：</strong>コスト回復効果が数値分増加する</blockquote>
+
+        <h3>・技術能力</h3>
+        <p>続いて技術能力です。
+        こちらは基本能力よりも細分化された、個々の判定を行うための物となります。
+        技術能力は技能ポイントを使ってLvを上げることが出来ます。
+        基本能力と同じく技術能力の初期値は全てLv1で、1ポイントでLv1上げることができます。</p>
+
+        <h3>▽技術能力一覧</h3>
         
-        <h3>■ 割り振り方式（上限：制作時最大8Lvまで）</h3>
-        <ul class="bullet-list">
-            <li><strong>ランダム割り振り:</strong> 各項目ごとに2d4をダイスロールし、2～8の数値をそのまま決定。</li>
-            <li><strong>手動（固定値）割り振り:</strong> 初期値2Lvの状態から、自由に分配できる【16Lv分】のポイントを手動で各能力に割り振る。</li>
-        </ul>
-
-        <div class="rule-box">
-            <strong>【成長システム補足】</strong>
-            シナリオクリア報酬の経験ポイントで能力Lvを上限突破させて成長可能ですが、<strong>Lv10の節目以降は、1Lv上昇させるための消費量が1ずつ増加</strong>します。
-            （例：Lv1→Lv2＝1pt、Lv9→Lv10＝2pt、Lv8→Lv10＝計3pt）
-            ※キャラ制作時の16Lv割り振り時は、数値分そのままストレートに上昇させて構いません。
-        </div>
-
-        <h3>■ 各基礎能力の対応ステータス影響</h3>
-        <ul class="bullet-list" style="list-style: square;">
-            <li><strong>〈身体〉:</strong> Lv×6だけHPの最大値が増加。</li>
-            <li><strong>〈筋力〉:</strong> Lv7につき、ダメージロールに「+DB」の記載がある攻撃へ +1d6 の追加ダメージが発生。</li>
-            <li><strong>〈知能〉:</strong> Lv×3だけ技術能力を上げる「技能ポイント」を獲得。さらにLv10到達時に追加で10ポイント獲得。</li>
-            <li><strong>〈速度〉:</strong> Lvの値だけ行動順が早くなる。さらにLv10到達時に戦闘中の「行動回数+1」。</li>
-            <li><strong>〈精神〉:</strong> Lv4につきコスト最大値+1。さらにLv10到達時にターン終了時の「コスト回復値+1」。</li>
-        </ul>
-
-        <div class="rule-box" style="background-color: #11141c; font-size: 0.85rem; color: var(--text-muted);">
-            <strong>【用語解説】</strong><br>
-            ・HP: ダメージで減少し、0になると死亡する。<br>
-            ・技能ポイント: 技術能力のLv上昇に使用する。<br>
-            ・行動回数: 戦闘中に1回につき1行動として、技術・特殊能力を使用できる量。<br>
-            ・コスト: 初期値3。強力な行動時に消費。ターン終了時に「1 + コスト回復値」だけ回復する。
-        </div>
-    </div>
-
-    <!-- ・技術能力 -->
-    <div class="section-panel">
-        <h2>〇 技術能力（技能）</h2>
-        <p>技術能力は、基礎能力より細分化された個々の判定を行うためのものです。技能ポイントやクリア報酬の経験ポイントを消費して成長させます。
-        <strong>初期値はすべて1Lv</strong>で、1ポイントにつき1Lv上昇します（こちらも基礎能力同様、Lv10を節目に消費量が1ずつ増加します）。</p>
-
-        <h3>技術能力カテゴリ (タップでスライド切り替え)</h3>
-        <ul class="list-grid">
-            <li><button onclick="scrollToTech(0)">戦闘系能力</button></li>
-            <li><button onclick="scrollToTech(1)">感覚能力</button></li>
-            <li><button onclick="scrollToTech(2)">行動能力</button></li>
-            <li><button onclick="scrollToTech(3)">対人能力</button></li>
-            <li><button onclick="scrollToTech(4)">知識能力</button></li>
-        </ul>
-
-        <div class="slider-wrapper">
-            <button class="slide-arrow arrow-prev" onclick="moveTechSlider(-1)">◀</button>
-            <div class="slider-container" id="tech-slider">
-                
-                <!-- 1. 戦闘系能力 -->
-                <div class="tech-card">
-                    <div class="tech-card-header">戦闘系能力 <span>[1/5]</span></div>
-                    <ul class="tech-sub-list">
-                        <li class="tech-item"><span class="tech-name">【回避】(守備能力)</span><span class="tech-desc">攻撃を回避する。敵の出目と同等以上なら無効。失敗するまで再使用可能。発動ターンは他守備行動不可。</span></li>
-                        <li class="tech-item"><span class="tech-name">【防御】(守備能力)</span><span class="tech-desc">攻撃を受け止める。出目の値だけバリアを獲得（ターン終了まで維持）。1ターンに1回。発動ターンは他守備行動不可。</span></li>
-                        <li class="tech-item"><span class="tech-name">【反撃】(守備能力)</span><span class="tech-desc">敵より出目が大きければスキルを無効化し、使用武器の「スキル1」で反撃（DB無効）。1ターン2回。遠距離・特殊攻撃にはダメージ判定なし。発動ターンは他守備行動不可。</span></li>
-                        <li class="tech-item"><span class="tech-name">【近接攻撃( 武器種 )】</span><span class="tech-desc">近接戦技能。格闘、短剣(ナイフ等)、刀剣、大剣、長柄(槍・ハルバード)、鈍器(ハンマー・スパナ)などを括弧内に記載。</span></li>
-                        <li class="tech-item"><span class="tech-name">【射撃攻撃( 銃器種 )】</span><span class="tech-desc">遠距離戦技能。拳銃、ライフル(スナイパー/アサルト)、ショットガン、弓矢などを括弧内に記載。弾丸を消費する。</span></li>
-                        <li class="tech-item"><span class="tech-name">【投擲】</span><span class="tech-desc">狙った場所に物を投げる能力。ただしダメージロール時、DB（ダメージボーナス）の効果が半減する（端数切り捨て）。</span></li>
-                    </ul>
-                </div>
-
-                <!-- 2. 感覚能力 -->
-                <div class="tech-card">
-                    <div class="tech-card-header">感覚能力 <span>[2/5]</span></div>
-                    <ul class="tech-sub-list">
-                        <li class="tech-item"><span class="tech-name">【視覚】</span><span class="tech-desc">何かを見つける、発見する能力。素早いものを目で追う際にも使用。</span></li>
-                        <li class="tech-item"><span class="tech-name">【聴覚】</span><span class="tech-desc">何かを聞く、聞き取る能力。複数の音を聞き分ける際にも使用。</span></li>
-                        <li class="tech-item"><span class="tech-name">【嗅覚】</span><span class="tech-desc">漂う臭いにいち早く気づく能力。反対に息を素早く止めるといった応用も可能。</span></li>
-                        <li class="tech-item"><span class="tech-name">【感知】</span><span class="tech-desc">周囲の違和感や気配、何らかの事象を察知するための能力。</span></li>
-                        <li class="tech-item"><span class="tech-name">【思案】</span><span class="tech-desc">何かを思いつく、アイデアや解決の糸口を脳内に導き出すための能力。</span></li>
-                    </ul>
-                </div>
-
-                <!-- 3. 行動能力 -->
-                <div class="tech-card">
-                    <div class="tech-card-header">行動能力 <span>[3/5]</span></div>
-                    <ul class="tech-sub-list">
-                        <li class="tech-item"><span class="tech-name">【調査】</span><span class="tech-desc">未知や複雑な物を調べる能力。本や書類、電子データを調べるのにも使う。</span></li>
-                        <li class="tech-item"><span class="tech-name">【隠密】</span><span class="tech-desc">誰にも見つからないよう隠れる能力。隠れやすい場所や逃走経路の推察も可能。</span></li>
-                        <li class="tech-item"><span class="tech-name">【跳躍】</span><span class="tech-desc">壁や塀、裂け目などを跳び越すための身体能力。</span></li>
-                        <li class="tech-item"><span class="tech-name">【登攀】</span><span class="tech-desc">崖や建造物の壁、ハシゴなどを登るための能力。</span></li>
-                        <li class="tech-item"><span class="tech-name">【追跡】</span><span class="tech-desc">逃げる相手を追ったり、残された痕跡を見つけ出す能力。</span></li>
-                        <li class="tech-item"><span class="tech-name">【手当】</span><span class="tech-desc">負傷者を1d4回復する。成否判定のダイス数をそのまま回復判定に移すことができる。</span></li>
-                    </ul>
-                </div>
-
-                <!-- 4. 対人能力 -->
-                <div class="tech-card">
-                    <div class="tech-card-header">対人能力 <span>[4/5]</span></div>
-                    <ul class="tech-sub-list">
-                        <li class="tech-item"><span class="tech-name">【話術】</span><span class="tech-desc">言葉を適切に選び分かりやすく伝える能力。説得や言いくるめなど。</span></li>
-                        <li class="tech-item"><span class="tech-name">【詐術】</span><span class="tech-desc">相手を欺く、嘘を吐く能力。相手の嘘を見抜く代用判定としても使用可能。</span></li>
-                        <li class="tech-item"><span class="tech-name">【心理学】</span><span class="tech-desc">心と行動を解き明かす能力。嘘を見抜いたり、NPCの心の内を推察する。</span></li>
-                        <li class="tech-item"><span class="tech-name">【威圧】</span><span class="tech-desc">精神的な圧力をかけ、相手を威圧・脅迫したり気圧されたりする能力。</span></li>
-                        <li class="tech-item"><span class="tech-name">【信用】</span><span class="tech-desc">自分が信用に足る存在かを表す。所持金や社会的地位が高ければこれだけで有利。</span></li>
-                    </ul>
-                </div>
-
-                <!-- 5. 知識能力 -->
-                <div class="tech-card">
-                    <div class="tech-card-header">知識能力 <span>[5/5]</span></div>
-                    <ul class="tech-sub-list">
-                        <li class="tech-item"><span class="tech-name">【言語】</span><span class="tech-desc">あらゆる言葉に通ずる能力。言語に関する理解度や、暗号の簡易認識。</span></li>
-                        <li class="tech-item"><span class="tech-name">【解読】</span><span class="tech-desc">未知の文章や古代文字、高度な暗号を時間をかけて解読する能力。</span></li>
-                        <li class="tech-item"><span class="tech-name">【医学】</span><span class="tech-desc">人体や病気に関しての専門知識。治療に使う場合「手当」の代用が可能だが、ダイスを回復効果に移すことはできない。</span></li>
-                        <li class="tech-item"><span class="tech-name">【コンピューター】</span><span class="tech-desc">電子機器やネットワーク、それに準ずる機械類に対する知識・ハッキング能力。</span></li>
-                        <li class="tech-item"><span class="tech-name">【修繕】</span><span class="tech-desc">壊れた機械の修理や武器の整備能力。特定の武器の「攻撃スキル」を選択・移植する際にも要求される。</span></li>
-                        <li class="tech-item"><span class="tech-name">【自然】</span><span class="tech-desc">生物や植物、気象や宇宙など、元々世界に存在する自然科学・博物学的知識。</span></li>
-                    </ul>
-                </div>
-
-            </div>
-            <button class="slide-arrow arrow-next" onclick="moveTechSlider(1)">▶</button>
-        </div>
-    </div>
-
-    <!-- 〇特殊能力 -->
-    <div class="section-panel">
-        <h2>〇 特殊能力の獲得</h2>
-        <p>探索や戦闘で個性を発揮する特殊能力は、全部で4つまで設定できますが、<strong>キャラクター制作段階では1つしか設定できません</strong>。残りの枠はシナリオクリア時の経験ポイント（5、10、20pt）を消費して解放します。
+        <p><strong>[戦闘系能力]</strong>
+        戦闘にて必要とされる能力。
+        攻撃能力にて算出されるダメージは基本1d4、或いは武器に記載される数値。
         
-        特殊能力による基礎能力の上昇は、キャラクター制作時の<strong>「上限8Lv」の制限を無視して突破・加算</strong>されます。基礎能力および技術能力のポイント割り振りは、この特殊能力の補正が乗った後に反映されます。</p>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">※ポータルに記載されているのは主力会社のみですが、世界に存在する中小会社はほぼ大規模の傘下です。詳細は「◆会社◆」ページをご確認のうえ、主要会社名を所属欄にご記入ください。</p>
+        <strong>【回避】（守備能力）</strong>
+        攻撃を回避する能力、対象よりも出目が同等か大きければダメージを無効化する。回避失敗するまで再使用可能。この能力を使用したターンは他の守備能力を使用出来ない。
+        
+        <strong>【防御】（守備能力）</strong>
+        攻撃を受け止める能力、出目の値だけバリアを獲得しターン終了まで維持される。1ターンに1回使用可能。この能力を使用したターンは他の守備能力を使用出来ない。
+        
+        <strong>【反撃】（守備能力）</strong>
+        攻撃を迎え撃つ能力、対象よりも出目が大きければスキルを無効化し対象にダメージを与える。1ターンに2回使用可能。ダメージロールは使用武器のスキル1を参照する（DBの効果は得られない）。遠距離攻撃や特殊な攻撃などで使用する場合、ダメージロール判定は発生しない。この能力を使用したターンは他の守備能力を使用出来ない。
+        
+        <strong>【近接攻撃(  )】</strong>
+        近距離での攻撃に使用する能力、（）の中には使用する武器を扱う内容を記載する。以下記載例。
+        ・格闘：徒手空拳、グローブ、ナックルなどを中心とした戦闘技能
+        ・短剣：ナイフやダガーなどの短い刃物を使用する戦闘技能（格闘でも扱えて良いが武器に短剣専用効果などが付いていればこの技能が優位となる）
+        ・刀剣：刀や剣などの武器を使用する戦闘技能
+        ・大剣：ツーハンデッドソードやクレイモアなどの両手剣を専門とする戦闘技能
+        ・長柄：薙刀やハルバード、槍などの長物の扱いに長けた戦闘技能
+        ・鈍器：メイスやハンマーなどの殴打武器を扱う戦闘技能
+        
+        <strong>【射撃攻撃(  )】</strong>
+        遠距離での攻撃に使用する能力、（）の中には使用する武器を扱う内容を記載する。以下記載例。
+        ・拳銃：小型の銃を使用する事を中心とした射撃技能
+        ・ライフル：ライフルを使用する射撃技能
+        ・ショットガン：ショットガンを扱う射撃技能
+        ・弓矢：弓矢、クロスボウ、スリングショットなどを扱う射撃技能
+        
+        <strong>【投擲】</strong>
+        狙った場所に物を投げる能力。ただしダメージロール判定時、DBが半減する。（小数点切り捨て）</p>
+
+        <p><strong>[感覚能力]</strong>
+        基本的に本人に備わっている能力。探索の他に戦闘など広い範囲で役立つ可能性がある。
+        
+        <strong>【視覚】</strong>何かを見つける、発見するための能力。素早いものを目で追うといった際にも使用される
+        <strong>【聴覚】</strong>何かを聞く、聞き取るための能力。複数の音を聞き分けるといった際にも使用される
+        <strong>【嗅覚】</strong>何かを嗅ぐ、漂う臭いにいち早く気づく能力。反対に息を素早く止めるといった使用も可能
+        <strong>【感知】</strong>何らかを察知するための能力
+        <strong>【思案】</strong>何かを思いつくための能力</p>
+
+        <p><strong>[行動能力]</strong>
+        探索や支援といったものを中心に扱う能力。もちろん必要とされる場面は少なくないだろう。
+        
+        <strong>【調査】</strong>未知や複雑な物を調べるための能力、本や書類を調べるのにも使う
+        <strong>【隠密】</strong>誰にも見つからないよう隠れる能力、隠れやすい場や逃走経路の推察などにも使用できる
+        <strong>【跳躍】</strong>壁や塀などを跳び越す能力
+        <strong>【登攀】</strong>崖や壁などを登る能力
+        <strong>【追跡】</strong>相手を追ったり痕跡を見つけ出す能力
+        <strong>【手当】</strong>この能力は成否判定のダイス数を回復判定に移す事ができる。怪我を負った人を1d4回復する能力</p>
+
+        <p><strong>[対人能力]</strong>
+        この世界に必要とされる場面は少ない。しかし全く必要ないという事も無いだろう。
+        
+        <strong>【話術】</strong>言葉を適切に選び分かりやすく伝える能力、人を説得したり言いくるめたりと様々な扱いが期待出来る
+        <strong>【詐術】</strong>相手を欺くための能力、嘘を見抜く代用判定としても使える
+        <strong>【心理学】</strong>心と行動を解き明かす能力、嘘を見抜いたり心の内を推察したりする
+        <strong>【威圧】</strong>相手を威圧・脅迫したりする能力
+        <strong>【信用】</strong>いかに自分が信用できる存在かを表す能力、所持金や身分が高ければこの能力だけで充分</p>
+
+        <p><strong>[知識能力]</strong>
+        より専門的知識に関する能力。人々は頭脳というものでここまで上り詰めてきたのだ。
+        
+        <strong>【言語】</strong>あらゆる言葉に通ずる能力、言語に関する理解度
+        <strong>【解読】</strong>未知の文章や古代文字の解読する能力
+        <strong>【医学】</strong>病気や怪我など人体に関しての知識能力、治療行為に使う場合手当の代用判定として扱う。手当と複合ロールをする場合、回復効果に医学のダイスを移す事は出来ない
+        <strong>【コンピューター】</strong>コンピューターやそれに準ずる機械類に対する知識能力
+        <strong>【修繕】</strong>壊れた機械や動かなくなった物を修理する能力、武器の整備などもできる
+        <strong>【自然】</strong>生物や植物、自然現象や宇宙など元々存在するものに関した自然科学・博物学的知識能力</p>
+
+        <h3>・特殊能力</h3>
+        <p>これらの他に特殊能力と呼ばれるものが存在します。
+        探索や戦闘において様々な効果を発揮し、プレイヤーを手助けしてくれると同時にキャラクターの個性にもつながるかと思われます。
+        所属している会社によって得られる特殊能力は異なるため、前述にあった通り所属の設定は必須となります。
+        また、特殊能力による基礎能力上昇はキャラクター制作時の基礎能力上限の制限を受けずに上限を上回ることができます。
+        AND基本能力及び技術能力のLv上昇は特殊能力の後に反映されます。
+        特殊能力は全部で4つ設定できますが、キャラクター制作段階では基本1つしか設定できません。
+        1つ目の特殊能力以外は、キャラクターLvがそれぞれ15,20,40で獲得が可能となります。
+        以後記載される会社は主力会社で、世の中に存在するであろう多くの会社の記載はされません。
+        それでもその会社はその会社の下についていることがほとんどです。
+        なので、自分が所属する会社として上にある会社の所属を記載して頂ければさほど問題はございません。
+        詳細は会社スレッドにてご確認ください。</p>
     </div>
 
     <!-- 〇武器 -->
     <div class="section-panel">
-        <h2>〇 初期武器の所持</h2>
-        <p>このクライングシティにおいて、会社員は大抵武器を保有しています。そうでなければ生き残ることは不可能です。
-        初期武器Lvは1からスタートし、要求値（必要ステータス）を満たしていれば装備可能です。武器Lvが上昇すると要求値も上昇します。複数の武器を同時使用（二刀流など）する場合、<strong>要求値はすべて加算（累積）</strong>されます。</p>
-        
-        <div class="rule-box" style="font-size:0.9rem;">
-            <strong>【攻撃スキルの解放タイミング】</strong><br>
-            武器レベルが <strong>Lv1、Lv2、Lv5、Lv15</strong> に達した時点で、それぞれ攻撃スキル1〜4が順次解放されます。<br>
-            スキル1は固定ですが、スキル2以降の効果内容はランダムに決定されます。もしキャラクターの【修繕Lv】が「武器Lv÷2（切り上げ）」以上であれば、効果を任意に選択して取得・味方に適用することが可能です。（一律経験ポイント3消費でリロールも可能）
-        </div>
+        <h2>〇武器</h2>
+        <p>会社員の大抵は武器を保有しています。
+        そうでなければ殺されるという事は、説明せずとも理解いただけるでしょう。
+        武器はそれぞれ武器Lvと武器スキル、攻撃スキルが存在しています。
+        武器Lvは1〜5まであり、初期Lvは1。
+        保有する武器Lvを上げるには技能ポイントを5消費することで上昇します。
+        また、武器は扱う際の要求値というものがあり、基礎能力がその数値に達していなければ扱えません。
+        要求される基礎能力は武器によって異なり、武器Lvが上昇すると要求値が現在要求値の2倍に上昇します。
+        (例：武器Lv1の要求値身体Lv4/筋力Lv5の武器の場合、武器Lv2で身体Lv8/筋力Lv10、武器Lv3で身体Lv16/筋力Lv20・・・武器Lv5で身体Lv64/筋力Lv80となります)
+        また、武器のダメージロールダイス数も同様に現在値から2倍されていきます。
+        武器を同時に2つ以上使用したい場合、それぞれの武器の要求値が加算されます。
+        （例：身体Lv6/速度Lv6の刀二本を使うなら身体Lv12/速度Lv12を要求される）
+        武器スキルは武器一つにつき1つだけ保有していますが、キャラ制作時は獲得できません。(ただし特殊能力にて特殊な固有アイテムを獲得するの効果で、武器を選択した場合はその限りではありません)
+        修繕Lvが武器Lv以上のキャラが居ればシナリオ中登場する同様武器の武器スキルを、移す事ができます。
+        攻撃スキルは1～4まで存在しており、攻撃スキル1は既存で存在し、武器によって差は大きくありません。
+        しかしスキル2以降は武器それぞれにランダムで攻撃効果が決まり、様々な個性を発揮します。
+        スキル2〜4はそれぞれLv2、Lv3、Lv4で解放されます。
+        それぞれの武器のスキル2表、スキル3表、スキル4表振り内容を決定します。
+        修繕Lvが武器Lv×10以上なら選んで選択することが可能で、味方にも適応することができます。
+        スキル表の内容と大きく差が生まれなければ、自分で能力を作る事も可能としています。
+        詳細は武器スレッドにてご確認ください。</p>
     </div>
 
     <!-- 〇詳細 -->
     <div class="section-panel">
-        <h2>〇 キャラクターの詳細（過去と感情）</h2>
-        <p>最後に容姿・性格・行動理念を記載する「備考欄（自由入力）」と、システムに直接影響を及ぼす<strong>「過去・感情・重要な人物欄」</strong>を記述します。
-        この街で10年以上生きていれば、誰しも他人に言えない罪、恥、暗い過去（誰かを殺した、利用した等）を必ず背負うことになります。</p>
+        <h2>〇詳細</h2>
+        <p>最後にキャラクターの詳細を書いていきます。
+        容姿の特徴や性格的特徴、行動理念などを記載する備考欄、そして過去とそれに付随する感情・重要な人物欄の2つがあります。
+        備考欄は特に言及する点は無く、自由に書いて問題はございません。
+        ただし過去や重要な人物欄は、判定やシナリオに影響が及ぶ可能性のある欄です。</p>
+
+        <h3>▽過去・重要な人物</h3>
+        <p>この欄には過去あった事象の名称と感情、その内容を記載しその人物に過去何があったかという背景が描かれるでしょう。
+        大抵の場合は誰かを殺した、陥れた、利用した等の罪が記載されると思われますが、ごく稀に被害に遭っただけの人も居ます。
+        いずれにせよ、誰も過去を語りたがる人間など居るはずもありません、罪や恥を相手に告白する事に等しい行為ですから。
+        そういった暗い過去をあなたは持っています、この世界で10年以上生きていけば必ずそうなります。
+        純粋な人ほど不純なものから目を逸らし続け、明るい人ほど必死に自分を隠している事を忘れないでください。
+        余談はこのぐらいにしましょう。
         
-        <div class="rule-box" style="border-left: 4px solid var(--accent-orange); background-color: #12151c;">
-            <strong>【システム効果：過去のトリガー】</strong><br>
-            あなたが設定した過去・感情・重要な人物の内容が、シナリオ中に発生した判定のシチュエーションに近い、または強く関連するとGMが認めた場合、<strong>その判定時のダイス数が1増加</strong>するボーナスを得られます。
-        </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">※この項目はシナリオや卓の性質上、他のプレイヤーに秘匿された状態（秘密HOなど）で指定・配布される場合があります。</p>
+        過去や感情、重要な人物に関して記載例を挙げますと、
+        <strong>過去：</strong>「友を殺した」
+        <strong>感情：</strong>「嫉妬」
+        <strong>内容：</strong>「はじめ、○○とは互いにライバルとして研鑽し合う仲であった（中略）…そうして、この血濡れ穢れたナイフと共に今もなお、あの日を引きずりながら詰まる息を吐き出している」
+        <strong>重要な人物：</strong>「○○/△△」
+        <strong>内容：</strong>「○○：元々仲が良くライバル関係だった（以下省略）△△：○○と恋仲。いつか死ぬ日が来るのなら、彼女に殺されるのだろう。（以下省略）」
+        
+        といった形になると思われます。
+        過去・感情・重要な人物の内容はシナリオ中の判定する物に近い内容であれば、判定時のダイス数が1増加する場合があります。
+        また、この欄はシナリオや卓によっては秘匿される場合や、HOとして多少指定される場合もあるかもしれません。
+        以上でキャラクター制作の説明を終わります、お疲れさまでした。</p>
     </div>
 
 </div>
-
-<!-- カルーセル制御スクリプト -->
-<script>
-    function moveTechSlider(direction) {
-        const container = document.getElementById('tech-slider');
-        const cardWidth = container.clientWidth;
-        container.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
-    }
-
-    function scrollToTech(index) {
-        const container = document.getElementById('tech-slider');
-        const cardWidth = container.clientWidth;
-        container.scrollTo({ left: cardWidth * index, behavior: 'smooth' });
-    }
-</script>
 
 </body>
 </html>
