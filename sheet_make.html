@@ -71,12 +71,12 @@
             letter-spacing: 0.05em;
         }
 
-        /* --- 【最優先修正】親の枠に囚われず、常にViewport右下に常駐固定される引き出し型目次 --- */
+        /* --- 【最優先修正】画面のどこにいても絶対に最前面で右下に固定される浮遊メニュー --- */
         .floating-menu {
             position: fixed !important;
             bottom: 25px !important;
             right: 25px !important;
-            z-index: 999999 !important;
+            z-index: 999999 !important; /* あらゆるパネルより前面に強制配置 */
         }
         .menu-trigger-btn {
             background: linear-gradient(135deg, var(--accent-blue) 0%, #008ba3 100%);
@@ -123,10 +123,6 @@
         }
         .menu-content-panel a:hover {
             background-color: #1e293b; color: var(--accent-blue); padding-left: 16px;
-        }
-        .menu-content-panel .menu-hl {
-            background: linear-gradient(90deg, #ff3b30, #a20000) !important; color: #fff !important;
-            font-weight: bold; text-align: center; margin-top: 5px;
         }
 
         /* --- ナビゲーション戻るボタン --- */
@@ -256,26 +252,19 @@
 </head>
 <body onpageshow="if (event.persisted) window.location.reload();">
 
+<!-- 👑 【完全追従化】どの座標・セクションを見ても確実に右下固定されるセクション専用目次 👑 -->
 <div class="floating-menu">
     <button type="button" class="menu-trigger-btn" onclick="toggleFloatingMenu()">☰</button>
     <div class="menu-content-panel" id="floating-menu-panel">
-        <div class="menu-section-title">▼ 外部サイト・資料リンク</div>
-        <a href="index.html">◆ 概要トップページ</a>
-        <a href="news.html">◆ お知らせ・パッチノート履歴</a>
-        <a href="character.html">◆ キャラクター制作ルール</a>
-        <a href="company.html">◆ 統括企業データ一覧</a>
-        <a href="weapon.html">◆ カタログスペック兵装一覧</a>
-        <a href="world_lore.html">◆ ディストピア都市歴史・世界観</a>
-
         <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
         <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
         <a onclick="scrollToSection('sec-profile')">👤 2. プロフィール ＆ 経歴</a>
-        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力設定</a>
+        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
         <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
-        <a onclick="scrollToSection('sec-traits')">🧬 5. 特殊能力スロット</a>
-        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装リスト</a>
-        <a onclick="scrollToSection('sec-story')">📖 7. 過去の因果背景</a>
-        <a onclick="scrollToSection('sec-closet')">📂 8. 登録記録保管庫</a>
+        <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
+        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
+        <a onclick="scrollToSection('sec-story')">📖 7. キャラクターバックストーリー</a>
+        <a onclick="scrollToSection('sec-closet')">📂 8. 端末内セーブデータ一覧</a>
     </div>
 </div>
 
@@ -291,6 +280,7 @@
         <button id="btn-edit-toggle" class="btn-nav" style="display:none; background-color: #1a2736; border-color: var(--accent-blue);" onclick="enableEditing()">⚙ このシートを編集する</button>
     </div>
 
+    <!-- ==================== 1. セーブ・共有・出力パネル ==================== -->
     <div class="section-panel account-box" id="sec-system">
         <h2>◆ システム・セーブ＆出力プロトコル</h2>
         <p style="font-size:0.85rem; color:var(--text-muted);">LocalStorageによる自動管理、暗号化URLによる共有、ココフォリア駒データのクリップボード出力に対応しています。</p>
@@ -320,6 +310,7 @@
         </div>
     </div>
 
+    <!-- ==================== 2. プロフィール ＆ 転職履歴 ==================== -->
     <div class="section-panel" id="sec-profile">
         <h2>〇 プロフィール ＆ 経歴管理（複数転職対応）</h2>
         <div class="form-grid">
@@ -350,6 +341,7 @@
                 <input type="text" id="p-faction-free" placeholder="オリジナルの会社名や組織名を入力してください" oninput="updateFactionAndTraits()">
             </div>
 
+            <!-- 前職リスト管理枠 -->
             <div class="form-group span-2" style="border-top:1px dashed var(--border-color); padding-top:10px; margin-top:5px;">
                 <label style="color: var(--accent-blue);">▼ 前職の経歴・転職履歴（追加した経歴の能力も選択肢にブレンドされます）</label>
                 <div id="career-history-area"></div>
@@ -383,6 +375,7 @@
         </div>
     </div>
 
+    <!-- ==================== 3. 基礎能力（独立・常時表示パネル） ==================== -->
     <div class="section-panel" id="sec-base">
         <h2>〇 基礎能力（割り振りポイント総数：キャラクターレベル × 4）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。獲得した基本能力ポイントを消費して割り振ります。上限はキャラレベル値までとなります。</p>
@@ -400,8 +393,7 @@
 
         <div class="status-header-bar"><span>能力項目</span><span>現在Lv</span></div>
 
-        <div id="base-stats-rows-container">
-            </div>
+        <div id="base-stats-rows-container"></div>
 
         <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
             <div class="form-group"><label>最大HP</label><input type="text" id="calc-hp" value="6" readonly style="color:var(--accent-color); font-weight:bold;"></div>
@@ -413,6 +405,7 @@
         </div>
     </div>
 
+    <!-- ==================== 4. 技術能力（スライド ◀ ▶ ループ対応形式） ==================== -->
     <div class="section-panel" id="sec-skills">
         <h2>〇 技術能力（共通一律コスト：1レベル上昇につき1pt消費）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は一律Lv1。戦闘系技能は自由に独自の兵装・流派名に変更可能です。</p>
@@ -449,14 +442,15 @@
         </div>
     </div>
 
+    <!-- ==================== 5. 特殊能力スロット（独立・常時表示パネル） ==================== -->
     <div class="section-panel" id="sec-traits">
         <h2>〇 特殊能力（最大4枠 // 現職と追加した全前職の能力が自動融合）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">選択した固有能力に応じて、対応するHPや基礎能力への自動適用・ステータス加算補正が瞬時に発動します。</p>
         
-        <div class="form-grid" id="special-slots-container">
-            </div>
+        <div class="form-grid" id="special-slots-container"></div>
     </div>
 
+    <!-- ==================== 6. 所持兵装管理 ==================== -->
     <div class="section-panel" id="sec-weapons">
         <h2>〇 所持武器・スキル・弾数管理（複数所持カード管理）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※武器を複数所持する場合、要求能力値がそれぞれ加算されます。1つ目のカードの弾数がステータスへ最優先連動します。</p>
@@ -464,6 +458,7 @@
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
     </div>
 
+    <!-- ==================== 7. バックストーリー ==================== -->
     <div class="section-panel" id="sec-story">
         <h2>〇 キャラクターバックストーリー</h2>
         <details class="story-accordion">
@@ -481,6 +476,7 @@
         </details>
     </div>
 
+    <!-- ==================== 8. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box" id="sec-closet">
         <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
         <div class="closet-list" id="closet-list-area"></div>
@@ -488,6 +484,7 @@
 
 </div>
 
+<!-- ==================== コアエンジン・スクリプト ==================== -->
 <script>
     const companyTraitsData = {
         "赤色戦派": ["武の才能", "戦意高揚", "死線越え", "肉弾戦", "暗殺の瞳", "正面突破", "強靭な肩", "撃ち合い特化", "戦術指揮", "各個撃破", "背水", "屈強な身体", "安定した呼吸", "戦いの信条", "バーサーカー", "不安定"],
@@ -534,11 +531,24 @@
     let careerIndexCounter = 0;
     const storagePrefix = "crying_city_sheet_";
 
-    // 目次開閉トグル
+    window.onload = function() {
+        initBaseStatsRows();
+        initSkillsSlides();
+        initSpecialSlots();
+        addNewWeaponField();
+        recalculate();
+        refreshClosetList();
+        parseUrlOrLoadLocal();
+        updateSkillSlideVisibility();
+    };
+
+    // 目次トグルの開閉関数
     function toggleFloatingMenu() {
         const panel = document.getElementById('floating-menu-panel');
         panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
     }
+
+    // 目次のスムーズスクロール機能
     function scrollToSection(id) {
         const target = document.getElementById(id);
         if(target) {
@@ -547,7 +557,7 @@
         }
     }
 
-    // 技術能力スライド切替（ループ対応式）
+    // 技術能力スライド（◀ ▶ ループ制御対応型）
     function changeSkillSlide(direction) {
         currentSkillSlideIdx += direction;
         if(currentSkillSlideIdx < 0) currentSkillSlideIdx = 4; 
@@ -1191,7 +1201,7 @@
                 card.innerHTML = `
                     <button type="button" class="btn-delete-card" onclick="deleteWeaponField(${weaponIndexCounter})">削除</button>
                     <div class="form-grid">
-                        <div class="form-group span-2"><label>武器名</label><input type="text" class="wp-name" value="${wp.name || ""}"></div>
+                        <div class="form-grid"><label>武器名</label><input type="text" class="wp-name" value="${wp.name || ""}"></div>
                         <div class="form-group"><label>兵装Lv</label><input type="number" class="wp-lv" value="${wp.lv || 1}"></div>
                         <div class="form-group"><label>スキル1</label><input type="text" class="wp-sk1" value="${wp.skill1 || ""}"></div>
                         <div class="form-group"><label>総弾数</label><input type="number" class="wp-bullet-total" value="${wp.bulletTotal || 0}"></div>
