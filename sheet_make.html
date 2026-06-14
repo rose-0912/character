@@ -70,7 +70,7 @@
             letter-spacing: 0.05em;
         }
 
-        /* --- ナビゲーション戻るボタン --- */
+        /* --- ナびゲーション戻るボタン --- */
         .back-nav { margin-bottom: 20px; display: flex; gap: 10px; }
         .btn-nav {
             background-color: #222733; color: #fff; padding: 10px 15px; text-decoration: none;
@@ -228,9 +228,7 @@
             transition: transform 0.2s;
         }
 
-        .menu-trigger-btn:hover {
-            transform: scale(1.08);
-        }
+        .menu-trigger-btn:hover { transform: scale(1.08); }
 
         .menu-content-panel {
             position: absolute;
@@ -261,9 +259,7 @@
             display: block; color: #cbd5e1; padding: 6px 12px; text-decoration: none;
             font-size: 0.85rem; border-radius: 4px; transition: all 0.15s; cursor: pointer;
         }
-        .menu-content-panel a:hover {
-            background-color: #1e293b; color: var(--accent-blue); padding-left: 16px;
-        }
+        .menu-content-panel a:hover { background-color: #1e293b; color: var(--accent-blue); padding-left: 16px; }
 
         @media (max-width: 480px) {
             .form-grid { grid-template-columns: 1fr; }
@@ -290,7 +286,7 @@
         <div class="form-grid" style="margin-top: 10px; gap:10px;">
             <div class="form-group">
                 <label>セーブスロット（アカウント内管理名）</label>
-                <input type="text" id="slot-name" value="デフォルトの市民データ">
+                <input type="text" id="slot-name" value="デフォルト of 市民データ">
             </div>
             <div class="form-group">
                 <label>PL名（ココフォリア出力用項目）</label>
@@ -436,7 +432,7 @@
         
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
-                <label>特技ポイントの【補正追加分】</label>
+                <label>特技ポイントの【補正追加分】（★通過シナリオの合計Expが自動連動加算されます）</label>
                 <input type="number" id="bonus-sp" value="0" min="0" oninput="recalculate()">
             </div>
             <div class="form-group">
@@ -482,10 +478,10 @@
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
     </div>
 
-    <!-- ==================== 7. 【新設】通過シナリオ一覧セクション ==================== -->
+    <!-- ==================== 7. 通過シナリオ一覧（例を完全クリア・Exp連動版） ==================== -->
     <div class="section-panel" id="sec-scenarios">
-        <h2>〇 通過シナリオ記録・履歴管理（動的追加削除対応）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">これまで通過したシナリオ名、獲得経験P、エンド内容、および個別の備考テキストを記録できます。</p>
+        <h2>〇 通過シナリオ記録・履歴管理（動的追加削除・獲得Exp技能連携）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">通過したシナリオ名、獲得経験P、エンド内容、備考を記録できます。入力された獲得Expは技能ポイント補正に自動合算されます。</p>
         <div id="scenarios-list-area"></div>
         <button type="button" class="btn-add-card" style="background-color:#1c2533; color:var(--accent-blue); border-color:#2a394a;" onclick="addNewScenarioField()">＋ 通過シナリオの記録を追加する</button>
     </div>
@@ -522,7 +518,7 @@
     <div class="menu-content-panel" id="floating-menu-panel">
         <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
         <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
-        <a onclick="scrollToSection('sec-profile">👤 2. プロフィール ＆ 経歴</a>
+        <a onclick="scrollToSection('sec-profile')">👤 2. プロフィール ＆ 経歴</a>
         <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
         <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
         <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
@@ -578,7 +574,7 @@
     let weaponIndexCounter = 0;
     let customSkillCounter = 0;
     let careerIndexCounter = 0;
-    let scenarioIndexCounter = 0; // シナリオカウンター
+    let scenarioIndexCounter = 0; 
     const storagePrefix = "crying_city_sheet_";
 
     let titlePrefixCollection = [""];
@@ -776,7 +772,7 @@
         
         document.querySelectorAll('.career-card').forEach(card => {
             let fac = card.querySelector('.career-faction-select').value;
-            if(fac === "other" || fac === "その他") fac = card.querySelector('.career-faction-free-input').value || "その他";
+            if(fac === "その他") fac = card.querySelector('.career-faction-free-input').value || "その他";
             if(fac && companyTraitsData[fac]) { companyTraitsData[fac].forEach(t => availableTraits.push({ traitName: t, source: `前職:${fac}` })); }
         });
 
@@ -810,7 +806,7 @@
         recalculate();
     }
 
-    // --- 【追加】動的通過シナリオ一覧の生成ロジック群 ---
+    // 通過シナリオ動的生成（記入例・プレースホルダーを完全排除 ＆ Expリアルタイム連動イベント設定）
     function addNewScenarioField(name="", exp="", end="", note="") {
         scenarioIndexCounter++;
         const container = document.getElementById('scenarios-list-area');
@@ -820,15 +816,33 @@
         div.innerHTML = `
             <button type="button" class="btn-delete-card" onclick="deleteScenarioField(${scenarioIndexCounter})">削除</button>
             <div class="form-grid">
-                <div class="form-group"><label>シナリオ名</label><input type="text" class="sc-name" value="${name}" placeholder="例：VOID：01"></div>
-                <div class="form-group"><label>獲得経験ポイント数</label><input type="text" class="sc-exp" value="${exp}" placeholder="例：50pt"></div>
-                <div class="form-group span-2"><label>到達エンド</label><input type="text" class="sc-end" value="${end}" placeholder="例：END A（生存）"></div>
-                <div class="form-group span-2"><label>シナリオ備考・獲得アイテム・報酬等</label><textarea class="sc-note" rows="2" placeholder="例：前半フレーズ「覚醒せし」を獲得、特殊アイテム入手など">${note}</textarea></div>
+                <div class="form-group"><label>シナリオ名</label><input type="text" class="sc-name" value="${name}"></div>
+                <div class="form-group"><label>獲得経験ポイント数（半角数値入力で技能ptへ自動合算）</label><input type="number" class="sc-exp" value="${exp}" oninput="syncScenariosExpToBonusSp()"></div>
+                <div class="form-group span-2"><label>到達エンド</label><input type="text" class="sc-end" value="${end}"></div>
+                <div class="form-group span-2"><label>シナリオ備考・獲得アイテム・報酬等</label><textarea class="sc-note" rows="2">${note}</textarea></div>
             </div>
         `;
         container.appendChild(div);
+        syncScenariosExpToBonusSp();
     }
-    function deleteScenarioField(id) { document.getElementById(`scenario-id-${id}`).remove(); }
+
+    function deleteScenarioField(id) { 
+        document.getElementById(`scenario-id-${id}`).remove(); 
+        syncScenariosExpToBonusSp();
+    }
+
+    // 【新設ロジック】全シナリオの獲得経験Pを全自動で集計し、特技のボーナス補正へ直結流し込みするプロトコル
+    function syncScenariosExpToBonusSp() {
+        let totalExp = 0;
+        const expInputs = document.querySelectorAll('.sc-exp');
+        expInputs.forEach(input => {
+            let val = parseInt(input.value) || 0;
+            totalExp += val;
+        });
+        // 技能セクションの補正追加分入力欄へ値を全自動上書き流し込み
+        document.getElementById('bonus-sp').value = totalExp;
+        recalculate();
+    }
 
     function addNewCustomSkillField(savedName = "", savedLv = 1, savedMod = 0) {
         customSkillCounter++;
@@ -888,7 +902,6 @@
 
     function updateModifier(skName, index) { skillModifiers[skName] = parseInt(document.getElementById(`skmod-${index}`).value) || 0; }
 
-    // 技術能力レベル増減処理
     function adjustSkill(skName, index, val) {
         let current = skillStats[skName]; if (current + val < 1 || current + val > 90) return;
         if (val > 0 && (parseInt(document.getElementById('calc-rem-sp').value) || 0) < 1) { alert("特技ポイントが不足しています。"); return; }
@@ -1013,7 +1026,6 @@
             }
         });
 
-        // 【新設】通過シナリオデータのコンパイル収集
         let scenariosArray = [];
         document.querySelectorAll('.scenario-item-card').forEach(card => {
             scenariosArray.push({
@@ -1028,8 +1040,7 @@
             titlePrefixWord: document.getElementById('p-title-prefix').value, titleSuffixWord: document.getElementById('p-title-suffix').value,
             savedPrefixList: titlePrefixCollection, savedSuffixList: titleSuffixCollection,
             profile: {
-                name: document.getElementById('p-name').value, faction: factionValue,
-                level: parseInt(document.getElementById('p-level').value) || 1, age: document.getElementById('p-age').value,
+                name: document.getElementById('p-name').value, faction: factionValue, age: document.getElementById('p-age').value,
                 sex: document.getElementById('p-sex').value, height: document.getElementById('p-height').value, weight: document.getElementById('p-weight').value
             },
             lore: {
@@ -1059,11 +1070,10 @@
 
         let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${fullTitleStr}\n特殊能力： ${traitsText}${careerStr}\n武器： ${weaponNames}\n所属： ${d.profile.faction || ""}`;
 
-        // シナリオ履歴テキストを駒データメモ欄の末尾に全自動追加
         if(d.scenariosList && d.scenariosList.length > 0) {
             memo += `\n\n【通過シナリオ記録】`;
             d.scenariosList.forEach(sc => {
-                if(sc.name) memo += `\n・${sc.name} (${sc.exp || '0pt'}) [${sc.end || '生存'}]: ${sc.note || ''}`;
+                if(sc.name) memo += `\n・${sc.name} (${sc.exp || '0'}pt) [${sc.end || ''}]: ${sc.note || ''}`;
             });
         }
 
@@ -1112,7 +1122,8 @@
     function applyDataToForm(data) {
         if (!data) return;
         baseStats = data.baseStats || baseStats; skillStats = data.skillStats || skillStats; skillModifiers = data.skillModifiers || skillModifiers;
-        document.getElementById('bonus-sp').value = data.bonusSp || 0; document.getElementById('p-pl-name').value = data.plName || "";
+        if(data.bonusSp) document.getElementById('bonus-sp').value = data.bonusSp;
+        document.getElementById('p-pl-name').value = data.plName || "";
         for (let key in baseStats) { if(document.getElementById(`base-${key}`)) document.getElementById(`base-${key}`).value = baseStats[key]; }
         cryingCitySkills.forEach((sk, index) => {
             if(document.getElementById(`sk-${index}`)) document.getElementById(`sk-${index}`).value = skillStats[sk] || 1;
@@ -1142,7 +1153,6 @@
             document.getElementById('career-history-area').innerHTML = "";
             if(data.careerHistory) { data.careerHistory.forEach(c => addNewCareerField(c.faction, c.freeFaction)); }
             updateFactionAndTraits();
-            if(data.profile.level) document.getElementById('p-level').value = data.profile.level;
             document.getElementById('p-age').value = data.profile.age || ""; document.getElementById('p-sex').value = data.profile.sex || "";
             document.getElementById('p-height').value = data.profile.height || ""; document.getElementById('p-weight').value = data.profile.weight || "";
         }
@@ -1179,10 +1189,12 @@
             });
         } else { addNewWeaponField(); }
 
-        // シナリオ履歴データの復元ロード処理
+        // シナリオ履歴のロード
         const scArea = document.getElementById('scenarios-list-area'); scArea.innerHTML = "";
         if(data.scenariosList && data.scenariosList.length > 0) {
             data.scenariosList.forEach(sc => { addNewScenarioField(sc.name, sc.exp, sc.end, sc.note); });
+        } else {
+            syncScenariosExpToBonusSp();
         }
 
         if(data.lore) {
