@@ -26,7 +26,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            padding-bottom: 120px; /* 目次と重ならないよう余白を確保 */
+            padding-bottom: 120px;
             opacity: 0;
             animation: fadeInPage 0.6s ease-out forwards;
         }
@@ -59,7 +59,7 @@
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-            scroll-margin-top: 20px; /* 目次スクロールジャンプ時の上部余白 */
+            scroll-margin-top: 20px;
         }
 
         h2 {
@@ -71,81 +71,64 @@
             letter-spacing: 0.05em;
         }
 
-/* --- 【最優先修正】画面右下にいつでも確実に常駐する拡張型スマート目次 --- */
-.floating-menu {
-    position: fixed !important;  /* 画面に対して完全に固定 */
-    bottom: 25px !important;     /* 画面下部からの距離 */
-    right: 25px !important;      /* 画面右側からの距離 */
-    z-index: 999999 !important;  /* 他のあらゆる要素より最前面に表示 */
-}
+        /* --- 【最優先修正】親の枠に囚われず、常にViewport右下に常駐固定される引き出し型目次 --- */
+        .floating-menu {
+            position: fixed !important;
+            bottom: 25px !important;
+            right: 25px !important;
+            z-index: 999999 !important;
+        }
+        .menu-trigger-btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #008ba3 100%);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .menu-trigger-btn:hover { transform: scale(1.08); }
+        .menu-content-panel {
+            position: absolute;
+            bottom: 65px;
+            right: 0;
+            background-color: #0e1117;
+            border: 1px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 10px;
+            width: 260px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.9);
+            display: none;
+            max-height: 450px;
+            overflow-y: auto;
+            animation: menuFade 0.2s ease-out forwards;
+        }
+        @keyframes menuFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .menu-content-panel .menu-section-title {
+            font-size: 0.75rem; color: var(--accent-orange); font-weight: bold;
+            padding: 4px 8px; border-bottom: 1px solid #2d3748; margin-top: 6px;
+        }
+        .menu-content-panel a {
+            display: block; color: #cbd5e1; padding: 6px 12px; text-decoration: none;
+            font-size: 0.85rem; border-radius: 4px; transition: all 0.15s; cursor: pointer;
+        }
+        .menu-content-panel a:hover {
+            background-color: #1e293b; color: var(--accent-blue); padding-left: 16px;
+        }
+        .menu-content-panel .menu-hl {
+            background: linear-gradient(90deg, #ff3b30, #a20000) !important; color: #fff !important;
+            font-weight: bold; text-align: center; margin-top: 5px;
+        }
 
-.menu-trigger-btn {
-    background: linear-gradient(135deg, var(--accent-blue) 0%, #008ba3 100%);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.2);
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    font-size: 1.6rem;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.menu-trigger-btn:hover { 
-    transform: scale(1.08); 
-}
-
-.menu-content-panel {
-    position: absolute;
-    bottom: 65px;                /* ボタンの上方向に展開 */
-    right: 0;
-    background-color: #0e1117;
-    border: 1px solid var(--accent-blue);
-    border-radius: 8px;
-    padding: 10px;
-    width: 260px;
-    box-shadow: 0 4px 25px rgba(0,0,0,0.9);
-    display: none;               /* 初期状態は非表示（JavaScriptで開閉） */
-    max-height: 450px;
-    overflow-y: auto;
-    animation: menuFade 0.2s ease-out forwards;
-}
-
-@keyframes menuFade {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.menu-content-panel .menu-section-title {
-    font-size: 0.75rem; 
-    color: var(--accent-orange); 
-    font-weight: bold;
-    padding: 4px 8px; 
-    border-bottom: 1px solid #2d3748; 
-    margin-top: 6px;
-}
-
-.menu-content-panel a {
-    display: block; 
-    color: #cbd5e1; 
-    padding: 6px 12px; 
-    text-decoration: none;
-    font-size: 0.85rem; 
-    border-radius: 4px; 
-    transition: all 0.15s; 
-    cursor: pointer;
-}
-
-.menu-content-panel a:hover {
-    background-color: #1e293b; 
-    color: var(--accent-blue); 
-    padding-left: 16px;
-}
-        
         /* --- ナビゲーション戻るボタン --- */
         .back-nav { margin-bottom: 20px; display: flex; gap: 10px; }
         .btn-nav {
@@ -267,12 +250,12 @@
             .form-grid { grid-template-columns: 1fr; }
             .form-group.span-2 { grid-column: span 1; }
             .btn-action-row { grid-template-columns: 1fr; }
-            .page-menu { width: 140px; right: 10px; bottom: 10px; }
+            .floating-menu { bottom: 15px !important; right: 15px !important; }
         }
     </style>
 </head>
 <body onpageshow="if (event.persisted) window.location.reload();">
-<!-- 🚨 記述位置：<body>のすぐ直後に配置してください 🚨 -->
+
 <div class="floating-menu">
     <button type="button" class="menu-trigger-btn" onclick="toggleFloatingMenu()">☰</button>
     <div class="menu-content-panel" id="floating-menu-panel">
@@ -287,15 +270,15 @@
         <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
         <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
         <a onclick="scrollToSection('sec-profile')">👤 2. プロフィール ＆ 経歴</a>
-        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
+        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力設定</a>
         <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
-        <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
-        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
-        <a onclick="scrollToSection('sec-story')">📖 7. キャラクターバックストーリー</a>
-        <a onclick="scrollToSection('sec-closet')">📂 8. 端末内セーブデータ一覧</a>
+        <a onclick="scrollToSection('sec-traits')">🧬 5. 特殊能力スロット</a>
+        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装リスト</a>
+        <a onclick="scrollToSection('sec-story')">📖 7. 過去の因果背景</a>
+        <a onclick="scrollToSection('sec-closet')">📂 8. 登録記録保管庫</a>
     </div>
 </div>
-    
+
 <header>
     <div class="main-title">CRYING CITY // 端末機構</div>
     <div class="sub-title">市民データ・キャラクタープロトコル生成</div>
@@ -308,7 +291,6 @@
         <button id="btn-edit-toggle" class="btn-nav" style="display:none; background-color: #1a2736; border-color: var(--accent-blue);" onclick="enableEditing()">⚙ このシートを編集する</button>
     </div>
 
-    <!-- ==================== 1. セーブ・共有・出力パネル ==================== -->
     <div class="section-panel account-box" id="sec-system">
         <h2>◆ システム・セーブ＆出力プロトコル</h2>
         <p style="font-size:0.85rem; color:var(--text-muted);">LocalStorageによる自動管理、暗号化URLによる共有、ココフォリア駒データのクリップボード出力に対応しています。</p>
@@ -338,7 +320,6 @@
         </div>
     </div>
 
-    <!-- ==================== 2. プロフィール ＆ 転職履歴 ==================== -->
     <div class="section-panel" id="sec-profile">
         <h2>〇 プロフィール ＆ 経歴管理（複数転職対応）</h2>
         <div class="form-grid">
@@ -369,7 +350,6 @@
                 <input type="text" id="p-faction-free" placeholder="オリジナルの会社名や組織名を入力してください" oninput="updateFactionAndTraits()">
             </div>
 
-            <!-- 前職動的リスト管理枠（現職と同じドロップダウンセレクト方式） -->
             <div class="form-group span-2" style="border-top:1px dashed var(--border-color); padding-top:10px; margin-top:5px;">
                 <label style="color: var(--accent-blue);">▼ 前職の経歴・転職履歴（追加した経歴の能力も選択肢にブレンドされます）</label>
                 <div id="career-history-area"></div>
@@ -403,7 +383,6 @@
         </div>
     </div>
 
-    <!-- ==================== 3. 基礎能力（独立して常時表示） ==================== -->
     <div class="section-panel" id="sec-base">
         <h2>〇 基礎能力（割り振りポイント総数：キャラクターレベル × 4）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。獲得した基本能力ポイントを消費して割り振ります。上限はキャラレベル値までとなります。</p>
@@ -422,8 +401,7 @@
         <div class="status-header-bar"><span>能力項目</span><span>現在Lv</span></div>
 
         <div id="base-stats-rows-container">
-            <!-- 身体、筋力、知能、速度、精神のカウンター -->
-        </div>
+            </div>
 
         <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
             <div class="form-group"><label>最大HP</label><input type="text" id="calc-hp" value="6" readonly style="color:var(--accent-color); font-weight:bold;"></div>
@@ -435,7 +413,6 @@
         </div>
     </div>
 
-    <!-- ==================== 4. 技術能力（のみ：左右スライド ◀ ▶ 形式でループ可能） ==================== -->
     <div class="section-panel" id="sec-skills">
         <h2>〇 技術能力（共通一律コスト：1レベル上昇につき1pt消費）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は一律Lv1。戦闘系技能は自由に独自の兵装・流派名に変更可能です。</p>
@@ -451,7 +428,6 @@
             </div>
         </div>
 
-        <!-- 技術能力スライドナビゲーション（次のカテゴリー名がわかる & ループ式） -->
         <div class="skill-slide-nav-bar">
             <button type="button" class="btn-slide-arrow" id="btn-prev-skill" onclick="changeSkillSlide(-1)">◀ 前のカテゴリ</button>
             <span class="slide-indicator" id="carousel-skill-title">技術能力グループ：[戦闘系能力]</span>
@@ -464,10 +440,8 @@
             <span style="width: 35%; text-align: right;">実値Lvコントロール</span>
         </div>
 
-        <!-- 5つのカテゴリ別スライド -->
         <div id="skills-slides-track"></div>
 
-        <!-- 別途の完全独自カスタム技能追加エリア -->
         <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
             <label style="color: var(--accent-blue); display:block; margin-bottom:10px;">▼ 枠数に囚われない独自カスタム技能の追加・削除（コスト一律1pt）</label>
             <div id="custom-skills-area"></div>
@@ -475,17 +449,14 @@
         </div>
     </div>
 
-    <!-- ==================== 5. 特殊能力スロット（独立して常時表示・効果自動補正適用） ==================== -->
     <div class="section-panel" id="sec-traits">
         <h2>〇 特殊能力（最大4枠 // 現職と追加した全前職の能力が自動融合）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">選択した固有能力に応じて、対応するHPや基礎能力への自動適用・ステータス加算補正が瞬時に発動します。</p>
         
         <div class="form-grid" id="special-slots-container">
-            <!-- スロット1〜4がスクリプトで動的生成されます -->
-        </div>
+            </div>
     </div>
 
-    <!-- ==================== 6. 所持武器・スキル・弾数管理（複数対応） ==================== -->
     <div class="section-panel" id="sec-weapons">
         <h2>〇 所持武器・スキル・弾数管理（複数所持カード管理）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※武器を複数所持する場合、要求能力値がそれぞれ加算されます。1つ目のカードの弾数がステータスへ最優先連動します。</p>
@@ -493,7 +464,6 @@
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
     </div>
 
-    <!-- ==================== 7. バックストーリー（ワンクッション） ==================== -->
     <div class="section-panel" id="sec-story">
         <h2>〇 キャラクターバックストーリー</h2>
         <details class="story-accordion">
@@ -511,7 +481,6 @@
         </details>
     </div>
 
-    <!-- ==================== 8. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box" id="sec-closet">
         <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
         <div class="closet-list" id="closet-list-area"></div>
@@ -519,9 +488,7 @@
 
 </div>
 
-<!-- ==================== コアエンジン・スクリプト ==================== -->
 <script>
-    // 企業アビリティマスターデータ
     const companyTraitsData = {
         "赤色戦派": ["武の才能", "戦意高揚", "死線越え", "肉弾戦", "暗殺の瞳", "正面突破", "強靭な肩", "撃ち合い特化", "戦術指揮", "各個撃破", "背水", "屈強な身体", "安定した呼吸", "戦いの信条", "バーサーカー", "不安定"],
         "ディフィポリディ": ["守護者", "絶対秩序", "重装盾陣", "迅速な護衛", "護衛行動", "頑丈", "防御振動", "受け身の攻撃", "防衛陣形", "根性", "暖かき守り人", "隙狙い", "防御強化", "攻撃は最大の防御", "護りの信条", "臆病者", "重装部隊"],
@@ -547,7 +514,6 @@
         "言語", "解読", "医学", "コンピューター", "修繕", "自然"
     ];
 
-    // 技術能力スライド用のカテゴリ分類マッピング
     const skillCategories = [
         { title: "技術能力：[戦闘系能力]", range: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
         { title: "技術能力：[感覚能力]", range: [14, 15, 16, 17, 18] },
@@ -562,36 +528,30 @@
     let traitAutoBonuses = { body: 0, str: 0, int: 0, spd: 0, men: 0, hp: 0, sp: 0 };
     let skillStats = {};
     let skillModifiers = {}; 
-    let currentSkillSlideIdx = 0; // 技術能力用スライド表示インデックス
+    let currentSkillSlideIdx = 0; 
     let weaponIndexCounter = 0;
     let customSkillCounter = 0;
     let careerIndexCounter = 0;
     const storagePrefix = "crying_city_sheet_";
 
-    window.onload = function() {
-        initBaseStatsRows();
-        initSkillsSlides();
-        initSpecialSlots();
-        addNewWeaponField();
-        recalculate();
-        refreshClosetList();
-        parseUrlOrLoadLocal();
-        updateSkillSlideVisibility();
-    };
-
-    // 🐾 ページ内スムーズスクロールジャンプ
+    // 目次開閉トグル
+    function toggleFloatingMenu() {
+        const panel = document.getElementById('floating-menu-panel');
+        panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+    }
     function scrollToSection(id) {
         const target = document.getElementById(id);
         if(target) {
             target.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('floating-menu-panel').style.display = 'none';
         }
     }
 
-    // 【ループ対応 ＆ 次のカテゴリー名取得】技術能力スライド切替制御
+    // 技術能力スライド切替（ループ対応式）
     function changeSkillSlide(direction) {
         currentSkillSlideIdx += direction;
-        if(currentSkillSlideIdx < 0) currentSkillSlideIdx = 4; // 最初で「前へ」を押したら「知識能力」へループ
-        if(currentSkillSlideIdx > 4) currentSkillSlideIdx = 0; // 最後で「次へ」を押したら「戦闘系能力」へループ
+        if(currentSkillSlideIdx < 0) currentSkillSlideIdx = 4; 
+        if(currentSkillSlideIdx > 4) currentSkillSlideIdx = 0; 
         updateSkillSlideVisibility();
     }
 
@@ -604,17 +564,13 @@
             else slide.classList.remove('active');
         });
         
-        // 現在のカテゴリーのタイトルをセット
         document.getElementById('carousel-skill-title').innerText = skillCategories[currentSkillSlideIdx].title;
 
-        // 【新設】ループ対応：前後カテゴリー名の取得
         const prevIdx = (currentSkillSlideIdx - 1 < 0) ? 4 : currentSkillSlideIdx - 1;
         const nextIdx = (currentSkillSlideIdx + 1 > 4) ? 0 : currentSkillSlideIdx + 1;
-
         const prevName = skillCategories[prevIdx].title.replace("技術能力：[", "").replace("]", "");
         const nextName = skillCategories[nextIdx].title.replace("技術能力：[", "").replace("]", "");
 
-        // ボタンのラベルに動的にカテゴリ名を代入して書き換え
         document.getElementById('btn-prev-skill').innerHTML = `◀ 前：${prevName}`;
         document.getElementById('btn-next-skill').innerHTML = `次：${nextName} ▶`;
     }
@@ -626,7 +582,7 @@
             body: ["身体", "最大HPに影響（Lv×6）"],
             str: ["筋力", "追加ダメージに影響（Lv7毎に+1d6加算）"],
             int: ["知能", "技能ポイントに直結（Lv×3 ＋ Lv10毎に+10pt）"],
-            spd: ["速度", "行動順・最大行動回数に影響（Lv20毎に行動回数+1）"],
+            spd: ["速度", "行動順・最大行動回数に影響（Lv20毎行動回数+1）"],
             men: ["精神", "コスト最大値（Lv4毎に+1）、コスト回復（Lv10毎に+1）"]
         };
         for(let key in mapping) {
@@ -704,7 +660,6 @@
         updateTraitDropdownOptions();
     }
 
-    // 前職動的フィールド追加（所属会社と同様のリスト選択方式）
     function addNewCareerField(savedValue = "", savedFreeValue = "") {
         careerIndexCounter++;
         const area = document.getElementById('career-history-area');
@@ -740,11 +695,8 @@
         `;
         area.appendChild(div);
         
-        // 保存されていた値のリスト・セレクト復元
         const sel = div.querySelector('.career-faction-select');
-        if (savedValue) {
-            sel.value = savedValue;
-        }
+        if (savedValue) sel.value = savedValue;
         handleCareerFactionChange(careerIndexCounter);
     }
 
@@ -752,11 +704,8 @@
         const card = document.getElementById(`career-card-id-${id}`);
         const selVal = card.querySelector('.career-faction-select').value;
         const freeGroup = document.getElementById(`career-free-group-${id}`);
-        if(selVal === "その他") {
-            freeGroup.style.display = "block";
-        } else {
-            freeGroup.style.display = "none";
-        }
+        if(selVal === "その他") freeGroup.style.display = "block";
+        else freeGroup.style.display = "none";
         updateFactionAndTraits();
     }
 
@@ -765,38 +714,27 @@
         updateFactionAndTraits();
     }
 
-    // 現職・前職アビリティドロップダウン動的同期処理
     function updateFactionAndTraits() {
         const currentFaction = document.getElementById('p-faction').value;
-        if (currentFaction === "その他") {
-            document.getElementById('faction-free-group').style.display = "block";
-        } else {
-            document.getElementById('faction-free-group').style.display = "none";
-        }
+        if (currentFaction === "その他") document.getElementById('faction-free-group').style.display = "block";
+        else document.getElementById('faction-free-group').style.display = "none";
         updateTraitDropdownOptions();
     }
 
     function updateTraitDropdownOptions() {
         let availableTraits = [];
-        
-        // 現在の会社
         let currentFaction = document.getElementById('p-faction').value;
-        if (currentFaction === "その他") {
-            currentFaction = document.getElementById('p-faction-free').value || "その他";
-        }
+        if (currentFaction === "その他") currentFaction = document.getElementById('p-faction-free').value || "その他";
+        
         if (companyTraitsData[currentFaction]) {
             companyTraitsData[currentFaction].forEach(t => availableTraits.push({ traitName: t, source: `現職:${currentFaction}` }));
         } else if (currentFaction) {
             availableTraits.push({ traitName: `自由記入アビリティ（${currentFaction}）`, source: "現職(カスタム)" });
         }
 
-        // 複数の全前職のリスト選択値
-        const careerCards = document.querySelectorAll('.career-card');
-        careerCards.forEach(card => {
+        document.querySelectorAll('.career-card').forEach(card => {
             let fac = card.querySelector('.career-faction-select').value;
-            if(fac === "その他") {
-                fac = card.querySelector('.career-faction-free-input').value || "その他";
-            }
+            if(fac === "その他") fac = card.querySelector('.career-faction-free-input').value || "その他";
             if(fac) {
                 if (companyTraitsData[fac]) {
                     companyTraitsData[fac].forEach(t => availableTraits.push({ traitName: t, source: `前職:${fac}` }));
@@ -806,7 +744,6 @@
             }
         });
 
-        // スロット1〜4へ同期流し込み
         for (let i = 1; i <= 4; i++) {
             const sel = document.getElementById(`special-trait-select-${i}`);
             const previousValue = sel.value;
@@ -841,7 +778,6 @@
         executeTraitAutoCalculations();
     }
 
-    // 特殊能力自動ステータス補正算出エンジン
     function executeTraitAutoCalculations() {
         traitAutoBonuses = { body: 0, str: 0, int: 0, spd: 0, men: 0, hp: 0, sp: 0 };
         
@@ -862,7 +798,6 @@
         recalculate();
     }
 
-    // --- 独自戦闘技能の動的追加削除 ---
     function addNewCustomSkillField(savedName = "", savedLv = 1, savedMod = 0) {
         customSkillCounter++;
         const area = document.getElementById('custom-skills-area');
@@ -917,7 +852,6 @@
         recalculate();
     }
 
-    // --- 武器動的スロット生成 ---
     function addNewWeaponField() {
         weaponIndexCounter++;
         const targetContainer = document.getElementById('weapons-list-area');
@@ -942,6 +876,33 @@
         document.getElementById(`weapon-card-id-${id}`).remove();
     }
 
+    function adjustBase(key, val) {
+        let current = baseStats[key];
+        let charLevel = parseInt(document.getElementById('p-level').value) || 1;
+        if (current + val < 1 || (val > 0 && current + val > charLevel)) return;
+        if (val > 0 && (parseFloat(document.getElementById('calc-rem-base-pt').value) || 0) < 1) {
+            alert("基本能力ポイントが不足しています。"); return;
+        }
+        baseStats[key] += val;
+        document.getElementById(`base-${key}`).value = baseStats[key];
+        recalculate();
+    }
+
+    function updateModifier(skName, index) {
+        skillModifiers[skName] = parseInt(document.getElementById(`skmod-${index}`).value) || 0;
+    }
+
+    function adjustSkill(skName, index, val) {
+        let current = skillStats[skName];
+        if (current + val < 1 || current + val > 90) return;
+        if (val > 0 && (parseInt(document.getElementById('calc-rem-sp').value) || 0) < 1) {
+            alert("特技ポイントが不足しています。"); return;
+        }
+        skillStats[skName] += val;
+        document.getElementById(`sk-${index}`).value = skillStats[skName];
+        recalculate();
+    }
+
     function recalculate() {
         let charLevel = parseInt(document.getElementById('p-level').value) || 1;
         
@@ -957,7 +918,6 @@
         else if (charLevel >= 81) rankText = "エリート(1級)";
         document.getElementById('calc-rank-status').value = rankText;
 
-        // パッチ：基本能力ポイント＝Lv×4
         let totalBasePoints = charLevel * 4;
         let usedBasePoints = (baseStats.body - 1) + (baseStats.str - 1) + (baseStats.int - 1) + (baseStats.spd - 1) + (baseStats.men - 1);
         let remBase = totalBasePoints - usedBasePoints;
@@ -981,7 +941,6 @@
         let basicSP = (finalInt * 3) + (Math.floor(finalInt / 10) * 10);
         document.getElementById('calc-sp').value = `${basicSP} pt`;
         
-        // 技能一律1ptルール
         let totalUsedSP = 0;
         cryingCitySkills.forEach(sk => { totalUsedSP += (skillStats[sk] - 1); });
         
@@ -997,7 +956,6 @@
             if (plusBtn) plusBtn.disabled = (remainingSP < 1);
         });
 
-        // 速度Lv20毎に行動回数+1
         document.getElementById('calc-actions').value = `${1 + Math.floor(finalSpd / 20)} 回`;
         document.getElementById('calc-cost-max').value = 3 + Math.floor(finalMen / 4);
         document.getElementById('calc-cost-reg').value = 1 + Math.floor(finalMen / 10);
@@ -1048,18 +1006,13 @@
         let factionValue = document.getElementById('p-faction').value;
         if (factionValue === "その他") factionValue = document.getElementById('p-faction-free').value || "その他";
 
-        // 前職のセレクト＆フリー入力情報収集
         let careerArray = [];
         document.querySelectorAll('.career-card').forEach(card => {
             let v = card.querySelector('.career-faction-select').value;
             let freeV = card.querySelector('.career-faction-free-input').value.trim();
-            careerArray.push({
-                faction: v,
-                freeFaction: freeV
-            });
+            careerArray.push({ faction: v, freeFaction: freeV });
         });
 
-        // 戦闘技能のエイリアス上書き情報
         let combatAliases = {};
         cryingCitySkills.forEach((sk, index) => {
             if(combatSkillIndices.includes(index)) {
@@ -1121,7 +1074,6 @@
         document.getElementById('share-box').style.display = 'block';
     }
 
-    // ==================== ココフォリア出力連携プロトコル ====================
     function copyToCcfolia() {
         let d = compileData();
         let calcHP = (baseStats.body + traitAutoBonuses.body) * 6;
@@ -1131,7 +1083,6 @@
         let weaponNames = d.weaponsList?.map(w => w.name || "未設定").join(', ') || "なし";
 
         let traitsText = d.traitsSlotsArray.map((t, idx) => t.selected ? `[枠${idx+1}]:${t.selected}${t.freeText ? '('+t.freeText+')':''}` : '').filter(x=>x).join(', ');
-        
         let careerDisplayList = d.careerHistory.map(c => c.faction === "その他" ? c.freeFaction : c.faction);
         let careerStr = careerDisplayList.length > 0 ? `\n転職経歴：${careerDisplayList.join(' ➔ ')}` : "";
 
@@ -1192,7 +1143,6 @@
             if(document.getElementById(`skmod-${index}`)) document.getElementById(`skmod-${index}`).value = skillModifiers[sk] || 0;
         });
 
-        // 戦闘技能オリジナル名称上書きの復元
         document.querySelectorAll('.combat-alias-input').forEach(input => input.value = "");
         if(data.combatAliases) {
             cryingCitySkills.forEach((sk, index) => {
@@ -1208,13 +1158,8 @@
             selectElement.value = ["赤色戦派","ディフィポリディ","ルナード・ルーンズ","メローメディック","ライブラビランス","センス","決闘連盟","無所属","一般労働者","電務工房","刻","Mysticism"].includes(data.profile.faction) ? data.profile.faction : "その他";
             if (selectElement.value === "その他") document.getElementById('p-faction-free').value = data.profile.faction || "";
             
-            // 前職リストカードの復元構築
             document.getElementById('career-history-area').innerHTML = "";
-            if(data.careerHistory) {
-                data.careerHistory.forEach(c => {
-                    addNewCareerField(c.faction, c.freeFaction);
-                });
-            }
+            if(data.careerHistory) { data.careerHistory.forEach(c => addNewCareerField(c.faction, c.freeFaction)); }
             updateFactionAndTraits();
 
             document.getElementById('p-level').value = data.profile.level || 1;
@@ -1223,7 +1168,6 @@
             document.getElementById('p-title').value = data.profile.title || ""; document.getElementById('p-earned-title').value = data.profile.earnedTitle || "";
         }
 
-        // 特殊能力スロット枠の選択復元
         if(data.traitsSlotsArray) {
             data.traitsSlotsArray.forEach((t, idx) => {
                 const i = idx + 1;
@@ -1236,11 +1180,9 @@
         }
         executeTraitAutoCalculations();
 
-        // カスタム技能の復元
         const cskArea = document.getElementById('custom-skills-area'); cskArea.innerHTML = "";
         if(data.customSkillsArray) { data.customSkillsArray.forEach(csk => addNewCustomSkillField(csk.name, csk.lv, csk.mod)); }
 
-        // 武器データの復元
         const wpArea = document.getElementById('weapons-list-area'); wpArea.innerHTML = "";
         if (data.weaponsList && data.weaponsList.length > 0) {
             data.weaponsList.forEach((wp, idx) => {
