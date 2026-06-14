@@ -141,7 +141,7 @@
         .highlight-green { color: var(--accent-green); font-weight: bold; }
         .highlight-purple { color: var(--accent-purple); font-weight: bold; }
 
-        /* 【指定】ネオンカラーの赤い装飾枠囲みボックス */
+        /* ネオンカラーの赤い装飾枠囲みボックス */
         .neon-alert-box {
             background-color: #0d0f12;
             border: 1px solid var(--accent-color);
@@ -236,13 +236,50 @@
             min-height: 140px;
         }
 
+        /* --- 【新設】上部カテゴリ切り替えタブメニュー --- */
+        .skill-tabs {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0 10px 0;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox用 */
+        }
+        .skill-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari用 */
+        }
+        .skill-tab-btn {
+            flex: 1;
+            min-width: 75px;
+            background-color: #1e2533;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 8px 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .skill-tab-btn:hover {
+            background-color: #2d3547;
+            color: #fff;
+        }
+        .skill-tab-btn.active {
+            background-color: #05161a;
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(0, 188, 212, 0.3);
+        }
+
         /* --- 技術能力サイド矢印付きスライド図鑑カルーセル --- */
         .carousel-container {
             position: relative;
             background-color: #0d0f12;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 15px 45px;
+            padding: 5px 45px 15px 45px;
             margin-bottom: 25px;
             overflow: hidden;
         }
@@ -330,7 +367,7 @@
             .nav-grid { grid-template-columns: 1fr; }
             .nav-button.highlight { grid-column: span 1; }
             .main-title { font-size: 1.6rem; }
-            .carousel-container { padding: 15px 38px; }
+            .carousel-container { padding: 5px 38px 15px 38px; }
             .carousel-btn { width: 30px; height: 34px; }
         }
     </style>
@@ -362,9 +399,8 @@
             <a href="character.html" class="nav-button current-page">◆キャラクター制作◆</a>
             <a href="company.html" class="nav-button">◆会社◆</a>
             <a href="weapon.html" class="nav-button">◆武器◆</a>
-            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
-            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
+            <a href="npc_list.html" class="nav-button">◆公開キャラクター一覧◆</a>
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
@@ -388,7 +424,7 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
 キャラクターLvは90が上限ですが、特殊能力などの外部効果で最大Lv100まで強化されるでしょう。
 シナリオをクリアした際にキャラクターLvは上昇しますが、シナリオ推奨Lvから差1につき本来用意されていた報酬を増減します。(報酬最大減少量-10/報酬最大増加量+10)
 対象とのLvの差だけ判定に有利、不利な補正が入る事になります。
-そして、この数値を参照して基本能力を決めていきます。</p>
+精度は、この数値を参照して基本能力を決めていきます。</p>
     </div>
 
     <!-- ○階級とランク -->
@@ -421,7 +457,7 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
 割り振り方はキャラクターLv×5だけ獲得した基本能力ポイントを使って増加させます。
 ただし、キャラクターレベル以上に基本能力Lvを上げることはできません。</p>
 
-        <!-- 【指定】赤いネオンカラーの枠囲みボックス 1 -->
+        <!-- 赤いネオンカラーの枠囲みボックス 1 -->
         <div class="neon-alert-box"><span class="highlight-red">※ただしこの初期値、および割り振りと上限はあくまで基本とするものであり、特殊能力などによって上限を超えて変動させることも可能です。その際は上限を超えても問題ありません。</span></div>
 
         <p>基礎能力にはそれぞれ対応した数値があります。
@@ -431,7 +467,7 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
 〈速度〉Lvの値だけ行動順が早くなる、Lv20につき戦闘中の行動回数+1
 〈精神〉Lv4につきコスト最大値+1、Lv10につきターン終了時のコスト回復値+1</p>
 
-        <!-- 【指定】赤いネオンカラーの枠囲みボックス 2 -->
+        <!-- 赤いネオンカラーの枠囲みボックス 2 -->
         <div class="neon-alert-box"><strong>HP：</strong>ダメージを受けるとこの数値が減少する、0になると死亡する
 <strong>ダメージロール：</strong>攻撃や何らかの衝撃など様々な要因でHPが減少する際に行われるロール
 <strong>技能ポイント：</strong>技術能力のLv上昇に使用される
@@ -446,10 +482,19 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
 技術能力は技能ポイントを使ってLvを上げることが出来ます。
 基本能力と同じく技術能力の初期値は全てLv1で、1ポイントでLv1上げることができます。</p>
 
-        <!-- ==================== サイド矢印付きスライド図鑑カルーセル ==================== -->
+        <!-- ==================== タブ ＆ スライド連動式図鑑 ==================== -->
         <h3 id="carousel-category-title" class="highlight-blue" style="border-bottom:none; margin-bottom:5px;">▽技術能力一覧：[戦闘系能力]</h3>
-        <p id="carousel-category-desc" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;"></p>
+        <p id="carousel-category-desc" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:5px;"></p>
         
+        <!-- 切り替えタブメニュー（ここをタップで即時切り替え） -->
+        <div class="skill-tabs">
+            <button class="skill-tab-btn active" onclick="jumpToSlide(0)">戦闘系</button>
+            <button class="skill-tab-btn" onclick="jumpToSlide(1)">感覚</button>
+            <button class="skill-tab-btn" onclick="jumpToSlide(2)">行動</button>
+            <button class="skill-tab-btn" onclick="jumpToSlide(3)">対人</button>
+            <button class="skill-tab-btn" onclick="jumpToSlide(4)">知識</button>
+        </div>
+
         <div class="carousel-container">
             <button class="carousel-btn btn-prev" onclick="moveSlide(-1)">◀</button>
             <button class="carousel-btn btn-next" onclick="moveSlide(1)">▶</button>
@@ -471,7 +516,7 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
                         </div>
                         <div class="skill-panel-item">
                             <div class="skill-panel-header"><span class="skill-panel-name">【反撃】</span><span class="skill-panel-tag tag-def">守備能力</span></div>
-                            <p>攻撃を迎え撃つ能力、対象よりも出目が大きければスキルを無効化し対象にダメージを与える。1ターンに2回使用可能。
+                            <p>攻撃を迎え撃つ能力、対象よりも出目が大きければスキルを無効化し対象にダメージを与える。1ターンに2回使用可能.
 ダメージロールは使用武器のスキル1を参照する（DBの効果は得られない）
 遠距離攻撃や特殊な攻撃などで使用する場合、ダメージロール判定は発生しない
 この能力を使用したターンは他の守備能力を使用出来ない。</p>
@@ -546,7 +591,7 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
                         </div>
                     </div>
                     
-                    <!-- カテゴリ4: 対人能力 -->
+                    <!-- カテゴリ4: 对人能力 -->
                     <div class="carousel-slide" data-category="[対人能力]" data-desc="この世界に必要とされる場面は少ない。しかし全く必要ないという事も無いだろう。">
                         <div class="skill-panel-item">
                             <div class="skill-panel-header"><span class="skill-panel-name">【話術】 ／ 【詐術】 ／ 【心理学】</span><span class="skill-panel-tag tag-gen">交渉判定</span></div>
@@ -635,7 +680,7 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
         <h3>▽過去・重要な人物</h3>
         <p>この欄には過去あった事象の名称と感情、その内容を記載しその人物に過去何があったかという背景が描かれるでしょう。
 大抵の場合は誰かを殺した、陥れた、利用した等の罪が記載されると思われますが、ごく稀に被害に遭っただけの人も居ます。
-いずれにせよ、誰も過去を語りたがる人間など居るはずもありません、罪や恥を相手に告白する事に等しい行為ですから。
+いずれにせよ、精度は誰も過去を語りたがる人間など居るはずもありません、罪や恥を相手に告白する事に等しい行為ですから。
 そういった暗い過去をあなたは持っています、この世界で10年以上生きていけば必ずそうなります。
 純粋な人ほど不純なものから目を逸らし続け、明るい人ほど必死に自分を隠している事を忘れないでください。
 余談はこのぐらいにしましょう。</p>
@@ -653,7 +698,7 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
 
 </div>
 
-<!-- スライダー＆スライド図鑑カルーセル制御JavaScript -->
+<!-- スライダー＆スライド図鑑・タブ連動制御JavaScript -->
 <script>
     // --- 階級シミュレーター制御 ---
     function updateRankSim() {
@@ -705,28 +750,51 @@ Lvはこのゲームの判定方法に大きく関わってくるので、慎重
         `;
     }
 
-    // --- 技術能力カルーセル制御 ---
+    // --- 技術能力カルーセル ＆ タブメニュー制御 ---
     let currentSlideIndex = 0;
     const slides = document.querySelectorAll('.carousel-slide');
+    const tabs = document.querySelectorAll('.skill-tab-btn');
     const categoryTitle = document.getElementById('carousel-category-title');
     const categoryDesc = document.getElementById('carousel-category-desc');
 
+    // 指定インデックスへのジャンプ（タブ用）
+    function jumpToSlide(index) {
+        slides[currentSlideIndex].classList.remove('active');
+        tabs[currentSlideIndex].classList.remove('active');
+        
+        currentSlideIndex = index;
+        
+        slides[currentSlideIndex].classList.add('active');
+        tabs[currentSlideIndex].classList.add('active');
+        
+        updateDisplayInfo();
+    }
+
+    // 前後スライド（左右バー矢印用）
     function moveSlide(direction) {
         slides[currentSlideIndex].classList.remove('active');
+        tabs[currentSlideIndex].classList.remove('active');
+        
         currentSlideIndex += direction;
         if (currentSlideIndex >= slides.length) currentSlideIndex = 0;
         if (currentSlideIndex < 0) currentSlideIndex = slides.length - 1;
         
+        slides[currentSlideIndex].classList.add('active');
+        tabs[currentSlideIndex].classList.add('active');
+        
+        updateDisplayInfo();
+    }
+
+    // 表示テキスト更新
+    function updateDisplayInfo() {
         const activeSlide = slides[currentSlideIndex];
-        activeSlide.classList.add('active');
         categoryTitle.innerText = "▽技術能力一覧：" + activeSlide.getAttribute('data-category');
         categoryDesc.innerText = activeSlide.getAttribute('data-desc');
     }
 
     // 初期起動時のレンダリング実行
     updateRankSim();
-    categoryTitle.innerText = "▽技術能力一覧：" + slides[0].getAttribute('data-category');
-    categoryDesc.innerText = slides[0].getAttribute('data-desc');
+    updateDisplayInfo();
 </script>
 
 </body>
