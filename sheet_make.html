@@ -472,7 +472,7 @@
 
     <!-- ==================== 6. 所持兵装管理 ==================== -->
     <div class="section-panel" id="sec-weapons">
-        <h2>〇 所持武器・スキル・弾数管理（複数所持カード管理）</h2>
+        <h2>〇 所持武器・スキル・弾数管理</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※武器を複数所持する場合、要求能力値がそれぞれ加算されます。1つ目のカードの弾数がステータスへ最優先連動します。</p>
         <div id="weapons-list-area"></div>
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
@@ -480,7 +480,7 @@
 
     <!-- ==================== 7. 通過シナリオ一覧（経験ポイント撤廃版） ==================== -->
     <div class="section-panel" id="sec-scenarios">
-        <h2>〇 通過シナリオ記録・履歴管理（動的追加削除対応）</h2>
+        <h2>〇 通過シナリオ記録・履歴管理</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">通過したシナリオ名、到達エンド、獲得アイテムや備考欄を綺麗に記録・管理できます。</p>
         <div id="scenarios-list-area"></div>
         <button type="button" class="btn-add-card" style="background-color:#1c2533; color:var(--accent-blue); border-color:#2a394a;" onclick="addNewScenarioField()">＋ 通過シナリオの記録を追加する</button>
@@ -506,28 +506,11 @@
 
     <!-- ==================== 9. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box" id="sec-closet">
-        <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
+        <h2>ブラウザ保存済みキャラクター一覧</h2>
         <div class="closet-list" id="closet-list-area"></div>
     </div>
 
 </div> <!-- sheet-app終了 -->
-
-<!-- 常時最前面右下固定配置型 ページ内目次パネル -->
-<div class="floating-menu">
-    <button type="button" class="menu-trigger-btn" onclick="toggleFloatingMenu()">☰</button>
-    <div class="menu-content-panel" id="floating-menu-panel">
-        <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
-        <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
-        <a onclick="scrollToSection('sec-profile')">👤 2. プロフィール ＆ 経歴</a>
-        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
-        <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
-        <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
-        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
-        <a onclick="scrollToSection('sec-scenarios')">🎬 7. 通過シナリオ履歴</a>
-        <a onclick="scrollToSection('sec-story')">📖 8. キャラクターバックストーリー</a>
-        <a onclick="scrollToSection('sec-closet')">📂 9. 端末内セーブデータ一覧</a>
-    </div>
-</div>
 
 <!-- ==================== コアエンジン・スクリプト ==================== -->
 <script>
