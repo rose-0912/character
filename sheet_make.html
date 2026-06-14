@@ -1,4 +1,3 @@
-sheet:クライングシティ - キャラクターシート制作:sheet_make.html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -27,7 +26,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            padding-bottom: 80px;
+            padding-bottom: 120px; /* 目次と重ならないよう余白を確保 */
             opacity: 0;
             animation: fadeInPage 0.6s ease-out forwards;
         }
@@ -60,7 +59,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-            scroll-margin-top: 20px; /* 目次スクロール調整用 */
+            scroll-margin-top: 20px; /* 目次スクロールジャンプ時の上部余白 */
         }
 
         h2 {
@@ -72,62 +71,43 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
             letter-spacing: 0.05em;
         }
 
-        /* --- 【最優先修正】画面の右下に絶対に常時追従する拡張型スマート目次 --- */
-        .floating-menu {
-            position: fixed !important;
-            bottom: 25px !important;
-            right: 25px !important;
-            z-index: 999999 !important;
-        }
-        .menu-trigger-btn {
-            background: linear-gradient(135deg, var(--accent-blue) 0%, #008ba3 100%);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            font-size: 1.6rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .menu-trigger-btn:hover { transform: scale(1.08); }
-        .menu-content-panel {
-            position: absolute;
-            bottom: 65px;
-            right: 0;
-            background-color: #0e1117;
-            border: 1px solid var(--accent-blue);
+        /* --- 【指定デザイン】右下の固定ページ内ジャンプメニュー --- */
+        .page-menu {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000; /* 最前面に配置 */
+            background: #ffffff;
+            border: 2px solid #9d81ba;
             border-radius: 8px;
             padding: 10px;
-            width: 260px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.9);
-            display: none;
-            max-height: 450px;
-            overflow-y: auto;
-            animation: menuFade 0.2s ease-out forwards;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            width: 165px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes menuFade {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .menu-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #6c528d;
+            text-align: center;
+            border-bottom: 1px dashed #b3a2cb;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
         }
-        .menu-content-panel .menu-section-title {
-            font-size: 0.75rem; color: var(--accent-orange); font-weight: bold;
-            padding: 4px 8px; border-bottom: 1px solid #2d3748; margin-top: 6px;
+        .page-menu a {
+            display: block;
+            color: #8261ad;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background 0.2s;
+            cursor: pointer;
         }
-        .menu-content-panel a {
-            display: block; color: #cbd5e1; padding: 6px 12px; text-decoration: none;
-            font-size: 0.85rem; border-radius: 4px; transition: all 0.15s; cursor: pointer;
-        }
-        .menu-content-panel a:hover {
-            background-color: #1e293b; color: var(--accent-blue); padding-left: 16px;
-        }
-        .menu-content-panel .menu-hl {
-            background: linear-gradient(90deg, #ff3b30, #a20000) !important; color: #fff !important;
-            font-weight: bold; text-align: center; margin-top: 5px;
+        .page-menu a:hover {
+            background: #f3effa;
+            color: #4a148c;
         }
 
         /* --- ナビゲーション戻るボタン --- */
@@ -150,11 +130,16 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         }
         .btn-slide-arrow {
             background-color: #1f2430; color: var(--accent-blue); border: 1px solid var(--border-color);
-            padding: 6px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            font-size: 0.8rem;
+            max-width: 190px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .btn-slide-arrow:hover:not(:disabled) { background-color: #2d3548; box-shadow: 0 0 8px rgba(0,188,212,0.3); }
         .btn-slide-arrow:disabled { opacity: 0.2; cursor: not-allowed; }
-        .slide-indicator { font-size: 0.85rem; font-weight: bold; color: #fff; letter-spacing: 0.05em; }
+        .slide-indicator { font-size: 0.85rem; font-weight: bold; color: #fff; letter-spacing: 0.05em; text-align: center; }
 
         /* --- 入力フォーム基本 --- */
         .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
@@ -246,33 +231,23 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
             .form-grid { grid-template-columns: 1fr; }
             .form-group.span-2 { grid-column: span 1; }
             .btn-action-row { grid-template-columns: 1fr; }
+            .page-menu { width: 140px; right: 10px; bottom: 10px; }
         }
     </style>
 </head>
 <body onpageshow="if (event.persisted) window.location.reload();">
 
-<!-- 常に右下に常駐固定される拡張型スマート目次（☰） -->
-<div class="floating-menu">
-    <button type="button" class="menu-trigger-btn" onclick="toggleFloatingMenu()">☰</button>
-    <div class="menu-content-panel" id="floating-menu-panel">
-        <div class="menu-section-title">▼ 外部サイト・資料リンク</div>
-        <a href="index.html">◆ 概要トップページ</a>
-        <a href="news.html">◆ お知らせ・パッチノート履歴</a>
-        <a href="character.html">◆ キャラクター制作ルール</a>
-        <a href="company.html">◆ 統括企業データ一覧</a>
-        <a href="weapon.html">◆ カタログスペック兵装一覧</a>
-        <a href="world_lore.html">◆ ディストピア都市歴史・世界観</a>
-
-        <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
-        <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
-        <a onclick="scrollToSection('sec-profile')">👤 2. プロフィール ＆ 経歴</a>
-        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
-        <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
-        <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
-        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
-        <a onclick="scrollToSection('sec-story')">📖 7. キャラクターバックストーリー</a>
-        <a onclick="scrollToSection('sec-closet')">📂 8. 端末内セーブデータ一覧</a>
-    </div>
+<!-- 常駐固定される電脳仕様ページ内ジャンプメニュー -->
+<div class="page-menu" id="fixed-page-menu">
+    <div class="menu-title">🐾 市民登録目次</div>
+    <a onclick="scrollToSection('sec-system')">◆ システム・セーブ</a>
+    <a onclick="scrollToSection('sec-profile')">◆ 市民プロフィール</a>
+    <a onclick="scrollToSection('sec-base')">◆ 基礎能力設定</a>
+    <a onclick="scrollToSection('sec-skills')">◆ 技能レベル配分</a>
+    <a onclick="scrollToSection('sec-traits')">◆ 特殊能力スロット</a>
+    <a onclick="scrollToSection('sec-weapons')">◆ 所持兵装リスト</a>
+    <a onclick="scrollToSection('sec-story')">◆ 過去の因果背景</a>
+    <a onclick="scrollToSection('sec-closet')">◆ 登録記録保管庫</a>
 </div>
 
 <header>
@@ -348,7 +323,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
                 <input type="text" id="p-faction-free" placeholder="オリジナルの会社名や組織名を入力してください" oninput="updateFactionAndTraits()">
             </div>
 
-            <!-- 【改修】前職動的リスト管理枠（所属会社と同じドロップダウンセレクト方式） -->
+            <!-- 前職動的リスト管理枠（現職と同じドロップダウンセレクト方式） -->
             <div class="form-group span-2" style="border-top:1px dashed var(--border-color); padding-top:10px; margin-top:5px;">
                 <label style="color: var(--accent-blue);">▼ 前職の経歴・転職履歴（追加した経歴の能力も選択肢にブレンドされます）</label>
                 <div id="career-history-area"></div>
@@ -382,7 +357,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         </div>
     </div>
 
-    <!-- ==================== 3. 【独立・常時表示】基礎能力 ==================== -->
+    <!-- ==================== 3. 基礎能力（独立して常時表示） ==================== -->
     <div class="section-panel" id="sec-base">
         <h2>〇 基礎能力（割り振りポイント総数：キャラクターレベル × 4）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。獲得した基本能力ポイントを消費して割り振ります。上限はキャラレベル値までとなります。</p>
@@ -401,7 +376,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         <div class="status-header-bar"><span>能力項目</span><span>現在Lv</span></div>
 
         <div id="base-stats-rows-container">
-            <!-- 身体、筋力、知能、速度、精神のカウンターが動的生成されます -->
+            <!-- 身体、筋力、知能、速度、精神のカウンター -->
         </div>
 
         <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
@@ -414,7 +389,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         </div>
     </div>
 
-    <!-- ==================== 4. 【左右スライド形式】技術能力のみ ==================== -->
+    <!-- ==================== 4. 技術能力（のみ：左右スライド ◀ ▶ 形式でループ可能） ==================== -->
     <div class="section-panel" id="sec-skills">
         <h2>〇 技術能力（共通一律コスト：1レベル上昇につき1pt消費）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は一律Lv1。戦闘系技能は自由に独自の兵装・流派名に変更可能です。</p>
@@ -430,11 +405,11 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
             </div>
         </div>
 
-        <!-- 技術能力グループ切り替え用スライドバー -->
+        <!-- 技術能力スライドナビゲーション（次のカテゴリー名がわかる & ループ式） -->
         <div class="skill-slide-nav-bar">
-            <button type="button" class="btn-slide-arrow" onclick="changeSkillSlide(-1)">◀ 前の能力カテゴリ</button>
+            <button type="button" class="btn-slide-arrow" id="btn-prev-skill" onclick="changeSkillSlide(-1)">◀ 前のカテゴリ</button>
             <span class="slide-indicator" id="carousel-skill-title">技術能力グループ：[戦闘系能力]</span>
-            <button type="button" class="btn-slide-arrow" onclick="changeSkillSlide(1)">次の能力カテゴリ ▶</button>
+            <button type="button" class="btn-slide-arrow" id="btn-next-skill" onclick="changeSkillSlide(1)">次のカテゴリ ▶</button>
         </div>
 
         <div class="status-header-bar" style="border-color: var(--accent-blue);">
@@ -443,10 +418,8 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
             <span style="width: 35%; text-align: right;">実値Lvコントロール</span>
         </div>
 
-        <!-- 各スライドコンテナ（スクリプト内で初期化されます） -->
-        <div id="skills-slides-track">
-            <!-- 5つのカテゴリ別スライドがここに展開され、JSで表示/非表示制御されます -->
-        </div>
+        <!-- 5つのカテゴリ別スライド -->
+        <div id="skills-slides-track"></div>
 
         <!-- 別途の完全独自カスタム技能追加エリア -->
         <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
@@ -456,7 +429,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         </div>
     </div>
 
-    <!-- ==================== 5. 【独立・常時表示】特殊能力スロット ==================== -->
+    <!-- ==================== 5. 特殊能力スロット（独立して常時表示・効果自動補正適用） ==================== -->
     <div class="section-panel" id="sec-traits">
         <h2>〇 特殊能力（最大4枠 // 現職と追加した全前職の能力が自動融合）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">選択した固有能力に応じて、対応するHPや基礎能力への自動適用・ステータス加算補正が瞬時に発動します。</p>
@@ -515,7 +488,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         "一般労働者": ["一般労働者"],
         "電務工房": ["機械改造", "ハッキングデバイス", "オーバークロック", "整備知識", "工事で鍛えた体力", "武器応用学", "ひらめき", "慧眼", "改善", "特別改造", "地道な作業"],
         "刻": ["時間跳躍", "未来視の片鱗", "瞬転の構え", "刻の夜"],
-        "Mysticism": ["神秘 of 術", "異界の加護"],
+        "Mysticism": ["神秘の術", "異界の加護"],
         "その他": ["自由記入アビリティ"]
     };
 
@@ -560,26 +533,22 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         updateSkillSlideVisibility();
     };
 
-    // スマート目次関連
-    function toggleFloatingMenu() {
-        const panel = document.getElementById('floating-menu-panel');
-        panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
-    }
+    // 🐾 ページ内スムーズスクロールジャンプ
     function scrollToSection(id) {
         const target = document.getElementById(id);
         if(target) {
             target.scrollIntoView({ behavior: 'smooth' });
-            document.getElementById('floating-menu-panel').style.display = 'none';
         }
     }
 
-    // 技術能力スライド切替制御
+    // 【ループ対応 ＆ 次のカテゴリー名取得】技術能力スライド切替制御
     function changeSkillSlide(direction) {
         currentSkillSlideIdx += direction;
-        if(currentSkillSlideIdx < 0) currentSkillSlideIdx = 0;
-        if(currentSkillSlideIdx > 4) currentSkillSlideIdx = 4;
+        if(currentSkillSlideIdx < 0) currentSkillSlideIdx = 4; // 最初で「前へ」を押したら「知識能力」へループ
+        if(currentSkillSlideIdx > 4) currentSkillSlideIdx = 0; // 最後で「次へ」を押したら「戦闘系能力」へループ
         updateSkillSlideVisibility();
     }
+
     function updateSkillSlideVisibility() {
         const track = document.getElementById('skills-slides-track');
         const slides = track.querySelectorAll('.skill-carousel-slide');
@@ -589,7 +558,19 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
             else slide.classList.remove('active');
         });
         
+        // 現在のカテゴリーのタイトルをセット
         document.getElementById('carousel-skill-title').innerText = skillCategories[currentSkillSlideIdx].title;
+
+        // 【新設】ループ対応：前後カテゴリー名の取得
+        const prevIdx = (currentSkillSlideIdx - 1 < 0) ? 4 : currentSkillSlideIdx - 1;
+        const nextIdx = (currentSkillSlideIdx + 1 > 4) ? 0 : currentSkillSlideIdx + 1;
+
+        const prevName = skillCategories[prevIdx].title.replace("技術能力：[", "").replace("]", "");
+        const nextName = skillCategories[nextIdx].title.replace("技術能力：[", "").replace("]", "");
+
+        // ボタンのラベルに動的にカテゴリ名を代入して書き換え
+        document.getElementById('btn-prev-skill').innerHTML = `◀ 前：${prevName}`;
+        document.getElementById('btn-next-skill').innerHTML = `次：${nextName} ▶`;
     }
 
     function initBaseStatsRows() {
@@ -677,7 +658,7 @@ sheet:クライングシティ - キャラクターシート制作:sheet_make.ht
         updateTraitDropdownOptions();
     }
 
-    // --- 【大改修】前職動的フィールド追加（所属会社と同様のリスト選択方式） ---
+    // 前職動的フィールド追加（所属会社と同様のリスト選択方式）
     function addNewCareerField(savedValue = "", savedFreeValue = "") {
         careerIndexCounter++;
         const area = document.getElementById('career-history-area');
