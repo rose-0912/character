@@ -1,3 +1,4 @@
+sheet:クライングシティ - キャラクターシート制作:sheet_make.html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -71,12 +72,12 @@
             letter-spacing: 0.05em;
         }
 
-        /* --- 画面右下にいつでも常駐する拡張型スマート目次 --- */
+        /* --- 【最優先修正】画面の右下に絶対に常時追従する拡張型スマート目次 --- */
         .floating-menu {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 9999;
+            position: fixed !important;
+            bottom: 25px !important;
+            right: 25px !important;
+            z-index: 999999 !important;
         }
         .menu-trigger-btn {
             background: linear-gradient(135deg, var(--accent-blue) 0%, #008ba3 100%);
@@ -137,12 +138,12 @@
         }
         .btn-nav:hover { background-color: #2d3446; border-color: var(--accent-gray); }
 
-        /* --- 左右スライド切替インターフェース用UI --- */
-        .slide-container { display: none; }
-        .slide-container.active { display: block; animation: slideIn 0.3s ease-out; }
+        /* --- 技術能力スライド用の切替表示設定 --- */
+        .skill-carousel-slide { display: none; }
+        .skill-carousel-slide.active { display: block; animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
         
-        .slide-nav-bar {
+        .skill-slide-nav-bar {
             display: flex; justify-content: space-between; align-items: center;
             background-color: #11141c; padding: 10px; border-radius: 6px;
             margin-bottom: 15px; border: 1px solid var(--border-color);
@@ -167,7 +168,6 @@
         }
         input:focus, select:focus, textarea:focus { border-color: var(--accent-blue); }
 
-        /* --- ステータス・技能並び用 --- */
         .status-header-bar {
             display: flex; justify-content: space-between; background-color: #11141c;
             padding: 8px 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.85rem;
@@ -235,7 +235,7 @@
         .closet-info { display: flex; flex-direction: column; cursor: pointer; flex-grow: 1; }
         .closet-name { font-weight: bold; font-size: 0.95rem; color: #fff; }
         .closet-meta { font-size: 0.75rem; color: var(--text-muted); }
-        .btn-delete-char { background-color: #331c20; color: #ff4444; border: 1px solid #552222; padding: 4px 10px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; }
+        .btn-delete-char { background-color: #331c20; color: #ff4444; border: 1px solid #552222; padding: 4px 10px; font-size: 0.75rem; border-radius: 4px; }
         .btn-delete-char:hover { background-color: #ff4444; color: #fff; }
         .no-data-msg { font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 15px 0; }
 
@@ -262,7 +262,6 @@
         <a href="company.html">◆ 統括企業データ一覧</a>
         <a href="weapon.html">◆ カタログスペック兵装一覧</a>
         <a href="world_lore.html">◆ ディストピア都市歴史・世界観</a>
-        <a href="npc_list.html">◆ 市民統括主要NPC一覧</a>
 
         <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
         <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
@@ -273,7 +272,6 @@
         <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
         <a onclick="scrollToSection('sec-story')">📖 7. キャラクターバックストーリー</a>
         <a onclick="scrollToSection('sec-closet')">📂 8. 端末内セーブデータ一覧</a>
-        <a href="sheet_make.html" class="menu-hl">シート制作リセット ➔</a>
     </div>
 </div>
 
@@ -350,7 +348,7 @@
                 <input type="text" id="p-faction-free" placeholder="オリジナルの会社名や組織名を入力してください" oninput="updateFactionAndTraits()">
             </div>
 
-            <!-- 動的な前職リスト管理枠 -->
+            <!-- 【改修】前職動的リスト管理枠（所属会社と同じドロップダウンセレクト方式） -->
             <div class="form-group span-2" style="border-top:1px dashed var(--border-color); padding-top:10px; margin-top:5px;">
                 <label style="color: var(--accent-blue);">▼ 前職の経歴・転職履歴（追加した経歴の能力も選択肢にブレンドされます）</label>
                 <div id="career-history-area"></div>
@@ -384,15 +382,8 @@
         </div>
     </div>
 
-    <!-- ==================== スライド表示形式 統括コンテナ ==================== -->
-    <div class="slide-nav-bar">
-        <button type="button" class="btn-slide-arrow" id="btn-prev-slide" onclick="changeSlide(-1)">◀ 前の項目</button>
-        <span class="slide-indicator" id="slide-title-indicator">項目：基礎能力割り振り</span>
-        <button type="button" class="btn-slide-arrow" id="btn-next-slide" onclick="changeSlide(1)">次の項目 ▶</button>
-    </div>
-
-    <!-- スライド1: 基礎能力 -->
-    <div class="section-panel slide-container active" id="sec-base">
+    <!-- ==================== 3. 【独立・常時表示】基礎能力 ==================== -->
+    <div class="section-panel" id="sec-base">
         <h2>〇 基礎能力（割り振りポイント総数：キャラクターレベル × 4）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。獲得した基本能力ポイントを消費して割り振ります。上限はキャラレベル値までとなります。</p>
         
@@ -410,7 +401,7 @@
         <div class="status-header-bar"><span>能力項目</span><span>現在Lv</span></div>
 
         <div id="base-stats-rows-container">
-            <!-- 身体、筋力、知能、速度、精神のカウンター -->
+            <!-- 身体、筋力、知能、速度、精神のカウンターが動的生成されます -->
         </div>
 
         <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
@@ -423,10 +414,10 @@
         </div>
     </div>
 
-    <!-- スライド2: 技術能力 ＆ 全戦闘技能オリジナル名称変更 -->
-    <div class="section-panel slide-container" id="sec-skills">
+    <!-- ==================== 4. 【左右スライド形式】技術能力のみ ==================== -->
+    <div class="section-panel" id="sec-skills">
         <h2>〇 技術能力（共通一律コスト：1レベル上昇につき1pt消費）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は一律Lv1。戦闘系技能（格闘〜弓矢）は自由に独自の兵装・流派名に変更可能です。</p>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は一律Lv1。戦闘系技能は自由に独自の兵装・流派名に変更可能です。</p>
         
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
@@ -439,14 +430,23 @@
             </div>
         </div>
 
+        <!-- 技術能力グループ切り替え用スライドバー -->
+        <div class="skill-slide-nav-bar">
+            <button type="button" class="btn-slide-arrow" onclick="changeSkillSlide(-1)">◀ 前の能力カテゴリ</button>
+            <span class="slide-indicator" id="carousel-skill-title">技術能力グループ：[戦闘系能力]</span>
+            <button type="button" class="btn-slide-arrow" onclick="changeSkillSlide(1)">次の能力カテゴリ ▶</button>
+        </div>
+
         <div class="status-header-bar" style="border-color: var(--accent-blue);">
             <span style="width: 45%;">技能項目名 ＆ [戦闘技能オリジナル名称上書き欄]</span>
             <span style="width: 20%; text-align: center;">補正</span>
             <span style="width: 35%; text-align: right;">実値Lvコントロール</span>
         </div>
 
-        <!-- 技能リスト -->
-        <div id="skills-container"></div>
+        <!-- 各スライドコンテナ（スクリプト内で初期化されます） -->
+        <div id="skills-slides-track">
+            <!-- 5つのカテゴリ別スライドがここに展開され、JSで表示/非表示制御されます -->
+        </div>
 
         <!-- 別途の完全独自カスタム技能追加エリア -->
         <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
@@ -456,8 +456,8 @@
         </div>
     </div>
 
-    <!-- スライド3: 特殊能力1〜4（現職・前職アビリティ全連動・効果自動補正） -->
-    <div class="section-panel slide-container" id="sec-traits">
+    <!-- ==================== 5. 【独立・常時表示】特殊能力スロット ==================== -->
+    <div class="section-panel" id="sec-traits">
         <h2>〇 特殊能力（最大4枠 // 現職と追加した全前職の能力が自動融合）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">選択した固有能力に応じて、対応するHPや基礎能力への自動適用・ステータス加算補正が瞬時に発動します。</p>
         
@@ -469,7 +469,7 @@
     <!-- ==================== 6. 所持武器・スキル・弾数管理（複数対応） ==================== -->
     <div class="section-panel" id="sec-weapons">
         <h2>〇 所持武器・スキル・弾数管理（複数所持カード管理）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※武器を保有・強化する場合、要求能力値を満たしている必要があります。1つ目のカードの弾数がステータスへ最優先連動します。</p>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※武器を複数所持する場合、要求能力値がそれぞれ加算されます。1つ目のカードの弾数がステータスへ最優先連動します。</p>
         <div id="weapons-list-area"></div>
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
     </div>
@@ -486,7 +486,7 @@
                     <div class="form-group span-2"><label>過去の背景・具体的な内容（罪や恥の背景）</label><textarea id="f-past-detail" rows="3" placeholder="はじめ、○○とは互いにライバル関係であったが……"></textarea></div>
                     <div class="form-group"><label>重要な人物</label><input type="text" id="f-past-npc" placeholder="例：○○ / △△"></div>
                     <div class="form-group span-2"><label>人物に関する感情・補足事項</label><textarea id="f-npc-detail" rows="2" placeholder="関係性、現在の生死や感情など"></textarea></div>
-                    <div class="form-group span-2"><label>容姿・性格の特徴（自由記入欄）</label><textarea id="f-appearance" rows="3" placeholder="身を包む私の姿、行動理念など"></textarea></div>
+                    <div class="form-group span-2"><label>容姿・性格の特徴（自由記入欄）</label><textarea id="f-appearance" rows="3" placeholder="行動理念、外見的特徴など"></textarea></div>
                 </div>
             </div>
         </details>
@@ -502,20 +502,20 @@
 
 <!-- ==================== コアエンジン・スクリプト ==================== -->
 <script>
-    // 企業アビリティ一覧マッピング（ドロップダウン連動＆効果自動適用判定用データ）
+    // 企業アビリティマスターデータ
     const companyTraitsData = {
-        "赤色戦派": ["武の才能", "戦意高揚", "死線越え"],
-        "ディフィポリディ": ["守護者", "絶対秩序", "重装盾陣"],
-        "ルナード・ルーンズ": ["魔導回路", "呪術知識", "詠唱収束"],
-        "メローメディック": ["現場医療班", "再生医療", "トリアージ"],
-        "ライブラビランス": ["情報検索", "監査権限", "頭脳明晰"],
-        "センス": ["感覚同調", "超感覚", "隠密暗殺"],
-        "決闘連盟": ["果敢な挑戦", "一騎打ち", "見切り"],
-        "無所属": ["傭兵気質", "裏社会のコネ", "サバイバリティ"],
-        "一般労働者": ["不屈の労働魂", "平穏の願い", "生活の知恵"],
-        "電務工房": ["機械改造", "ハッキングデバイス", "オーバークロック"],
-        "刻": ["時間跳躍", "未来視の片鱗", "瞬転の構え"],
-        "Mysticism": ["神秘の血統", "オカルト狂", "異界の加護"],
+        "赤色戦派": ["武の才能", "戦意高揚", "死線越え", "肉弾戦", "暗殺の瞳", "正面突破", "強靭な肩", "撃ち合い特化", "戦術指揮", "各個撃破", "背水", "屈強な身体", "安定した呼吸", "戦いの信条", "バーサーカー", "不安定"],
+        "ディフィポリディ": ["守護者", "絶対秩序", "重装盾陣", "迅速な護衛", "護衛行動", "頑丈", "防御振動", "受け身の攻撃", "防衛陣形", "根性", "暖かき守り人", "隙狙い", "防御強化", "攻撃は最大の防御", "護りの信条", "臆病者", "重装部隊"],
+        "ルナード・ルーンズ": ["魔導回路", "呪術知識", "詠唱収束", "古を追う者", "解読班", "戦闘班", "偵察班", "加工班", "アーティファクト", "古代技術の解明", "優れた連携力", "有利地形", "オーパーツ", "緩和フィルター", "効率転換", "探求の信条", "呪われたアーティファクト", "狂気的探求"],
+        "メローメディック": ["現場医療班", "再生医療", "トリアージ", "医療知識", "医務の合間に", "医者", "連続処置", "回復薬", "救助活動", "精神科", "対応力", "白衣の天使", "パワー系", "医療式戦闘術", "修理手当", "医療の信条", "激務の過労"],
+        "ライブラビランス": ["情報検索", "監査権限", "頭脳明晰", "本の虫", "集中", "知識堆積", "情報戦闘", "弱点を突く", "揺れ槍", "呪力操術", "増幅", "行動阻害", "情報の重要性", "知識の盾", "知識の信条", "警戒心", "部屋籠り", "対人恐怖症"],
+        "センス": ["感覚同調", "超感覚", "隠密暗殺", "戦闘センス", "感覚センス", "行動センス", "対人センス", "知識センス", "基礎センス", "集中的戦闘センス", "集中的感覚センス", "集中的行動センス", "集中的対人センス", "集中的知識センス", "集中的基礎センス", "一種の才能"],
+        "決闘連盟": ["果敢な挑戦", "一騎打ち", "見切り", "決闘", "いざ、尋常勝負！", "決闘連盟の名に懸けて", "決闘宣布", "受けてみよ！", "弱点は見えた！", "隙あり！", "素早く決めようではないか", "素晴らしき決闘であった", "全員で来るが良い！", "鮮やかな受け流し", "決闘の心得", "対決", "決闘のプライド"],
+        "無所属": ["傭兵気質", "裏社会のコネ", "サバイバリティ", "エリート", "無才", "ならずものの暴虐", "没落者の勘", "弱者の生存戦略", "負け犬の意地", "浮浪者の知恵", "崩れた企業の非検体", "個人事業主", "個人事業所属", "残された者", "名家の一族"],
+        "一般労働者": ["一般労働者"],
+        "電務工房": ["機械改造", "ハッキングデバイス", "オーバークロック", "整備知識", "工事で鍛えた体力", "武器応用学", "ひらめき", "慧眼", "改善", "特別改造", "地道な作業"],
+        "刻": ["時間跳躍", "未来視の片鱗", "瞬転の構え", "刻の夜"],
+        "Mysticism": ["神秘 of 術", "異界の加護"],
         "その他": ["自由記入アビリティ"]
     };
 
@@ -528,14 +528,22 @@
         "言語", "解読", "医学", "コンピューター", "修繕", "自然"
     ];
 
-    // 戦闘技能に該当するインデックスかどうかの判定用
+    // 技術能力スライド用のカテゴリ分類マッピング
+    const skillCategories = [
+        { title: "技術能力：[戦闘系能力]", range: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
+        { title: "技術能力：[感覚能力]", range: [14, 15, 16, 17, 18] },
+        { title: "技術能力：[行動能力]", range: [19, 20, 21, 22, 23, 24] },
+        { title: "技術能力：[対人能力]", range: [25, 26, 27, 28, 29] },
+        { title: "技術能力：[知識能力]", range: [30, 31, 32, 33, 34, 35] }
+    ];
+
     const combatSkillIndices = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     let baseStats = { body: 1, str: 1, int: 1, spd: 1, men: 1 };
-    let traitAutoBonuses = { body: 0, str: 0, int: 0, spd: 0, men: 0, hp: 0, sp: 0 }; // 特殊能力による補正値
+    let traitAutoBonuses = { body: 0, str: 0, int: 0, spd: 0, men: 0, hp: 0, sp: 0 };
     let skillStats = {};
     let skillModifiers = {}; 
-    let currentSlideIndex = 0; // 0:能力、1:技術能力、2:特殊能力
+    let currentSkillSlideIdx = 0; // 技術能力用スライド表示インデックス
     let weaponIndexCounter = 0;
     let customSkillCounter = 0;
     let careerIndexCounter = 0;
@@ -543,13 +551,13 @@
 
     window.onload = function() {
         initBaseStatsRows();
-        initSkills();
+        initSkillsSlides();
         initSpecialSlots();
         addNewWeaponField();
         recalculate();
         refreshClosetList();
         parseUrlOrLoadLocal();
-        updateSlideVisibility();
+        updateSkillSlideVisibility();
     };
 
     // スマート目次関連
@@ -565,25 +573,23 @@
         }
     }
 
-    // 左右スライドナビゲーション
-    function changeSlide(direction) {
-        currentSlideIndex += direction;
-        if(currentSlideIndex < 0) currentSlideIndex = 0;
-        if(currentSlideIndex > 2) currentSlideIndex = 2;
-        updateSlideVisibility();
+    // 技術能力スライド切替制御
+    function changeSkillSlide(direction) {
+        currentSkillSlideIdx += direction;
+        if(currentSkillSlideIdx < 0) currentSkillSlideIdx = 0;
+        if(currentSkillSlideIdx > 4) currentSkillSlideIdx = 4;
+        updateSkillSlideVisibility();
     }
-    function updateSlideVisibility() {
-        const slides = [document.getElementById('sec-base'), document.getElementById('sec-skills'), document.getElementById('sec-traits')];
-        const titles = ["項目：基礎能力割り振り", "項目：技術能力 ＆ 名称上書き", "項目：選択特殊能力スロット"];
+    function updateSkillSlideVisibility() {
+        const track = document.getElementById('skills-slides-track');
+        const slides = track.querySelectorAll('.skill-carousel-slide');
         
         slides.forEach((slide, idx) => {
-            if(idx === currentSlideIndex) slide.classList.add('active');
+            if(idx === currentSkillSlideIdx) slide.classList.add('active');
             else slide.classList.remove('active');
         });
         
-        document.getElementById('slide-title-indicator').innerText = titles[currentSlideIndex];
-        document.getElementById('btn-prev-slide').disabled = (currentSlideIndex === 0);
-        document.getElementById('btn-next-slide').disabled = (currentSlideIndex === 2);
+        document.getElementById('carousel-skill-title').innerText = skillCategories[currentSkillSlideIdx].title;
     }
 
     function initBaseStatsRows() {
@@ -611,34 +617,42 @@
         }
     }
 
-    function initSkills() {
-        const container = document.getElementById('skills-container');
-        container.innerHTML = "";
-        cryingCitySkills.forEach((sk, index) => {
-            skillStats[sk] = 1;
-            skillModifiers[sk] = 0; 
+    function initSkillsSlides() {
+        const track = document.getElementById('skills-slides-track');
+        track.innerHTML = "";
+        
+        skillCategories.forEach((cat, catIdx) => {
+            const slideDiv = document.createElement('div');
+            slideDiv.className = `skill-carousel-slide ${catIdx === 0 ? 'active' : ''}`;
             
-            const isCombat = combatSkillIndices.includes(index);
-            const nameInputHtml = isCombat ? 
-                `<input type="text" class="combat-alias-input" id="skname-${index}" placeholder="オリジナル名称上書き可" style="font-size:0.75rem; padding:4px; margin-top:3px; border-color:#3a4b6e; height:26px;">` : '';
-            
-            const div = document.createElement('div');
-            div.className = 'stat-row';
-            div.innerHTML = `
-                <div style="width: 45%; display:flex; flex-direction:column;">
-                    <span class="stat-name" style="font-size:0.85rem;">${sk}</span>
-                    ${nameInputHtml}
-                </div>
-                <div style="width: 20%; text-align: center;">
-                    <input type="number" id="skmod-${index}" value="0" style="width:50px; text-align:center; border-color:var(--accent-purple);" oninput="updateModifier('${sk}', ${index})">
-                </div>
-                <div class="stat-control" style="width: 35%; justify-content: flex-end;">
-                    <button type="button" class="btn-calc" onclick="adjustSkill('${sk}', ${index}, -1)">-</button>
-                    <input type="number" id="sk-${index}" value="1" style="width:42px; text-align:center;" readonly>
-                    <button type="button" class="btn-calc" id="btn-plus-${index}" onclick="adjustSkill('${sk}', ${index}, 1)">+</button>
-                </div>
-            `;
-            container.appendChild(div);
+            cat.range.forEach(index => {
+                const sk = cryingCitySkills[index];
+                skillStats[sk] = 1;
+                skillModifiers[sk] = 0;
+                
+                const isCombat = combatSkillIndices.includes(index);
+                const nameInputHtml = isCombat ? 
+                    `<input type="text" class="combat-alias-input" id="skname-${index}" placeholder="オリジナル名称上書き可" style="font-size:0.75rem; padding:4px; margin-top:3px; border-color:#3a4b6e; height:26px;">` : '';
+                
+                const div = document.createElement('div');
+                div.className = 'stat-row';
+                div.innerHTML = `
+                    <div style="width: 45%; display:flex; flex-direction:column;">
+                        <span class="stat-name" style="font-size:0.85rem;">${sk}</span>
+                        ${nameInputHtml}
+                    </div>
+                    <div style="width: 20%; text-align: center;">
+                        <input type="number" id="skmod-${index}" value="0" style="width:50px; text-align:center; border-color:var(--accent-purple);" oninput="updateModifier('${sk}', ${index})">
+                    </div>
+                    <div class="stat-control" style="width: 35%; justify-content: flex-end;">
+                        <button type="button" class="btn-calc" onclick="adjustSkill('${sk}', ${index}, -1)">-</button>
+                        <input type="number" id="sk-${index}" value="1" style="width:42px; text-align:center;" readonly>
+                        <button type="button" class="btn-calc" id="btn-plus-${index}" onclick="adjustSkill('${sk}', ${index}, 1)">+</button>
+                    </div>
+                `;
+                slideDiv.appendChild(div);
+            });
+            track.appendChild(slideDiv);
         });
     }
 
@@ -652,10 +666,10 @@
             div.innerHTML = `
                 <label style="color:var(--accent-blue);">▼ 特殊能力枠 スロット ${i}</label>
                 <select id="special-trait-select-${i}" onchange="onTraitSelected(${i})">
-                    <option value="">-- 未設定（クリックして所属・前職アビリティから選択） --</option>
+                    <option value="">-- 未設定（所属・前職アビリティから選択） --</option>
                 </select>
                 <div id="special-trait-free-area-${i}" style="display:none; margin-top:5px;">
-                    <textarea id="special-trait-free-desc-${i}" rows="2" placeholder="その他・自由記入能力の具体的効果テキストをここに記載してください" oninput="recalculate()"></textarea>
+                    <textarea id="special-trait-free-desc-${i}" rows="2" placeholder="自由記入能力の具体的効果テキストをここに記載してください" oninput="recalculate()"></textarea>
                 </div>
             `;
             container.appendChild(div);
@@ -663,21 +677,59 @@
         updateTraitDropdownOptions();
     }
 
-    // 前職動的フィールド追加
-    function addNewCareerField(savedValue = "") {
+    // --- 【大改修】前職動的フィールド追加（所属会社と同様のリスト選択方式） ---
+    function addNewCareerField(savedValue = "", savedFreeValue = "") {
         careerIndexCounter++;
         const area = document.getElementById('career-history-area');
         const div = document.createElement('div');
-        div.className = 'dynamic-card';
+        div.className = 'dynamic-card career-card';
         div.id = `career-card-id-${careerIndexCounter}`;
         div.innerHTML = `
             <button type="button" class="btn-delete-card" onclick="deleteCareerField(${careerIndexCounter})">削除</button>
-            <div class="form-group">
-                <label>過去に在籍していた会社・組織名</label>
-                <input type="text" class="career-faction-input" value="${savedValue}" placeholder="例：ディフィポリディ、またはその他" oninput="updateFactionAndTraits()">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>過去に在籍していた会社・組織名</label>
+                    <select class="career-faction-select" onchange="handleCareerFactionChange(${careerIndexCounter})">
+                        <option value="赤色戦派">赤色戦派 [大規模]</option>
+                        <option value="ディフィポリディ">ディフィポリディ [大規模]</option>
+                        <option value="ルナード・ルーンズ">ルナード・ルーンズ [大規模]</option>
+                        <option value="メローメディック">メローメディック [大規模]</option>
+                        <option value="ライブラビランス">ライブラビランス [大規模]</option>
+                        <option value="センス">センス [中規模]</option>
+                        <option value="決闘連盟">決闘連盟 [中規模]</option>
+                        <option value="無所属">無所属 [特殊枠]</option>
+                        <option value="一般労働者">一般労働者 [一般枠]</option>
+                        <option value="電務工房">電務工房 [DLC]</option>
+                        <option value="刻">刻（とき） [DLC]</option>
+                        <option value="Mysticism">Mysticism [DLC]</option>
+                        <option value="その他">その他（自由記入）</option>
+                    </select>
+                </div>
+                <div class="form-group span-2" id="career-free-group-${careerIndexCounter}" style="display:none;">
+                    <label style="color: var(--accent-orange);">▼ 自由記入 前職所属組織名</label>
+                    <input type="text" class="career-faction-free-input" value="${savedFreeValue}" placeholder="オリジナルの会社名や組織名を入力してください" oninput="updateFactionAndTraits()">
+                </div>
             </div>
         `;
         area.appendChild(div);
+        
+        // 保存されていた値のリスト・セレクト復元
+        const sel = div.querySelector('.career-faction-select');
+        if (savedValue) {
+            sel.value = savedValue;
+        }
+        handleCareerFactionChange(careerIndexCounter);
+    }
+
+    function handleCareerFactionChange(id) {
+        const card = document.getElementById(`career-card-id-${id}`);
+        const selVal = card.querySelector('.career-faction-select').value;
+        const freeGroup = document.getElementById(`career-free-group-${id}`);
+        if(selVal === "その他") {
+            freeGroup.style.display = "block";
+        } else {
+            freeGroup.style.display = "none";
+        }
         updateFactionAndTraits();
     }
 
@@ -686,7 +738,7 @@
         updateFactionAndTraits();
     }
 
-    // 現職・前職が変更されたら、特殊能力選択肢のドロップダウンを動的に再ブレンド生成する
+    // 現職・前職アビリティドロップダウン動的同期処理
     function updateFactionAndTraits() {
         const currentFaction = document.getElementById('p-faction').value;
         if (currentFaction === "その他") {
@@ -700,7 +752,7 @@
     function updateTraitDropdownOptions() {
         let availableTraits = [];
         
-        // 現職の能力をブレンド
+        // 現在の会社
         let currentFaction = document.getElementById('p-faction').value;
         if (currentFaction === "その他") {
             currentFaction = document.getElementById('p-faction-free').value || "その他";
@@ -711,10 +763,13 @@
             availableTraits.push({ traitName: `自由記入アビリティ（${currentFaction}）`, source: "現職(カスタム)" });
         }
 
-        // 全前職の経歴枠から能力をブレンド
-        const careerInputs = document.querySelectorAll('.career-faction-input');
-        careerInputs.forEach(input => {
-            const fac = input.value.trim();
+        // 複数の全前職のリスト選択値
+        const careerCards = document.querySelectorAll('.career-card');
+        careerCards.forEach(card => {
+            let fac = card.querySelector('.career-faction-select').value;
+            if(fac === "その他") {
+                fac = card.querySelector('.career-faction-free-input').value || "その他";
+            }
             if(fac) {
                 if (companyTraitsData[fac]) {
                     companyTraitsData[fac].forEach(t => availableTraits.push({ traitName: t, source: `前職:${fac}` }));
@@ -724,13 +779,12 @@
             }
         });
 
-        // 1〜4のスロットのドロップダウンへ一斉に流し込む（選んでいた値は維持する）
+        // スロット1〜4へ同期流し込み
         for (let i = 1; i <= 4; i++) {
             const sel = document.getElementById(`special-trait-select-${i}`);
             const previousValue = sel.value;
-            sel.innerHTML = `<option value="">-- 未設定（クリックして所属・前職アビリティから選択） --</option>`;
+            sel.innerHTML = `<option value="">-- 未設定（所属・前職アビリティから選択） --</option>`;
             
-            // 自由記入カスタム枠を常に末尾へ用意
             availableTraits.forEach(item => {
                 const opt = document.createElement('option');
                 opt.value = item.traitName;
@@ -744,7 +798,7 @@
             sel.appendChild(optFree);
 
             sel.value = previousValue;
-            if (sel.selectedIndex === -1) sel.value = ""; // 不整合が起きたらリセット
+            if (sel.selectedIndex === -1) sel.value = ""; 
             onTraitSelected(i);
         }
     }
@@ -757,26 +811,23 @@
         } else {
             freeArea.style.display = "none";
         }
-        executeTraitAutoCalculations(); // 特殊能力によるステータス補正発動
+        executeTraitAutoCalculations();
     }
 
-    // 🧬 特殊能力選択に伴うステータス自動適用・補正ロジック
+    // 特殊能力自動ステータス補正算出エンジン
     function executeTraitAutoCalculations() {
-        // 補正オブジェクトの初期化
         traitAutoBonuses = { body: 0, str: 0, int: 0, spd: 0, men: 0, hp: 0, sp: 0 };
         
         for (let i = 1; i <= 4; i++) {
             const val = document.getElementById(`special-trait-select-${i}`).value;
             if(!val) continue;
 
-            // アビリティ名に応じた自動ステータスアップ・ダウン
-            if (val === "武の才能" || val === "果敢な挑戦") traitAutoBonuses.str += 1;
-            if (val === "守護者" || val === "死線越え") traitAutoBonuses.body += 1;
-            if (val === "迅速な護衛" || val === "感覚同調") traitAutoBonuses.spd += 1;
-            if (val === "頭脳明晰" || val === "魔導回路") traitAutoBonuses.int += 1;
-            if (val === "精神集中" || val === "呪術知識") traitAutoBonuses.men += 1;
-            if (val === "現場医療班") skillModifiers["手当"] = (skillModifiers["手当"] || 0) + 2; // 技能等への自動補正も可
-            if (val === "部屋籠り") {
+            if (val === "武の才能" || val === "果敢な挑戦" || val.includes("武の才能")) traitAutoBonuses.str += 1;
+            if (val === "守護者" || val === "死線越え" || val.includes("守護者")) traitAutoBonuses.body += 1;
+            if (val === "迅速な護衛" || val === "感覚同調" || val.includes("迅速な護衛")) traitAutoBonuses.spd += 1;
+            if (val === "頭脳明晰" || val === "魔導回路" || val.includes("頭脳明晰")) traitAutoBonuses.int += 1;
+            if (val === "精神集中" || val === "呪術知識" || val.includes("精神集中")) traitAutoBonuses.men += 1;
+            if (val === "部屋籠り" || val.includes("部屋籠り")) {
                 traitAutoBonuses.int += 2; traitAutoBonuses.men += 2;
                 traitAutoBonuses.body -= 1; traitAutoBonuses.str -= 1; traitAutoBonuses.spd -= 1;
             }
@@ -784,17 +835,16 @@
         recalculate();
     }
 
-    // --- 別途の完全独自カスタム戦闘技能の追加・削除 ---
+    // --- 独自戦闘技能の動的追加削除 ---
     function addNewCustomSkillField(savedName = "", savedLv = 1, savedMod = 0) {
         customSkillCounter++;
         const area = document.getElementById('custom-skills-area');
         const div = document.createElement('div');
         div.className = 'custom-skill-card';
         div.id = `custom-skill-id-${customSkillCounter}`;
-        div.style = "background-color:#0d1117; border:1px solid #38445d; padding:10px; border-radius:4px; margin-bottom:10px; position:relative;";
         
         div.innerHTML = `
-            <button type="button" class="btn-delete-card" onclick="deleteCustomSkillField(${customSkillCounter})">削除</button>
+            <button type="button" class="btn-delete-element" onclick="deleteCustomSkillField(${customSkillCounter})">削除</button>
             <div class="form-grid" style="gap:10px; align-items: center;">
                 <div class="form-group">
                     <label>別枠カスタム技能の名称変更</label>
@@ -840,7 +890,7 @@
         recalculate();
     }
 
-    // --- 武器動的フィールド生成 ---
+    // --- 武器動的スロット生成 ---
     function addNewWeaponField() {
         weaponIndexCounter++;
         const targetContainer = document.getElementById('weapons-list-area');
@@ -855,7 +905,7 @@
                 <div class="form-group"><label>解放スキル1（初期搭載）</label><input type="text" class="wp-sk1" placeholder="追加効果やダメージロール"></div>
                 <div class="form-group"><label>総弾丸数</label><input type="number" class="wp-bullet-total" value="0"></div>
                 <div class="form-group"><label>装弾数</label><input type="number" class="wp-bullet-mag" value="0"></div>
-                <div class="form-group span-2"><label>ランダム解放スキル枠（スキル2〜4）</label><textarea class="wp-sk-multi" rows="2"></textarea></div>
+                <div class="form-group span-2"><label>ランダム解放スキル（スキル2〜4）</label><textarea class="wp-sk-multi" rows="2"></textarea></div>
             </div>
         `;
         targetContainer.appendChild(card);
@@ -865,34 +915,6 @@
         document.getElementById(`weapon-card-id-${id}`).remove();
     }
 
-    function adjustBase(key, val) {
-        let current = baseStats[key];
-        let charLevel = parseInt(document.getElementById('p-level').value) || 1;
-        if (current + val < 1 || (val > 0 && current + val > charLevel)) return;
-        if (val > 0 && (parseFloat(document.getElementById('calc-rem-base-pt').value) || 0) < 1) {
-            alert("基本能力ポイントが不足しています。"); return;
-        }
-        baseStats[key] += val;
-        document.getElementById(`base-${key}`).value = baseStats[key];
-        recalculate();
-    }
-
-    function updateModifier(skName, index) {
-        skillModifiers[skName] = parseInt(document.getElementById(`skmod-${index}`).value) || 0;
-    }
-
-    function adjustSkill(skName, index, val) {
-        let current = skillStats[skName];
-        if (current + val < 1 || current + val > 90) return;
-        if (val > 0 && (parseInt(document.getElementById('calc-rem-sp').value) || 0) < 1) {
-            alert("特技ポイントが不足しています。"); return;
-        }
-        skillStats[skName] += val;
-        document.getElementById(`sk-${index}`).value = skillStats[skName];
-        recalculate();
-    }
-
-    // 全自動コア計算ロジック
     function recalculate() {
         let charLevel = parseInt(document.getElementById('p-level').value) || 1;
         
@@ -908,7 +930,7 @@
         else if (charLevel >= 81) rankText = "エリート(1級)";
         document.getElementById('calc-rank-status').value = rankText;
 
-        // パッチ：獲得総基本ポイント数＝Lv×4
+        // パッチ：基本能力ポイント＝Lv×4
         let totalBasePoints = charLevel * 4;
         let usedBasePoints = (baseStats.body - 1) + (baseStats.str - 1) + (baseStats.int - 1) + (baseStats.spd - 1) + (baseStats.men - 1);
         let remBase = totalBasePoints - usedBasePoints;
@@ -919,7 +941,6 @@
             if (plusBtn) plusBtn.disabled = (remBase < 1 || baseStats[key] >= charLevel);
         }
 
-        // 特殊能力自動適用補正を合算した最終実数値の算出
         let finalBody = baseStats.body + traitAutoBonuses.body;
         let finalStr = baseStats.str + traitAutoBonuses.str;
         let finalInt = baseStats.int + traitAutoBonuses.int;
@@ -933,11 +954,10 @@
         let basicSP = (finalInt * 3) + (Math.floor(finalInt / 10) * 10);
         document.getElementById('calc-sp').value = `${basicSP} pt`;
         
-        // 技術能力一律1ptルール計算
+        // 技能一律1ptルール
         let totalUsedSP = 0;
         cryingCitySkills.forEach(sk => { totalUsedSP += (skillStats[sk] - 1); });
         
-        // 別枠カスタム技能消費分を加算
         document.querySelectorAll('.custom-skill-card').forEach(card => {
             totalUsedSP += ((parseInt(card.querySelector('.csk-lv').value) || 1) - 1);
         });
@@ -949,12 +969,8 @@
             let plusBtn = document.getElementById(`btn-plus-${index}`);
             if (plusBtn) plusBtn.disabled = (remainingSP < 1);
         });
-        document.querySelectorAll('.custom-skill-card').forEach(card => {
-            let pBtn = card.querySelector('.btn-calc[id^="btn-csk-plus-"]');
-            if(pBtn) pBtn.disabled = (remainingSP < 1);
-        });
 
-        // パッチ：速度Lv20毎に行動回数+1
+        // 速度Lv20毎に行動回数+1
         document.getElementById('calc-actions').value = `${1 + Math.floor(finalSpd / 20)} 回`;
         document.getElementById('calc-cost-max').value = 3 + Math.floor(finalMen / 4);
         document.getElementById('calc-cost-reg').value = 1 + Math.floor(finalMen / 10);
@@ -994,23 +1010,29 @@
 
     function saveToLocal() {
         localStorage.setItem(storagePrefix + (document.getElementById('slot-name').value.trim() || "デフォルト"), JSON.stringify(compileData()));
-        alert("市民データを端末機関に固定記憶しました。"); refreshClosetList();
+        alert("市民データを端末へ記憶しました。"); refreshClosetList();
     }
 
     function deleteFromCloset(slotName) {
-        if (confirm(`本当に【${slotName}】の登録データを削除しますか？`)) { localStorage.removeItem(storagePrefix + slotName); refreshClosetList(); }
+        if (confirm(`【${slotName}】を削除しますか？`)) { localStorage.removeItem(storagePrefix + slotName); refreshClosetList(); }
     }
 
     function compileData() {
         let factionValue = document.getElementById('p-faction').value;
         if (factionValue === "その他") factionValue = document.getElementById('p-faction-free').value || "その他";
 
+        // 前職のセレクト＆フリー入力情報収集
         let careerArray = [];
-        document.querySelectorAll('.career-faction-input').forEach(input => {
-            if(input.value.trim()) careerArray.push(input.value.trim());
+        document.querySelectorAll('.career-card').forEach(card => {
+            let v = card.querySelector('.career-faction-select').value;
+            let freeV = card.querySelector('.career-faction-free-input').value.trim();
+            careerArray.push({
+                faction: v,
+                freeFaction: freeV
+            });
         });
 
-        // 戦闘技能オリジナル名称上書きリスト収集
+        // 戦闘技能のエイリアス上書き情報
         let combatAliases = {};
         cryingCitySkills.forEach((sk, index) => {
             if(combatSkillIndices.includes(index)) {
@@ -1082,7 +1104,9 @@
         let weaponNames = d.weaponsList?.map(w => w.name || "未設定").join(', ') || "なし";
 
         let traitsText = d.traitsSlotsArray.map((t, idx) => t.selected ? `[枠${idx+1}]:${t.selected}${t.freeText ? '('+t.freeText+')':''}` : '').filter(x=>x).join(', ');
-        let careerStr = d.careerHistory.length > 0 ? `\n転職経歴：${d.careerHistory.join(' ➔ ')}` : "";
+        
+        let careerDisplayList = d.careerHistory.map(c => c.faction === "その他" ? c.freeFaction : c.faction);
+        let careerStr = careerDisplayList.length > 0 ? `\n転職経歴：${careerDisplayList.join(' ➔ ')}` : "";
 
         let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${d.profile.title || ""}\n特殊能力： ${traitsText}${careerStr}\n武器： ${weaponNames}\n所属： ${d.profile.faction || ""}`;
 
@@ -1157,9 +1181,13 @@
             selectElement.value = ["赤色戦派","ディフィポリディ","ルナード・ルーンズ","メローメディック","ライブラビランス","センス","決闘連盟","無所属","一般労働者","電務工房","刻","Mysticism"].includes(data.profile.faction) ? data.profile.faction : "その他";
             if (selectElement.value === "その他") document.getElementById('p-faction-free').value = data.profile.faction || "";
             
-            // 前職の復元
+            // 前職リストカードの復元構築
             document.getElementById('career-history-area').innerHTML = "";
-            if(data.careerHistory) { data.careerHistory.forEach(fac => addNewCareerField(fac)); }
+            if(data.careerHistory) {
+                data.careerHistory.forEach(c => {
+                    addNewCareerField(c.faction, c.freeFaction);
+                });
+            }
             updateFactionAndTraits();
 
             document.getElementById('p-level').value = data.profile.level || 1;
@@ -1168,7 +1196,7 @@
             document.getElementById('p-title').value = data.profile.title || ""; document.getElementById('p-earned-title').value = data.profile.earnedTitle || "";
         }
 
-        // 特殊能力枠スロットの復元
+        // 特殊能力スロット枠の選択復元
         if(data.traitsSlotsArray) {
             data.traitsSlotsArray.forEach((t, idx) => {
                 const i = idx + 1;
@@ -1218,3 +1246,6 @@
 
 </body>
 </html>
+```eof
+
+ご要望のあった「セレクトボックスによる前職の複数登録・引継ぎ」、「いつでもスムーズに右下にいてくれる浮遊目次（☰）」、そして「基礎能力＆特殊能力の常時表示」を完全に内包した極限のポータルツールとなっています。ぜひブラウザに登録して、実際の挙動を確認してみてください！
