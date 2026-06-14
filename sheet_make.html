@@ -398,8 +398,8 @@
 
     <!-- ==================== 3. 基礎能力 ==================== -->
     <div class="section-panel" id="sec-base">
-        <h2>〇 基礎能力（割り振りポイント総数：キャラクターレベル × 4）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。獲得した基本能力ポイントを消費して割り振ります。上限はキャラレベル値までとなります。</p>
+        <h2>〇 基礎能力（固定一律：40ポイント割り振りシステム）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。基本能力ポイントを消費して割り振ります。上限は各能力最大30までとなります。</p>
         
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
@@ -408,7 +408,7 @@
             </div>
             <div class="form-group">
                 <label style="color: var(--accent-orange);">⚠️ 未割り振り基本能力ポイント</label>
-                <input type="text" id="calc-rem-base-pt" value="4 pt" readonly style="font-weight:bold; font-size:1.1rem; text-align:center; color: var(--accent-orange);">
+                <input type="text" id="calc-rem-base-pt" value="40 pt" readonly style="font-weight:bold; font-size:1.1rem; text-align:center; color: var(--accent-orange);">
             </div>
         </div>
 
@@ -432,7 +432,7 @@
         
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
-                <label>特技ポイントの【補正追加分】（★通過シナリオの合計Expが自動連動加算されます）</label>
+                <label>特技ポイントの【補正追加分】</label>
                 <input type="number" id="bonus-sp" value="0" min="0" oninput="recalculate()">
             </div>
             <div class="form-group">
@@ -478,10 +478,10 @@
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
     </div>
 
-    <!-- ==================== 7. 通過シナリオ一覧（例を完全クリア・Exp連動版） ==================== -->
+    <!-- ==================== 7. 通過シナリオ一覧（経験ポイント撤廃版） ==================== -->
     <div class="section-panel" id="sec-scenarios">
-        <h2>〇 通過シナリオ記録・履歴管理（動的追加削除・獲得Exp技能連携）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">通過したシナリオ名、獲得経験P、エンド内容、備考を記録できます。入力された獲得Expは技能ポイント補正に自動合算されます。</p>
+        <h2>〇 通過シナリオ記録・履歴管理（動的追加削除対応）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">通過したシナリオ名、到達エンド、獲得アイテムや備考欄を綺麗に記録・管理できます。</p>
         <div id="scenarios-list-area"></div>
         <button type="button" class="btn-add-card" style="background-color:#1c2533; color:var(--accent-blue); border-color:#2a394a;" onclick="addNewScenarioField()">＋ 通過シナリオの記録を追加する</button>
     </div>
@@ -741,7 +741,7 @@
                         <option value="赤色戦派">赤色戦派</option><option value="ディフィポリディ">ディフィポリディ</option><option value="ルナード・ルーンズ">ルナード・ルーンズ</option><option value="メローメディック">メローメディック</option><option value="ライブラビランス">ライブラビランス</option><option value="センス">センス</option><option value="決闘連盟">決闘連盟</option><option value="無所属">無所属</option><option value="一般労働者">一般労働者</option><option value="電務工房">電務工房</option><option value="刻">刻</option><option value="Mysticism">Mysticism</option><option value="その他">その他（自由記入）</option>
                     </select>
                 </div>
-                <div class="form-group span-2" id="career-free-group-${careerIndexCounter}" style="display:none;"><label style="color: var(--accent-orange);">▼ 自由記入 前職所属名</label><input type="text" class="career-faction-free-input" value="${savedFreeValue}" oninput="updateFactionAndTraits()"></div>
+                <div class="form-grid span-2" id="career-free-group-${careerIndexCounter}" style="display:none;"><label style="color: var(--accent-orange);">▼ 自由記入 前職所属名</label><input type="text" class="career-faction-free-input" value="${savedFreeValue}" oninput="updateFactionAndTraits()"></div>
             </div>
         `;
         area.appendChild(div);
@@ -806,8 +806,8 @@
         recalculate();
     }
 
-    // 通過シナリオ動的生成（記入例・プレースホルダーを完全排除 ＆ Expリアルタイム連動イベント設定）
-    function addNewScenarioField(name="", exp="", end="", note="") {
+    // 通過シナリオ動的生成（経験ポイントを完全撤廃）
+    function addNewScenarioField(name="", end="", note="") {
         scenarioIndexCounter++;
         const container = document.getElementById('scenarios-list-area');
         const div = document.createElement('div');
@@ -816,32 +816,16 @@
         div.innerHTML = `
             <button type="button" class="btn-delete-card" onclick="deleteScenarioField(${scenarioIndexCounter})">削除</button>
             <div class="form-grid">
-                <div class="form-group"><label>シナリオ名</label><input type="text" class="sc-name" value="${name}"></div>
-                <div class="form-group"><label>獲得経験ポイント数（半角数値入力で技能ptへ自動合算）</label><input type="number" class="sc-exp" value="${exp}" oninput="syncScenariosExpToBonusSp()"></div>
+                <div class="form-group span-2"><label>シナリオ名</label><input type="text" class="sc-name" value="${name}"></div>
                 <div class="form-group span-2"><label>到達エンド</label><input type="text" class="sc-end" value="${end}"></div>
                 <div class="form-group span-2"><label>シナリオ備考・獲得アイテム・報酬等</label><textarea class="sc-note" rows="2">${note}</textarea></div>
             </div>
         `;
         container.appendChild(div);
-        syncScenariosExpToBonusSp();
     }
 
     function deleteScenarioField(id) { 
         document.getElementById(`scenario-id-${id}`).remove(); 
-        syncScenariosExpToBonusSp();
-    }
-
-    // 【新設ロジック】全シナリオの獲得経験Pを全自動で集計し、特技のボーナス補正へ直結流し込みするプロトコル
-    function syncScenariosExpToBonusSp() {
-        let totalExp = 0;
-        const expInputs = document.querySelectorAll('.sc-exp');
-        expInputs.forEach(input => {
-            let val = parseInt(input.value) || 0;
-            totalExp += val;
-        });
-        // 技能セクションの補正追加分入力欄へ値を全自動上書き流し込み
-        document.getElementById('bonus-sp').value = totalExp;
-        recalculate();
     }
 
     function addNewCustomSkillField(savedName = "", savedLv = 1, savedMod = 0) {
@@ -894,8 +878,8 @@
     function deleteWeaponField(id) { document.getElementById(`weapon-card-id-${id}`).remove(); }
 
     function adjustBase(key, val) {
-        let current = baseStats[key]; let charLevel = parseInt(document.getElementById('p-level').value) || 1;
-        if (current + val < 1 || (val > 0 && current + val > charLevel)) return;
+        let current = baseStats[key];
+        if (current + val < 1 || (val > 0 && current + val > 30)) return; // 最大30上限固定
         if (val > 0 && (parseFloat(document.getElementById('calc-rem-base-pt').value) || 0) < 1) { alert("基本能力ポイントが不足しています。"); return; }
         baseStats[key] += val; document.getElementById(`base-${key}`).value = baseStats[key]; recalculate();
     }
@@ -909,27 +893,17 @@
     }
 
     function recalculate() {
-        let charLevel = parseInt(document.getElementById('p-level').value) || 1;
         let rankText = "一般労働階級";
-        if (charLevel >= 2 && charLevel <= 4) rankText = "ランクG(8級)";
-        else if (charLevel >= 5 && charLevel <= 10) rankText = "ランク F(7級)";
-        else if (charLevel >= 11 && charLevel <= 20) rankText = "ランク E(6級)";
-        else if (charLevel >= 21 && charLevel <= 34) rankText = "ランク D(5級)";
-        else if (charLevel >= 35 && charLevel <= 50) rankText = "ランク C(4級)";
-        else if (charLevel >= 51 && charLevel <= 62) rankText = "ランク B(3級)";
-        else if (charLevel >= 63 && charLevel <= 70) rankText = "ランク A(2級)";
-        else if (charLevel >= 71 && charLevel <= 80) rankText = "ランク S(1級)";
-        else if (charLevel >= 81) rankText = "エリート(1級)";
         document.getElementById('calc-rank-status').value = rankText;
 
-        let totalBasePoints = charLevel * 4;
+        let totalBasePoints = 40; // 40ポイント固定
         let usedBasePoints = (baseStats.body - 1) + (baseStats.str - 1) + (baseStats.int - 1) + (baseStats.spd - 1) + (baseStats.men - 1);
         let remBase = totalBasePoints - usedBasePoints;
         document.getElementById('calc-rem-base-pt').value = remBase + " pt";
 
         for (let key in baseStats) {
             let plusBtn = document.getElementById(`btn-base-plus-${key}`);
-            if (plusBtn) plusBtn.disabled = (remBase < 1 || baseStats[key] >= charLevel);
+            if (plusBtn) plusBtn.disabled = (remBase < 1 || baseStats[key] >= 30);
         }
 
         let finalBody = baseStats.body + traitAutoBonuses.body;
@@ -1029,7 +1003,7 @@
         let scenariosArray = [];
         document.querySelectorAll('.scenario-item-card').forEach(card => {
             scenariosArray.push({
-                name: card.querySelector('.sc-name').value, exp: card.querySelector('.sc-exp').value,
+                name: card.querySelector('.sc-name').value,
                 end: card.querySelector('.sc-end').value, note: card.querySelector('.sc-note').value
             });
         });
@@ -1073,7 +1047,7 @@
         if(d.scenariosList && d.scenariosList.length > 0) {
             memo += `\n\n【通過シナリオ記録】`;
             d.scenariosList.forEach(sc => {
-                if(sc.name) memo += `\n・${sc.name} (${sc.exp || '0'}pt) [${sc.end || ''}]: ${sc.note || ''}`;
+                if(sc.name) memo += `\n・${sc.name} [${sc.end || ''}]: ${sc.note || ''}`;
             });
         }
 
@@ -1189,12 +1163,9 @@
             });
         } else { addNewWeaponField(); }
 
-        // シナリオ履歴のロード
         const scArea = document.getElementById('scenarios-list-area'); scArea.innerHTML = "";
         if(data.scenariosList && data.scenariosList.length > 0) {
-            data.scenariosList.forEach(sc => { addNewScenarioField(sc.name, sc.exp, sc.end, sc.note); });
-        } else {
-            syncScenariosExpToBonusSp();
+            data.scenariosList.forEach(sc => { addNewScenarioField(sc.name, sc.end, sc.note); });
         }
 
         if(data.lore) {
