@@ -12,9 +12,7 @@
             --accent-color: #ff3b30; /* 警告用ネオンレッド */
             --accent-gray: #b3bac2;  
             --accent-blue: #00bcd4;  /* サイバーブルー */
-            --accent-green: #34c759; /* エメラルドグリーン */
-            --accent-orange: #ff9500;
-            --accent-purple: #9d4edd;
+            --accent-purple: #af52de; /* DLC用の紫 */
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #2d3748;
@@ -32,15 +30,25 @@
             color: var(--text-color);
             line-height: 1.8;
             padding-bottom: 60px;
+            
+            /* ページ遷移用フェードインの初期状態 */
             opacity: 0;
             animation: fadeInPage 0.6s ease-out forwards;
         }
 
+        /* --- ページ遷移用フェードインアニメーション --- */
         @keyframes fadeInPage {
-            0% { opacity: 0; transform: translateY(8px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
+        /* --- ヘッダー・タイトル --- */
         header {
             background: linear-gradient(180deg, #11141a 0%, var(--panel-bg) 100%);
             padding: 40px 20px;
@@ -63,7 +71,7 @@
             letter-spacing: 0.1em;
         }
 
-        /* --- お知らせバナー --- */
+        /* --- お知らせバナー（ネオンレッド） --- */
         .banner-container {
             background-color: #1a0000; 
             border-bottom: 1px solid var(--accent-color);
@@ -96,6 +104,7 @@
             100% { transform: translateX(-50%); }
         }
 
+        /* --- メインレイアウト --- */
         .container {
             max-width: 700px;
             margin: 0 auto;
@@ -113,7 +122,7 @@
         h2 {
             font-size: 1.2rem;
             color: #fff;
-            border-left: 4px solid var(--accent-blue);
+            border-left: 4px solid var(--accent-gray);
             padding-left: 10px;
             margin-bottom: 15px;
             letter-spacing: 0.05em;
@@ -153,6 +162,7 @@
             color: #fff;
         }
 
+        /* 現在開いているアクティブページの強調（会社用） */
         .nav-grid .nav-button.current-page,
         .nav-grid .nav-button.current-page:hover {
             background-color: #05161a !important;
@@ -162,8 +172,13 @@
             pointer-events: none; 
             box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
         }
-        .nav-grid .nav-button.current-page::before { content: '● '; font-size: 0.7rem; vertical-align: middle; }
+        .nav-grid .nav-button.current-page::before {
+            content: '● ';
+            font-size: 0.7rem;
+            vertical-align: middle;
+        }
 
+        /* キャラクターシート制作ボタン（赤グラデーション強調） */
         .nav-button.highlight {
             grid-column: span 2;
             background: linear-gradient(90deg, #ff3b30, #a20000);
@@ -173,108 +188,173 @@
             margin-top: 5px;
             color: #fff;
         }
+        .nav-button.highlight:hover {
+            opacity: 0.9;
+            border: none;
+        }
 
-        /* --- サイド矢印付きスライド図鑑共通スタイル --- */
-        .carousel-container {
-            position: relative;
-            background-color: #0d0f12;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px 45px;
-            margin-bottom: 25px;
-            overflow: hidden;
+        /* --- 所属一覧リスト（目次風） --- */
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            list-style: none;
+            padding: 5px 0;
         }
-        .carousel-track-wrapper {
-            width: 100%;
-            overflow: hidden;
+        .list-grid li a {
+            display: block;
+            background-color: #12151c;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-gray);
         }
-        .carousel-track {
+        .list-grid.dlc-list li a {
+            border-left-color: var(--accent-purple);
+        }
+
+        /* --- タブ切り替えシステム --- */
+        .tab-container {
             display: flex;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        .carousel-slide {
-            flex-shrink: 0;
-            width: 100%;
+        .tab-btn {
+            flex: 1;
+            background-color: #222733;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover {
+            color: #fff;
+            border-color: var(--accent-gray);
+        }
+        .tab-btn.active {
+            background-color: #1a2233;
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.2);
+        }
+        .tab-btn.active.dlc-tab {
+            color: var(--accent-purple);
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 10px rgba(175, 82, 222, 0.2);
+        }
+        .tab-content {
             display: none;
         }
-        .carousel-slide.active {
+        .tab-content.active {
             display: block;
-            animation: slideFadeIn 0.3s ease-out;
         }
-        @keyframes slideFadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
+
+        /* --- 各会社の詳細カード・アコーディオン --- */
+        .company-card {
+            background-color: #1a202c;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .company-header {
+            background-color: #222a38;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .company-desc {
+            padding: 20px;
+            font-size: 0.95rem;
+            background-color: #141923;
+            border-bottom: 1px solid var(--border-color);
+            white-space: pre-line;
         }
         
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #1e2533;
-            color: var(--accent-blue);
-            border: 1px solid var(--border-color);
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
+        /* 特殊能力アコーディオン */
+        .ability-details {
+            border: none;
+            background: transparent;
+        }
+        .ability-summary {
+            padding: 15px 20px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #1c2331;
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 0.95rem;
+            outline: none;
+            list-style: none;
+            position: relative;
+        }
+        .dlc-card .ability-summary {
+            color: var(--accent-purple);
+        }
+        .ability-summary::after {
+            content: '▼ 特殊能力一覧を展開';
+            position: absolute;
+            right: 20px;
             font-size: 0.8rem;
-            font-weight: bold;
-            z-index: 10;
-            user-select: none;
-            transition: 0.2s;
+            color: var(--text-muted);
         }
-        .carousel-btn:hover {
-            background-color: var(--accent-blue);
-            color: #0d0f12;
-            box-shadow: 0 0 10px var(--accent-blue);
-        }
-        .carousel-btn.btn-prev { left: 8px; }
-        .carousel-btn.btn-next { right: 8px; }
-
-        .skill-panel-item {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 10px;
-        }
-        .skill-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #1f2733;
-            padding-bottom: 4px;
-            margin-bottom: 8px;
-        }
-        .skill-panel-name {
-            font-weight: bold;
+        .ability-details[open] .ability-summary::after {
+            content: '▲ 閉じる';
             color: #fff;
-            font-size: 1.1rem;
         }
-
         .ability-list {
-            margin-top: 10px;
-            padding-left: 5px;
+            padding: 15px 20px;
+            background-color: #0f131c;
+            list-style: none;
         }
         .ability-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #232d3f;
             font-size: 0.9rem;
-            border-bottom: 1px dashed #222a38;
-            padding: 6px 0;
-            white-space: pre-line;
         }
         .ability-item:last-child {
             border-bottom: none;
         }
+        .ability-name {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .ability-effect {
+            color: var(--text-color);
+            display: block;
+            padding-left: 10px;
+            border-left: 2px solid #3a475c;
+            white-space: pre-line;
+        }
 
         @media (max-width: 480px) {
-            .nav-grid { grid-template-columns: 1fr; }
-            .nav-button.highlight { grid-column: span 1; }
-            .main-title { font-size: 1.6rem; }
-            .carousel-container { padding: 15px 38px; }
-            .carousel-btn { width: 30px; height: 34px; }
+            .nav-grid, .list-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-button.highlight {
+                grid-column: span 1;
+            }
+            .main-title {
+                font-size: 1.6rem;
+            }
+            .company-header {
+                font-size: 1rem;
+            }
+            .ability-summary::after {
+                content: '▼ 展開';
+            }
         }
     </style>
 </head>
@@ -282,301 +362,703 @@
 
 <header>
     <div class="main-title">クライングシティ</div>
-    <div class="sub-title">市民登録プロトコル // 登録主力会社・組織一覧</div>
+    <div class="sub-title">所属組織及び認可特殊能力アーカイブ</div>
 </header>
 
 <div class="banner-container">
     <div class="banner-track">
-        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
+        <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
     </div>
 </div>
 
 <div class="container">
-    <h2>会社一覧</h2>
-    <div class="company-nav" id="nav-container"></div>
-    <div class="section-panel">
-        <h3 id="comp-name" style="margin-bottom:10px; color:var(--accent-blue); font-size:1.4rem;"></h3>
-        <div class="info-panel"><p id="comp-desc" style="white-space:pre-line;"></p></div>
-        <div id="ability-container" class="ability-grid"></div>
+
+    <!-- ナビゲーション（会社が current-page になります） -->
+    <div id="about-menu" class="section-panel">
+        <h2>ナビゲーション</h2>
+        <div class="nav-grid">
+            <a href="index.html" class="nav-button">◆概要◆</a> 
+            <a href="news.html" class="nav-button">◆お知らせ◆</a>
+            <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
+            <a href="company.html" class="nav-button current-page">◆会社◆</a>
+            <a href="weapon.html" class="nav-button">◆武器◆</a>
+            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
+            <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
+            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
+            <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
+        </div>
     </div>
+
+    <!-- タブボタンエリア -->
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('normal')">通常所属 一覧</button>
+        <button class="tab-btn dlc-tab" onclick="switchTab('dlc')">DLC会社 一覧</button>
+    </div>
+
+    <!-- ==================== 通常所属タブ ==================== -->
+    <div id="tab-normal" class="tab-content active">
+        
+        <div class="section-panel">
+            <h2>▽所属一覧</h2>
+            <ul class="list-grid">
+                <li><a href="#com-red">赤色戦派</a></li>
+                <li><a href="#com-diffi">ディフィポリディ</a></li>
+                <li><a href="#com-runard">ルナード・ルーンズ</a></li>
+                <li><a href="#com-mellow">メローメディック</a></li>
+                <li><a href="#com-libra">ライブラビランス</a></li>
+                <li><a href="#com-sense">センス</a></li>
+                <li><a href="#com-決闘">決闘連盟</a></li>
+                <li><a href="#com-無所属">無所属</a></li>
+                <li><a href="#com-一般">一般労働者</a></li>
+            </ul>
+        </div>
+
+        <h2>▽会社と特殊能力の詳細</h2>
+
+<div id="com-red" class="company-card">
+    <div class="company-header">赤色戦派 <span>[大規模会社]</span></div>
+    <div class="company-desc">
+        戦闘を重視する大規模会社。
+        戦う事だけに関しては右に出る会社はおらず、戦う事だけを考えるならまずこの会社が適任だろう。
+        もちろん戦う事だけとは言えただ無暗に戦うのではなく、戦術や戦略の理論もしっかりありどの面においても戦闘力が高い。
+        その為全面戦争から乱闘、要人暗殺まで幅広く受け持つことができる。
+        傘下会社にも直接訓練指導を行うなどして、戦闘力の底上げは徹底的に行っているようだ。
+    </div>
+
+```
+<details class="ability-details">
+    <summary class="ability-summary">〈特殊能力〉</summary>
+    <ul class="ability-list">
+        <li class="ability-item"><span class="ability-name">1．武の才能</span><span class="ability-effect">筋力Lv+1、ターン開始時コストを1消耗するごとにそのターン中の全ての近接攻撃判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">2．狩人の目</span><span class="ability-effect">知能Lv+1、ターン開始時コストを1消耗するごとにそのターン中の全ての射撃攻撃判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">3．肉弾戦</span><span class="ability-effect">近接攻撃格闘による拳や蹴りのダメージ量+3、筋力による追加ダメージの効果がd6からd10に変化する</span></li>
+        <li class="ability-item"><span class="ability-name">4．暗殺の瞳</span><span class="ability-effect">武器：刀・ナイフ使用時ダメージ量+4、隠密状態で敵に攻撃時固定で最大ダメージを与える</span></li>
+        <li class="ability-item"><span class="ability-name">5．正面突破</span><span class="ability-effect">武器：剣・長柄使用時ダメージ量+2、防御のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">6．強靭な肩</span><span class="ability-effect">投擲の判定・ダメージロールのダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">7．撃ち合い特化</span><span class="ability-effect">敵と自分が互いに射撃武器の場合、射撃攻撃判定のダイス数+2</span></li>
+        <li class="ability-item"><span class="ability-name">8．戦術指揮</span><span class="ability-effect">ターン開始時コストを2消耗すれば、自分を除く全味方の近接攻撃・射撃攻撃・投擲判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">9．各個撃破</span><span class="ability-effect">前回攻撃した相手を攻撃するとき、判定及びダメージロールのダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">10．背水</span><span class="ability-effect">自分のHPが半分以下なら全ての戦闘能力の判定にダイス数+2</span></li>
+        <li class="ability-item"><span class="ability-name">11．屈強な身体</span><span class="ability-effect">防護1を得る、身体Lv8につき追加で1得る（最大2）</span></li>
+        <li class="ability-item"><span class="ability-name">12．安定した呼吸</span><span class="ability-effect">本来のコスト消費量が3以上の攻撃使用時、コスト消費量-1</span></li>
+        <li class="ability-item"><span class="ability-name">13．戦いの信条</span><span class="ability-effect">近接攻撃・射撃攻撃判定をした時、1シナリオにつき合計3回振り直しが可能となる</span></li>
+        <li class="ability-item"><span class="ability-name">14．バーサーカー</span><span class="ability-effect">筋力Lvの値だけ戦闘能力専用の技能ポイントを獲得する、ただし知識能力の技能ポイント消費量+1</span></li>
+        <li class="ability-item"><span class="ability-name">15．不安定</span><span class="ability-effect">近接攻撃・射撃攻撃のダメージロールが最大値か最低値になる（確率は両方とも1/2）</span></li>
+    </ul>
+</details>
+```
+
 </div>
-        <p>クライングシティに存在する主要な会社・組織の詳細情報です。
-キャラクター制作時の所属決定や、世界観の把握にご利用ください。
-サイドの矢印（◀ ▶）で会社を切り替えることができます。</p>
 
+
+<div id="com-defipolidi" class="company-card">
+    <div class="company-header">ディフィポリディ <span>[大規模会社]</span></div>
+    <div class="company-desc">
+        いわゆる警察のような立ち位置に居る大規模会社。
+        『守護』することに重きを置いており誰かを守ったり、無所属のならずものを捕えたり様々な方法で守護活動を行っている。
+        依頼の都合上赤色戦派とは対立することが多く、世間から仲が悪いと思われているが実際はそんな事は無い。
+        得意とすることが違うため協力する事もあり、むしろ関係はお互い保とうとしている。
+        護るという性質上市民達からの信用は厚く、一番人気の会社とも言えるだろう。
+    </div>
+
+```
+<details class="ability-details">
+    <summary class="ability-summary">〈特殊能力〉</summary>
+    <ul class="ability-list">
+        <li class="ability-item"><span class="ability-name">1．守護者</span><span class="ability-effect">身体Lv+1、ターン開始時コストを1消耗するごとにそのターン中の防御・反撃判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">2．迅速な護衛</span><span class="ability-effect">速度Lv+1、ターン開始時コストを1消耗するごとにそのターン中の回避判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">3．護衛行動</span><span class="ability-effect">1ターンに1回コストを2消耗すれば味方が受けるダメージを肩代わりする、その時防御を使用回数関係なく使用できる</span></li>
+        <li class="ability-item"><span class="ability-name">4．頑丈</span><span class="ability-effect">防護2を得る、身体Lv7につき追加で1得る（最大3）</span></li>
+        <li class="ability-item"><span class="ability-name">5．防御振動</span><span class="ability-effect">攻撃を受けた後、防御のバリアが残っているなら攻撃した対象に受けたダメージの半分だけダメージを与える</span></li>
+        <li class="ability-item"><span class="ability-name">6．受け身の攻撃</span><span class="ability-effect">反撃Lv+1、反撃の回数制限が最大6回になる</span></li>
+        <li class="ability-item"><span class="ability-name">7．防衛陣形</span><span class="ability-effect">ターン開始時コストを2消耗すれば、自分を除く全味方の回避・防御・反撃判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">8．根性</span><span class="ability-effect">自分のHPが半分以下なら回避・防御・反撃判定のダイス数+2</span></li>
+        <li class="ability-item"><span class="ability-name">9．暖かき守り人</span><span class="ability-effect">手当判定のダイス数+1、信用判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">10．隙狙い</span><span class="ability-effect">回避判定成功時、対象に防護無視の1d4ダメージを与える</span></li>
+        <li class="ability-item"><span class="ability-name">11．防御強化</span><span class="ability-effect">戦闘中行動回数2回分攻撃しなければ、次のターンにコスト2回復、防護2、防御判定のダイスロール+2を得る（この効果は重複しない）</span></li>
+        <li class="ability-item"><span class="ability-name">12．攻撃は最大の防御</span><span class="ability-effect">ダメージロール時、自分の防護の値だけ対象に防護無視の追加ダメージを与える</span></li>
+        <li class="ability-item"><span class="ability-name">13．護りの信条</span><span class="ability-effect">守備判定をした時、1シナリオにつき合計3回振り直しが可能となる</span></li>
+        <li class="ability-item"><span class="ability-name">14．臆病者</span><span class="ability-effect">守備能力Lv+1、精神Lv-1</span></li>
+        <li class="ability-item"><span class="ability-name">15．重装部隊</span><span class="ability-effect">毎ターン開始時バリアを（防御Lv×3）得る、速度Lv-1</span></li>
+    </ul>
+</details>
+```
+
+</div>
+
+<div id="com-lunard" class="company-card">
+    <div class="company-header">ルナード・ルーンズ <span>[大規模会社]</span></div>
+    <div class="company-desc">
+        遺跡や古代の遺物を中心に、この世界の遺産を追求する大規模会社。
+        当然危険な場所に足を踏み入れ、様々なものを解読していくため身体も頭脳もそれなりの水準が必須。
+        しかし限界もある為戦闘班と解読班など様々な専門班を作り、共同調査を行う。
+        それ故に他の会社より様々な部署が存在するが、横の繋がりが強くチームワークに優れている。
+        武器は刀や鈍器類を持った者がほとんどだが、実は特に武器の指定は無く自由に選べる。
+    </div>
+
+```
+<details class="ability-details">
+    <summary class="ability-summary">〈特殊能力〉</summary>
+    <ul class="ability-list">
+        <li class="ability-item"><span class="ability-name">1．古を追う者</span><span class="ability-effect">身体Lv+1、任意の行動能力1つの能力判定がd6からd10になる</span></li>
+        <li class="ability-item"><span class="ability-name">2．解読班</span><span class="ability-effect">知能Lv+1、解読Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+        <li class="ability-item"><span class="ability-name">3．戦闘班</span><span class="ability-effect">筋力Lv+1、刀・鈍器使用時コスト1回復</span></li>
+        <li class="ability-item"><span class="ability-name">4．偵察班</span><span class="ability-effect">速度Lv+1、隠密・追跡能力判定の難度-3</span></li>
+        <li class="ability-item"><span class="ability-name">5．加工班</span><span class="ability-effect">精神Lv+1、修繕・自然能力判定失敗時にその判定を1回だけ振り直すことができる</span></li>
+        <li class="ability-item"><span class="ability-name">6．アーティファクト</span><span class="ability-effect">防護+1、ダメージロールのダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">7．古代技術の解明</span><span class="ability-effect">技能ポイント+10</span></li>
+        <li class="ability-item"><span class="ability-name">8．優れた連携力</span><span class="ability-effect">自分を除いた味方が3人以上の時、自分を含む全ての味方の行動能力判定難度-3</span></li>
+        <li class="ability-item"><span class="ability-name">9．有利地形</span><span class="ability-effect">場所が古代に関連する場所の場合、視覚・調査・隠密・解読能力判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">10．オーパーツ</span><span class="ability-effect">自分を含む味方がコストを消費する前、任意でコスト消費量を1減少できる（1ターンに1回）</span></li>
+        <li class="ability-item"><span class="ability-name">11．緩和フィルター</span><span class="ability-effect">精神判定発生時、難度10につき精神判定のダイス数+1（最大2）</span></li>
+        <li class="ability-item"><span class="ability-name">12．効率転換</span><span class="ability-effect">1戦闘に1回、コストを2消費して味方全員のコストを1回復</span></li>
+        <li class="ability-item"><span class="ability-name">13．探求の信条</span><span class="ability-effect">行動能力判定をした時、1シナリオにつき合計3回振り直しが可能となる</span></li>
+        <li class="ability-item"><span class="ability-name">14．呪われたアーティファクト</span><span class="ability-effect">防護+2、ダメージロールのダイス数+2、コスト回復値-1</span></li>
+        <li class="ability-item"><span class="ability-name">15．狂気的探求</span><span class="ability-effect">全ての行動能力判定のダイス数+1、コスト回復値+1、精神-1</span></li>
+    </ul>
+</details>
+```
+
+</div>
+
+
+<div id="com-melomedic" class="company-card">
+    <div class="company-header">メローメディック <span>[大規模会社]</span></div>
+    <div class="company-desc">
+        医療や治療を中心に活躍している大規模会社。
+        危険な現場にも赴き、医療活動を行っているほか無関係な市民の避難や救護も行う。
+        企業との提携もあり迅速で適切な処置を実現している。
+        その分当然割高ではあるが絶対的な安全性が保障されている。
+        しかし戦闘が常に起こっている以上、増え続ける需要に応えなければならず常に忙しい過酷な環境だそうだ。
+    </div>
+
+```
+<details class="ability-details">
+    <summary class="ability-summary">〈特殊能力〉</summary>
+    <ul class="ability-list">
+        <li class="ability-item"><span class="ability-name">1．医療知識</span><span class="ability-effect">知能Lv+1、手当・医学の判定難度-3</span></li>
+        <li class="ability-item"><span class="ability-name">2．医務の合間に</span><span class="ability-effect">速度Lv+1、手当判定成功時自分の体力を1d6回復</span></li>
+        <li class="ability-item"><span class="ability-name">3．医者</span><span class="ability-effect">信用・言語Lv+1、3以下のダメージの手当判定に自動成功する</span></li>
+        <li class="ability-item"><span class="ability-name">4．連続処置</span><span class="ability-effect">手当判定時コストを1消耗につき1名追加で回復できる（最大3）</span></li>
+        <li class="ability-item"><span class="ability-name">5．現場医療班</span><span class="ability-effect">回避Lv+1、手当成功時対象のコスト1回復</span></li>
+        <li class="ability-item"><span class="ability-name">6．回復薬</span><span class="ability-effect">所持品に即時回復薬を医学Lv÷2だけ所持（最大20）。（即時回復薬：判定不要で最大HPの半分の値だけ体力を回復）</span></li>
+        <li class="ability-item"><span class="ability-name">7．救助活動</span><span class="ability-effect">ターン開始時HPが半分以下の味方がいる場合、最速で行動する（最速行動の効果を持つキャラクターが複数いる場合速度Lvを優先）</span></li>
+        <li class="ability-item"><span class="ability-name">8．精神科</span><span class="ability-effect">精神判定にて失敗しパニック状態に陥ったキャラクターを、手当・医学で回復することができる</span></li>
+        <li class="ability-item"><span class="ability-name">9．対応力</span><span class="ability-effect">対人能力使用時、判定難度-3</span></li>
+        <li class="ability-item"><span class="ability-name">10．白衣の天使</span><span class="ability-effect">手当の回復判定時、ダイス1つにつき回復量+2</span></li>
+        <li class="ability-item"><span class="ability-name">11．パワー系</span><span class="ability-effect">ダメージを与えてきた対象へ攻撃的中時ダメージロールに+1d6、自身の体力を1回復</span></li>
+        <li class="ability-item"><span class="ability-name">12．医療式戦闘術</span><span class="ability-effect">任意の武器種を1つ選択する。選択されたものを医学で攻撃判定可能とする</span></li>
+        <li class="ability-item"><span class="ability-name">13．修理手当</span><span class="ability-effect">義体部品の修復を手当で代わりに回復できるようになる、義体部品の手当判定難度を-3する</span></li>
+        <li class="ability-item"><span class="ability-name">14．医療の信条</span><span class="ability-effect">手当・医学判定をした時、1シナリオにつき合計3回振り直しが可能となる</span></li>
+        <li class="ability-item"><span class="ability-name">15．激務の過労</span><span class="ability-effect">手当・医学Lv+2、HP最大値が身体Lv×4に変化</span></li>
+    </ul>
+</details>
+```
+
+</div>
+
+<div id="com-librabilance" class="company-card">
+    <div class="company-header">ライブラビランス <span>[大規模会社]</span></div>
+    <div class="company-desc">
+        本や資料などの知識・情報の収集、閲覧を行う頭脳派の大規模会社。
+        仕事内容はこういった本などの何かが記された紙媒体を収集することが中心。
+        この世界は学ぶことをどこか軽視している人が多く、ここに所属していない者たちを嫌ったり見下したりしている事がある。
+        ただルナード・ルーンズ、メローメディックとはまだ仲は良好と言えるだろう。
+        特徴としてこの会社では会社員を司書と呼称することと、武器は槍か不思議な力を扱う事に統一されている事だ。
+    </div>
+
+```
+<details class="ability-details">
+    <summary class="ability-summary">〈特殊能力〉</summary>
+    <ul class="ability-list">
+        <li class="ability-item"><span class="ability-name">1．本の虫</span><span class="ability-effect">知能Lv+1、調査Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+        <li class="ability-item"><span class="ability-name">2．集中</span><span class="ability-effect">精神Lv+1、コスト回復値+1</span></li>
+        <li class="ability-item"><span class="ability-name">3．知識堆積</span><span class="ability-effect">全ての知識能力の判定難度-3</span></li>
+        <li class="ability-item"><span class="ability-name">4．情報戦闘</span><span class="ability-effect">攻撃能力使用時、対象の守備判定の判定難度+3</span></li>
+        <li class="ability-item"><span class="ability-name">5．弱点を突く</span><span class="ability-effect">攻撃能力的中時、能力判定に出た6の目の数だけダメージロール時に追加ダメージを与える（最大6）</span></li>
+        <li class="ability-item"><span class="ability-name">6．揺れ槍</span><span class="ability-effect">武器：槍使用時、対象の守備判定のダイス数-1</span></li>
+        <li class="ability-item"><span class="ability-name">7．呪力操術</span><span class="ability-effect">攻撃能力に『呪力』を使用できる（呪力：コストを消耗してダメージを与える特殊遠距離攻撃）</span></li>
+        <li class="ability-item"><span class="ability-name">8．増幅</span><span class="ability-effect">コスト回復値+1、精神Lv8につきコスト最大値+1</span></li>
+        <li class="ability-item"><span class="ability-name">9．行動阻害</span><span class="ability-effect">コスト消耗量2につき対象の判定結果のダイスの目を1にする</span></li>
+        <li class="ability-item"><span class="ability-name">10．情報の重要性</span><span class="ability-effect">ターン開始時敵一名を対象に知識能力判定を行い、成功した場合対象への能力判定のダイス数+1</span></li>
+        <li class="ability-item"><span class="ability-name">11．知識の盾</span><span class="ability-effect">ターン開始時コストを消費でき、消費した値d6だけ自分を含む味方1名にバリアを付与</span></li>
+        <li class="ability-item"><span class="ability-name">12．知識の信条</span><span class="ability-effect">知識能力判定をした時、1シナリオにつき合計3回振り直しが可能となる</span></li>
+        <li class="ability-item"><span class="ability-name">13．警戒心</span><span class="ability-effect">ライブラビランス所属以外の相手から対人能力の対象にされた時判定難度+3。威圧Lv+1、ライブラビランス所属以外の相手に威圧以外の対人能力使用時判定難度+3</span></li>
+        <li class="ability-item"><span class="ability-name">14．部屋籠り</span><span class="ability-effect">知能・精神Lv+2、身体・筋力・速度Lv-1</span></li>
+        <li class="ability-item"><span class="ability-name">15．対人恐怖症</span><span class="ability-effect">物体や事象などに対する全ての能力判定のダイス数+1、人に対する全ての能力判定のダイス数-2</span></li>
+    </ul>
+</details>
+```
+
+</div>
+
+
+<div id="com-sense" class="company-card">
+    <div class="company-header">センス <span>[中規模会社]</span></div>
+    <div class="company-desc">
+        感覚派の中規模会社。
+        とにかく自由度が高いことが特徴。
+        自分の判断だけで動く会社と会社員、受けている依頼の幅と人員の多様性は随一。
+        その自由度から個性的会社員が多いものの、分野の違い幅が広すぎる為社員同士の繋がりがあまりにも希薄。
+        このつまらない特殊能力で自らの個性を輝かせられる者だけがこの会社に勤められるでしょうね。
+    </div>
+
+    <details class="ability-details">
+        <summary class="ability-summary">〈特殊能力〉</summary>
+        <ul class="ability-list">
+            <li class="ability-item"><span class="ability-name">1．戦闘センス</span><span class="ability-effect">戦闘能力の内3つの能力Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">2．感覚センス</span><span class="ability-effect">感覚能力の内3つの能力Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">3．行動センス</span><span class="ability-effect">行動能力の内3つの能力Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">4．対人センス</span><span class="ability-effect">対人能力の内3つの能力Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">5．知識センス</span><span class="ability-effect">知識能力の内3つの能力Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">6．基礎センス</span><span class="ability-effect">基礎能力の内2つの能力Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">7．集中的戦闘センス</span><span class="ability-effect">戦闘能力の内1つの能力Lv+3。Lv10ごとに増加量+2（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">8．集中的感覚センス</span><span class="ability-effect">感覚能力の内1つの能力Lv+3。Lv10ごとに増加量+2（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">9．集中的行動センス</span><span class="ability-effect">行動能力の内1つの能力Lv+3。Lv10ごとに増加量+2（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">10．集中的対人センス</span><span class="ability-effect">対人能力の内1つの能力Lv+3。Lv10ごとに増加量+2（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">11．集中的知識センス</span><span class="ability-effect">知識能力の内1つの能力Lv+3。Lv10ごとに増加量+2（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">12．集中的基礎センス</span><span class="ability-effect">基礎能力の内1つの能力Lv+2。Lv10ごとに増加量+2（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">13．一種の才能</span><span class="ability-effect">技術能力判定をした時、1シナリオにつき合計3回振り直しが可能となる</span></li>
+        </ul>
+    </details>
+</div>
+        
+<div id="com-duel-union" class="company-card">
+    <div class="company-header">決闘連盟 <span>[中規模会社]</span></div>
+    <div class="company-desc">
+        1対1の戦闘や双方の合意の下行う戦闘などを重視する中規模会社。
+        高らかに名乗り上げる、手袋を投げるなどといった様々な行為を事前に行い相手へ攻撃するといったことを全員行う。
+        これに違反するものは決闘連盟から除名処分を受けるが、前例はほとんどない。
+        名誉のために決闘は行われるため、基本対象を殺害する事は無いが当然双方の合意があれば命を懸けた決闘も行える。
+        社内では常にお互いを高め合う戦闘訓練があり、仕事は代理決闘という依頼を主に受け活動している。
+    </div>
+
+    <details class="ability-details">
+        <summary class="ability-summary">〈特殊能力〉</summary>
+        <ul class="ability-list">
+            <li class="ability-item"><span class="ability-name">0．決闘</span><span class="ability-effect">この特殊能力は決闘連盟に所属する全てのキャラクターが獲得する、キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。攻撃使用時、対象にマークを付与する</span></li>
+
+            <li class="ability-item"><span class="ability-name">1．いざ、尋常に勝負！</span><span class="ability-effect">速度Lv+1、マークの付いた相手へ攻撃能力使用時ダイス数+1</span></li>
+
+            <li class="ability-item"><span class="ability-name">2．決闘連盟の名に懸けて</span><span class="ability-effect">速度Lv+1、マークの付いた相手の攻撃を受ける際回避判定のダイス数+2</span></li>
+
+            <li class="ability-item"><span class="ability-name">3．決闘宣布</span><span class="ability-effect">速度Lv+1、ターン開始時マークの付いた対象が居ない場合コストを1消耗し、任意の対象一名にマークを付与する</span></li>
+
+            <li class="ability-item"><span class="ability-name">4．受けてみよ！</span><span class="ability-effect">マークの付いた相手へのダメージロールのダイス数+2</span></li>
+
+            <li class="ability-item"><span class="ability-name">5．弱点は見えた！</span><span class="ability-effect">マークの付いた相手へ攻撃時コストを1消耗するごとにそのターンの対象の防護効果-2</span></li>
+
+            <li class="ability-item"><span class="ability-name">6．隙あり！</span><span class="ability-effect">速度Lv+1、マークの付いた対象の攻撃を受ける際反撃判定のダイス数+2</span></li>
+
+            <li class="ability-item"><span class="ability-name">7．素早く決めようではないか</span><span class="ability-effect">ターン開始時コストを消耗すれば、そのターン中消耗した数だけ速度Lvが増加。マークの付いた対象よりも自分の速度Lvが高ければ、自分の判定値+（速度Lv差÷2）</span></li>
+
+            <li class="ability-item"><span class="ability-name">8．素晴らしき決闘であった</span><span class="ability-effect">マークの付いた対象を討伐時、コスト2回復</span></li>
+
+            <li class="ability-item"><span class="ability-name">9．全員で来るが良い！</span><span class="ability-effect">反撃の回数制限が最大5回になる。マークの付いた対象以外からの攻撃を受ける際、回避・反撃判定のダイス数+1</span></li>
+
+            <li class="ability-item"><span class="ability-name">10．鮮やかな受け流し</span><span class="ability-effect">1ターンの間に回避・反撃の併用が可能。マークの付いた対象への回避・反撃判定難度-4</span></li>
+
+            <li class="ability-item"><span class="ability-name">11．決闘の心得</span><span class="ability-effect">マークの付いた対象へ判定をした時、1シナリオにつき合計3回振り直しが可能となる</span></li>
+
+            <li class="ability-item"><span class="ability-name">12．対決</span><span class="ability-effect">マークの付いた対象がいる時、対象と自分は他の対象を攻撃できない。マークの付いた対象がいる時、対象と自分は他の対象からの攻撃を受けない（味方が居ない場合は発動しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">13．決闘のプライド</span><span class="ability-effect">マークの付いた対象への全ての判定にダイス数+2。マークの付いた対象がいる時、その対象以外を攻撃する場合全ての判定にダイス数-2</span></li>
+        </ul>
+    </details>
+</div>
+
+<div id="com-unaffiliated" class="company-card">
+    <div class="company-header">無所属 <span>[その他]</span></div>
+    <div class="company-desc">
+        どこの会社にも所属していない。
+        ならずもの、没落者、弱者、負け犬、浮浪者と様々です。
+        淘汰されるべくしてされた、そんな人達の総称が無所属です。
+        なお、分類し難い存在も無所属として扱われることもあります。
+        しかし忘れないでください、世の中には誰も寄せ付けない超人的存在がいることを。
+        エリートと呼ばれる様々な分野で最高峰に立つ彼らは、基本無所属で例外的存在なのです。
+        また、この場では同カテゴリとして扱いますが、会社以外の所属として個人事業という所属もございます。
+        その場合は7、8を選択してください。
+    </div>
+
+    <details class="ability-details">
+        <summary class="ability-summary">〈特殊能力〉</summary>
+        <ul class="ability-list">
+
+            <li class="ability-item">
+                <span class="ability-name">0．エリート</span>
+                <span class="ability-effect">（※無所属でなくとも条件次第で獲得可能）この特殊能力はキャラクターLvが81以上のキャラクターが保有できる。通常特殊能力の枠に入らない特別な特殊能力として獲得する。無所属の特殊能力のデメリットが全て無効となるか、特殊能力を固有のものへと変化させることもできる。全ての技術能力のLvが10増加</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">0．無才</span>
+                <span class="ability-effect">（※無所属でなくとも獲得可能）キャラクターの獲得可能通常特殊能力の上限が2つになる。最大Lv上限が70で固定される。通常特殊能力の枠に入らない特別な特殊能力として獲得する</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">1．ならずものの暴虐</span>
+                <span class="ability-effect">近接攻撃判定時、判定値が18を超える度ダメージロール+1d6。ただし話術判定時、常時難度+6。対人能力判定時、常時難度+2</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">2．没落者の勘</span>
+                <span class="ability-effect">難度8以上の感知判定時、難度8ごとにダイス数+1。ただし信用判定時、常時難度+6。対人能力判定時、常時難度+2</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">3．弱者の生存戦略</span>
+                <span class="ability-effect">心理学判定で対抗が発生した場合、対象の判定ダイス数2につき自身の判定値に+4。ただし威圧判定時、常時難度+6。心理学を除く対人能力判定時、常時難度+2</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">4．負け犬の意地</span>
+                <span class="ability-effect">行動能力のLv合計値60につき、HP+10・コスト+1。ただし詐術判定時、常時難度+6。対人能力判定時、常時難度+2</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">5．浮浪者の知恵</span>
+                <span class="ability-effect">感覚・思案・隠密・手当・自然の判定失敗時、判定毎に1回振り直すことができる。ただし心理学判定時、常時難度+6。対人能力判定時、常時難度+2</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">6．崩れた企業の非検体</span>
+                <span class="ability-effect">任意の基礎能力を1つ選択し、その基礎能力のLv+8。ただし他基礎能力のLv-1。任意の技術能力カテゴリー判定時、常時難度+2</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">7．個人事業主</span>
+                <span class="ability-effect">（この効果は基礎能力の合計Lvが25、信用Lvが4以上のキャラクターのみ獲得できる）任意の技術能力のカテゴリーを1つ選択。選択したカテゴリーの内2つの技術能力のLv+2。選択したカテゴリーの技術能力を、1シナリオにつき3回振り直せる</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">8．個人事業所属</span>
+                <span class="ability-effect">（※この効果は個人事業主の効果を持つキャラクターのデータも必要となる）（自身の所属する個人事業主の効果を持つキャラクターよりも基礎能力の合計Lvが高ければ、個人事業主に上書きする事も出来るが必ず行うものではない）個人事業主が選択した技術能力のカテゴリーを1つ選択。選択したカテゴリーの内2つの技術能力のLv+1。選択したカテゴリーの技術能力を、1シナリオにつき1回振り直せる</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">9．残された者</span>
+                <span class="ability-effect">（※無所属でなくとも獲得可能）装備品や持ち物などから一つだけ特殊な固有アイテムを保有する事ができる。武器の場合は武器特殊能力として「半壊した○○」が付与される（○○には任意の名前を記載可能）。「半壊した○○」：武器Lvが上昇しない、スキル1しか使用できない。（以下任意の効果を設定可能）</span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">10．名家の一族</span>
+                <span class="ability-effect">（※無所属でなくとも獲得可能）信用判定時、ダイス数+3。エリート以外の無所属の他特殊能力を保有している場合、代わりにダイス数-3。装備品や持ち物などから一つだけ特殊な固有アイテムを保有する事ができる。固有アイテムは任意の特殊能力を保有できる</span>
+            </li>
+
+        </ul>
+    </details>
+</div>
+
+<div id="com-worker" class="company-card">
+    <div class="company-header">一般労働者 <span>[その他]</span></div>
+    <div class="company-desc">
+        あらゆる仕事の総称。
+        何の個性もありません。
+    </div>
+
+    <details class="ability-details">
+        <summary class="ability-summary">〈特殊能力〉</summary>
+        <ul class="ability-list">
+            <li class="ability-item">
+                <span class="ability-name">0．一般労働者</span>
+                <span class="ability-effect">
+                    この特殊能力は一般労働者に所属する全てのキャラクターが獲得する、キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。
+                    基礎能力が全て初期値でシナリオを開始する、特殊能力を獲得できない
+                </span>
+            </li>
+        </ul>
+    </details>
+</div>
+
+    <!-- ==================== DLC会社タブ ==================== -->
+    <div id="tab-dlc" class="tab-content">
+        
+        <div class="section-panel" style="border-color: var(--accent-purple);">
+            <h2 style="border-left-color: var(--accent-purple);">▽DLC会社一覧</h2>
+            <ul class="list-grid dlc-list">
+                <li><a href="#com-denmu">電務工房</a></li>
+                <li><a href="#com-koku">刻（とき）</a></li>
+                <li><a href="#com-myst">Mysticism</a></li>
+            </ul>
+        </div>
+
+<div id="com-denmu" class="company-card">
+    <div class="company-header">電務工房 <span>[大規模会社]</span></div>
+    <div class="company-desc">
+        インフラ・武器整備をしている大規模会社。
+        武器防具などの制作を認可するといった事や、建物に関する規則(建築法的なもの)の制定なども行なっている。
+        影響力の大きい会社の為、電務工房公認ではない工房は違法武器を取り扱っていると言われることもあるが、認可の為に必要な申請書類や金額だけでもかなりのものであり、そのような申請が難しい工房などの場合もある。
+        ただ、電務工房の認可が下りていない工房が危険であったり、不備が見られる場合や不備に対する対応が悪かったりすることが多いので、認可の下りている工房が良い事に間違いはない。
+    </div>
+
+    <details class="ability-details">
+        <summary class="ability-summary">〈特殊能力〉</summary>
+        <ul class="ability-list">
+
+            <li class="ability-item"><span class="ability-name">1．整備知識</span><span class="ability-effect">知能Lv+1、修繕Lv+1。Lv10ごとに増加量+1（Lv90は超過しない）</span></li>
+
+            <li class="ability-item"><span class="ability-name">2．工事で鍛えた体力</span><span class="ability-effect">身体Lv+1、身体Lv10につき最大HP+6</span></li>
+
+            <li class="ability-item"><span class="ability-name">3．武器応用学</span><span class="ability-effect">自分の使用する武器の武器Lv5につき要求値が1減少（要求値が二つ以上あるなら一つを選択して減少）（最大10）</span></li>
+
+            <li class="ability-item"><span class="ability-name">4．ひらめき</span><span class="ability-effect">思案Lv+1、武器種の違う武器の武器スキルを他の武器に装着可能にする</span></li>
+
+            <li class="ability-item"><span class="ability-name">5．慧眼</span><span class="ability-effect">調査判定時、視覚と複合判定をしたならダイス数+4</span></li>
+
+            <li class="ability-item"><span class="ability-name">6．改善</span><span class="ability-effect">自分を含む任意の対象一名にコストと行動回数を1消耗し、次の攻撃判定とダメージロールのダイス数+1（ターン終了時この効果は消滅する）</span></li>
+
+            <li class="ability-item"><span class="ability-name">7．特別改造</span><span class="ability-effect">コストと行動回数を1消耗することができる。消耗したなら、自分を含む任意の対象一名に以下の中からランダムな効果を付与する（ターン終了時この効果は消滅する）<br>・攻撃判定のダイス数+2<br>・反撃判定のダイス数+2<br>・ダメージロール+2d6<br>・コスト消費量-1<br>・失敗</span></li>
+
+            <li class="ability-item"><span class="ability-name">8．地道な作業</span><span class="ability-effect">コスト最大値+1、キャラクターLv上昇量+1</span></li>
+
+            <li class="ability-item"><span class="ability-name">9．失敗は成功の母</span><span class="ability-effect">判定に失敗した際、次の判定のダイス数+1（最大3回まで重複）</span></li>
+
+            <li class="ability-item"><span class="ability-name">10．建築家の観点</span><span class="ability-effect">自然Lv10につき修繕判定のダイス数+1</span></li>
+
+            <li class="ability-item"><span class="ability-name">11．使い切り強化ガジェット</span><span class="ability-effect">1シナリオに1回、任意のタイミングで攻撃判定のダイス数を3ターンの間5上昇させる</span></li>
+
+            <li class="ability-item"><span class="ability-name">12．欠点利用</span><span class="ability-effect">スキル使用時ダイス数減少効果がある場合、コスト1回復</span></li>
+
+            <li class="ability-item"><span class="ability-name">13．職人のこだわり</span><span class="ability-effect">武器・建造物に対する判定をした時、1シナリオにつき合計3回振り直しができる</span></li>
+
+            <li class="ability-item"><span class="ability-name">14．暴発</span><span class="ability-effect">攻撃スキル使用時5%の確率で攻撃判定のダイス数-5、防護無視の20ダメージの効果がスキルに付与される。この効果の付いたスキルが外れた場合バースト状態を得る。<br>（バースト状態：コストが0になる、攻撃判定のダイス数-5。ターン終了時この効果は消滅する）</span></li>
+
+            <li class="ability-item"><span class="ability-name">15．異常発熱</span><span class="ability-effect">経過ターン数÷3（小数点切り捨て）だけ攻撃判定のダイス数-1（最大3）、ダメージロールのダイス数+2（最大5）</span></li>
+
+        </ul>
+    </details>
+</div>
+
+<div id="com-toki" class="company-card">
+    <div class="company-header">刻（とき） <span>[中規模会社]</span></div>
+    <div class="company-desc">
+        中規模会社。
+        会社として動くことはほとんどない。
+        各々が各々の目的のために武器を振るい戦う者達。
+        会社として存在している理由も、採用条件も、会社の目的も不明。
+        判明していることはトワイライトとデイブレイクの二つの派閥が存在している事、それぞれが1〜3名程度の少人数で活動しているという事だけだ。
+        中規模会社の括りではあるが、彼らを侮る者は一人もいない。
+        彼の者らは個々が強く、たった一人で大人数を相手取ることも、姿を見られることなく全員を暗殺することも出来るのだから。
+        <br><br>
+        「夜は必ず訪れてくる」<br>
+        「そして、明けない夜は無い」
+    </div>
+
+    <details class="ability-details">
+        <summary class="ability-summary">〈特殊能力〉</summary>
+        <ul class="ability-list">
+
+            <li class="ability-item">
+                <span class="ability-name">0．刻の夜</span>
+                <span class="ability-effect">
+                    この特殊能力は刻に所属する全てのキャラクターが獲得する、キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。<br>
+                    キャラクターLvが40以上でなければこの効果は獲得できない。<br>
+                    この効果を保有していない限り、刻の特殊能力は獲得できない。<br>
+                    この能力を保有した時点で、既存の特殊能力は全て消滅し、消滅した分だけ刻の特殊効果を代わりに獲得する。
+                </span>
+            </li>
+
+            <li class="ability-item"><span class="ability-name">1．黄昏時</span><span class="ability-effect">全ての基礎能力Lv+2、隠密Lv10につき隠密判定のダイス数+1。自分を対象とする攻撃判定のダイス数-1。この特殊能力はトワイライト派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">2．逢魔</span><span class="ability-effect">攻撃能力に『呪力』を使用出来る。精神Lv10につきコスト+1（最大6）、精神Lv20につきコスト回復値+1（最大3）。この特殊能力はトワイライト派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">3．宵の帷</span><span class="ability-effect">コスト消耗時、消耗したコスト量に応じて攻撃判定のダイス数増加。1〜2：+1、3〜5：+2、6以上：+4。この特殊能力はトワイライト派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">4．日没</span><span class="ability-effect">行動回数+1。ターン毎に自分の最後の行動回数で使用するスキルのダメージロールのダイス数+3。この特殊能力はトワイライト派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">5．夕焼け</span><span class="ability-effect">自分の攻撃終了時、ランダムな味方一名がスキル1で対象を攻撃する（対象が討伐されているならランダムな対象を攻撃）（1ターンにつき1回）。この効果で攻撃する時、対象は回避・反撃を使用できない。この特殊能力はトワイライト派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">6．薄暮</span><span class="ability-effect">保有する武器のうち1つにスキルEx「薄暮」が使えるようになる。この特殊能力はトワイライト派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">7．沈む空</span><span class="ability-effect">沈む空を保有する味方がいる場合発動。上記の効果を持つ味方が攻撃判定時、自分の行動回数を1消耗し連携攻撃が可能になる。この特殊能力はトワイライト派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">8．彼誰時</span><span class="ability-effect">全ての基礎能力Lv+2、追跡Lv10につき追跡判定のダイス数+1。自分を対象とする攻撃判定のダイス数-1。この特殊能力はデイブレイク派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">9．暁</span><span class="ability-effect">HPとコストを変換可能にする（HP10↔コスト1）。身体Lv10につきDBダイス最大値+1（最大4）、身体Lv20につきコスト+1（最大3）。この特殊能力はデイブレイク派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">10．東雲</span><span class="ability-effect">コスト消耗時、味方へ消耗数に応じて効果を付与。1〜2：ランダムな味方1名へ次の攻撃判定のダイス数+1。3〜5：ランダムな味方2名へ次に使用するスキルのダメージロールのダイス数+1（対象重複可）。6以上：全味方へこのターンの間攻撃判定のダイス数+1、防護+1。この特殊能力はデイブレイク派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">11．明け方</span><span class="ability-effect">行動回数+1。ターンの最初に使用するスキルの攻撃判定のダイス数+5。この特殊能力はデイブレイク派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">12．朝焼け</span><span class="ability-effect">味方の攻撃終了時、自分のスキル1で対象を攻撃する（対象が討伐されているならランダムな対象を攻撃）（1ターンにつき1回）。この効果で攻撃する時、対象は回避・反撃を使用できない。この特殊能力はデイブレイク派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">13．黎明</span><span class="ability-effect">保有する武器のうち1つにスキルEx「黎明」が使えるようになる。この特殊能力はデイブレイク派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">14．白む空</span><span class="ability-effect">白む空を保有する味方がいる場合発動。上記の効果を持つ味方が攻撃判定時、自分の行動回数を1消耗し連携攻撃が可能になる。この特殊能力はデイブレイク派閥のみ選択可能</span></li>
+
+            <li class="ability-item"><span class="ability-name">15．孤高</span><span class="ability-effect">1ターンの間に守備能力を全て使用可能になり、反撃の使用回数制限値+3</span></li>
+
+        </ul>
+    </details>
+</div>
+
+<div id="com-mysticism" class="company-card">
+    <div class="company-header">Mysticism（ミスチシズム） <span>[中規模会社]</span></div>
+    <div class="company-desc">
+        教会や宗教を統括する一応会社の中規模会社。
+        この会社自体は問題ない普通の会社であるものの、傘下である教会はほとんど狂った奴ら。
+        まともな宗教が無いわけではないので、そこだけは勘違いしないでほしいが、それはそれとして碌でもない集団の母数が多すぎる。
+        この会社が存在する意味はあるのだろうか？
+    </div>
+
+    <details class="ability-details">
+        <summary class="ability-summary">〈特殊能力〉</summary>
+        <ul class="ability-list">
+
+            <li class="ability-item">
+                <span class="ability-name">0．信仰</span>
+                <span class="ability-effect">
+                    この特殊能力はMysticismに所属する全てのキャラクターが獲得する、キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。<br>
+                    攻撃能力に『呪力』を使用出来る。<br>
+                    銃火器の使用が不可能になる（Mysticismに所属していない状態の場合無効化される）。<br>
+                    精神判定のダイスがd6からd10に変化する（Mysticismに所属していない状態の場合無効化される）。
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">1．神父</span>
+                <span class="ability-effect">
+                    精神Lv+1、戦闘開始時バリアを30得る。<br>
+                    ターン終了時にこの効果で得たバリアが残っているなら、次のターンに残った分だけバリアが引き継がれる。
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">2．修道者</span>
+                <span class="ability-effect">
+                    精神Lv+1、被ダメージ時コスト1回復（1ターンにつき3回）
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">3．告解</span>
+                <span class="ability-effect">
+                    自分のターンの時、コストを2消耗して全味方のHPを10回復できる
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">4．信心</span>
+                <span class="ability-effect">
+                    呪力スキルのコスト消費量-1、コスト回復値+1
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">5．果てしない忍耐</span>
+                <span class="ability-effect">
+                    防御判定時、ダイスの数だけ追加バリアを得る。<br>
+                    バリアを保有した状態でターン終了時コスト2回復、体力10回復。
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">6．赦しの心</span>
+                <span class="ability-effect">
+                    対人判定の判定難度-3、話術判定のダイス数+1。<br>
+                    神父・修道者の効果を保有しているなら更に対人判定のダイス数+2。
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">7．天啓</span>
+                <span class="ability-effect">
+                    回避判定失敗時、その攻撃にのみ再度回避を使用可能にする。<br>
+                    上記の効果での回避判定のダイス数+1。
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">8．神の導きに従い</span>
+                <span class="ability-effect">
+                    コストを2消耗する事ができ、消耗したならそのターン中任意の味方一名に下記の効果から一つを適用できる（1ターンにつき2回）（同じ味方に重複して使用不可）。<br>
+                    ・HP15回復<br>
+                    ・防護2付与<br>
+                    ・攻撃判定のダイス数+1<br>
+                    ・回避または反撃判定のダイス数+1<br>
+                    ・ダメージ判定値に+3
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">9．教えを説く</span>
+                <span class="ability-effect">
+                    味方が知能または精神判定をする時、判定のダイス数+1
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">10．克服</span>
+                <span class="ability-effect">
+                    基礎能力判定をした時、1シナリオにつき合計3回振り直しができる
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">11．預言？</span>
+                <span class="ability-effect">
+                    判定時、1d10を振り出た数値-5だけ判定のダイス数が変動する
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">12．過剰な神力</span>
+                <span class="ability-effect">
+                    毎ターン開始時コストが全回復する。<br>
+                    ターン終了前、コストを1以上保有しているなら次のターン開始時バースト状態を得る。<br>
+                    （バースト状態：コストが0になる、攻撃判定のダイス数-5。ターン終了時この効果は消滅する）
+                </span>
+            </li>
+
+            <li class="ability-item">
+                <span class="ability-name">13．狂信</span>
+                <span class="ability-effect">
+                    精神Lv+4、全コスト消費量+1。<br>
+                    対人能力使用不可、対人能力判定無効。<br>
+                    神の導きに従いの効果が自分にのみ適用される代わりに、効果数値が2倍になる。
+                </span>
+            </li>
+
+        </ul>
+    </details>
+</div>
+
+    </div>
+
+</div>
+
+<!-- タブ切り替え用のシンプルなJavaScriptスクリプト -->
 <script>
-    const data = [
-{
-    name: "赤色戦派",
-    desc: "戦闘を重視する大規模会社。\n戦う事だけに関しては右に出る会社はおらず、戦う事だけを考えるならまずこの会社が適任だろう。\nもちろん戦う事だけとは言えただ無暗に戦うのではなく、戦術や戦略の理論もしっかりありどの面においても戦闘力が高い。\nその為全面戦争から乱闘、要人暗殺まで幅広く受け持つことができる。\n傘下会社にも直接訓練指導を行うなどして、戦闘力の底上げは徹底的に行っているようだ。",
-    abilities: [
-        {n:"1．武の才能", d:"筋力Lv+1、ターン開始時コストを1消耗するごとにそのターン中の全ての近接攻撃判定のダイス数+1"},
-        {n:"2．狩人の目", d:"知能Lv+1、ターン開始時コストを1消耗するごとにそのターン中の全ての射撃攻撃判定のダイス数+1"},
-        {n:"3．肉弾戦", d:"近接攻撃格闘による拳や蹴りのダメージ量+3、筋力による追加ダメージの効果がd6からd10に変化する"},
-        {n:"4．暗殺の瞳", d:"武器：刀・ナイフ使用時ダメージ量+4、隠密状態で敵に攻撃時固定で最大ダメージを与える"},
-        {n:"5．正面突破", d:"武器：剣・長柄使用時ダメージ量+2、防御のダイス数+1"},
-        {n:"6．強靭な肩", d:"投擲の判定・ダメージロールのダイス数+1"},
-        {n:"7．撃ち合い特化", d:"敵と自分が互いに射撃武器の場合、射撃攻撃判定のダイス数+2"},
-        {n:"8．戦術指揮", d:"ターン開始時コストを2消耗すれば、自分を除く全味方の近接攻撃・射撃攻撃・投擲判定のダイス数+1"},
-        {n:"9．各個撃破", d:"前回攻撃した相手を攻撃するとき、判定及びダメージロールのダイス数+1"},
-        {n:"10．背水", d:"自分のHPが半分以下なら全ての戦闘能力の判定にダイス数+2"},
-        {n:"11．屈強な身体", d:"防護1を得る、身体Lv8につき追加で1得る（最大2）"},
-        {n:"12．安定した呼吸", d:"本来のコスト消費量が3以上の攻撃使用時、コスト消費量-1"},
-        {n:"13．戦いの信条", d:"近接攻撃・射撃攻撃判定をした時、1シナリオにつき合計3回振り直しが可能となる"},
-        {n:"14．バーサーカー", d:"筋力Lvの値だけ戦闘能力専用の技能ポイントを獲得する、ただし知識能力の技能ポイント消費量+1"},
-        {n:"15．不安定", d:"近接攻撃・射撃攻撃のダメージロールが最大値か最低値になる（確率は両方とも1/2）"}
-    ]
-},
-{
-    name: "ディフィポリディ",
-    desc: "いわゆる警察のような立ち位置に居る大規模会社。\n『守護』することに重きを置いており誰かを守ったり、無所属のならずものを捕えたり様々な方法で守護活動を行っている。\n依頼の都合上赤色戦派とは対立することが多く、世間から仲が悪いと思われているが実際はそんな事は無い。\n得意とすることが違うため協力する事もあり、むしろ関係はお互い保とうとしている。\n護るという性質上市民達からの信用は厚く、一番人気の会社とも言えるだろう。",
-    abilities: [
-        {n:"1．守護者", d:"身体Lv+1、ターン開始時コストを1消耗するごとにそのターン中の防御・反撃判定のダイス数+1"},
-        {n:"2．迅速な護衛", d:"速度Lv+1、ターン開始時コストを1消耗するごとにそのターン中の回避判定のダイス数+1"},
-        {n:"3．護衛行動", d:"1ターンに1回コストを2消耗すれば味方が受けるダメージを肩代わりする、その時防御を使用回数関係なく使用できる"},
-        {n:"4．頑丈", d:"防護2を得る、身体Lv7につき追加で1得る（最大3）"},
-        {n:"5．防御振動", d:"攻撃を受けた後、防御のバリアが残っているなら攻撃した対象に受けたダメージの半分だけダメージを与える"},
-        {n:"6．受け身の攻撃", d:"反撃Lv+1、反撃の回数制限が最大6回になる"},
-        {n:"7．防衛陣形", d:"ターン開始時コストを2消耗すれば、自分を除く全味方の回避・防御・反撃判定のダイス数+1"},
-        {n:"8．根性", d:"自分のHPが半分以下なら回避・防御・反撃判定のダイス数+2"},
-        {n:"9．暖かき守り人", d:"手当判定のダイス数+1、信用判定のダイス数+1"},
-        {n:"10．隙狙い", d:"回避判定成功時、対象に防護無視の1d4ダメージを与える"},
-        {n:"11．防御強化", d:"戦闘中行動回数2回分攻撃しなければ、次のターンにコスト2回復、防護2、防御判定のダイスロール+2を得る（この効果は重複しない）"},
-        {n:"12．攻撃は最大の防御", d:"ダメージロール時、自分の防護の値だけ対象に防護無視の追加ダメージを与える"},
-        {n:"13．護りの信条", d:"守備判定をした時、1シナリオにつき合計3回振り直しが可能となる"},
-        {n:"14．臆病者", d:"守備能力Lv+1、精神Lv-1"},
-        {n:"15．重装部隊", d:"毎ターン開始時バリアを（防御Lv×3）得る、速度Lv-1"}
-    ]
-},
-{
-    name: "ルナード・ルーンズ",
-    desc: "遺跡や古代の遺物を中心に、この世界の遺産を追求する大規模会社。\n当然危険な場所に足を踏み入れ、様々なものを解読していくため身体も頭脳もそれなりの水準が必須。\nしかし限界もある為戦闘班と解読班など様々な専門班を作り、共同調査を行う。\nそれ故に他の会社より様々な部署が存在するが、横の繋がりが強くチームワークに優れている。\n武器は刀や鈍器類を持った者がほとんどだが、実は特に武器の指定は無く自由に選べる。",
-    abilities: [
-        {n:"1．古を追う者", d:"身体Lv+1、任意の行動能力1つの能力判定がd6からd10になる"},
-        {n:"2．解読班", d:"知能Lv+1、解読Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"3．戦闘班", d:"筋力Lv+1、刀・鈍器使用時コスト1回復"},
-        {n:"4．偵察班", d:"速度Lv+1、隠密・追跡能力判定の難度-3"},
-        {n:"5．加工班", d:"精神Lv+1、修繕・自然能力判定失敗時にその判定を1回だけ振り直すことができる"},
-        {n:"6．アーティファクト", d:"防護+1、ダメージロールのダイス数+1"},
-        {n:"7．古代技術の解明", d:"技能ポイント+10"},
-        {n:"8．優れた連携力", d:"自分を除いた味方が3人以上の時、自分を含む全ての味方の行動能力判定難度-3"},
-        {n:"9．有利地形", d:"場所が古代に関連する場所の場合、視覚・調査・隠密・解読能力判定のダイス数+1"},
-        {n:"10．オーパーツ", d:"自分を含む味方がコストを消費する前、任意でコスト消費量を1減少できる（1ターンに1回）"},
-        {n:"11．緩和フィルター", d:"精神判定発生時、難度10につき精神判定のダイス数+1（最大2）"},
-        {n:"12．効率転換", d:"1戦闘に1回、コストを2消費して味方全員のコストを1回復"},
-        {n:"13．探求の信条", d:"行動能力判定をした時、1シナリオにつき合計3回振り直しが可能となる"},
-        {n:"14．呪われたアーティファクト", d:"防護+2、ダメージロールのダイス数+2、コスト回復値-1"},
-        {n:"15．狂気的探求", d:"全ての行動能力判定のダイス数+1、コスト回復値+1、精神-1"}
-    ]
-},
-{
-    name: "メローメディック",
-    desc: "医療や治療を中心に活躍している大規模会社。\n危険な現場にも赴き、医療活動を行っているほか無関係な市民の避難や救護も行う。\n企業との提携もあり迅速で適切な処置を実現している。\nその分当然割高ではあるが絶対的な安全性が保障されている。\nしかし戦闘が常に起こっている以上、増え続ける需要に応えなければならず常に忙しい過酷な環境だそうだ。",
-    abilities: [
-        {n:"1．医療知識", d:"知能Lv+1、手当・医学の判定難度-3"},
-        {n:"2．医務の合間に", d:"速度Lv+1、手当判定成功時自分の体力を1d6回復"},
-        {n:"3．医者", d:"信用・言語Lv+1、3以下のダメージの手当判定に自動成功する"},
-        {n:"4．連続処置", d:"手当判定時コストを1消耗につき1名追加で回復できる（最大3）"},
-        {n:"5．現場医療班", d:"回避Lv+1、手当成功時対象のコスト1回復"},
-        {n:"6．回復薬", d:"所持品に即時回復薬を医学Lv÷2だけ所持（最大20）\n（即時回復薬：判定不要で最大HPの半分の値だけ体力を回復）"},
-        {n:"7．救助活動", d:"ターン開始時HPが半分以下の味方がいる場合、最速で行動する（最速行動の効果を持つキャラクターが複数いる場合速度Lvを優先）"},
-        {n:"8．精神科", d:"精神判定にて失敗しパニック状態に陥ったキャラクターを、手当・医学で回復することができる"},
-        {n:"9．対応力", d:"対人能力使用時、判定難度-3"},
-        {n:"10．白衣の天使", d:"手当の回復判定時、ダイス1つにつき回復量+2"},
-        {n:"11．パワー系", d:"ダメージを与えてきた対象へ攻撃的中時、ダメージロールに+1d6、自身の体力を1回復"},
-        {n:"12．医療式戦闘術", d:"任意の武器種を1つ選択する。選択されたものを医学で攻撃判定可能とする"},
-        {n:"13．修理手当", d:"義体部品の修復を手当で代わりに回復できるようになる、義体部品の手当判定難度を-3する"},
-        {n:"14．医療の信条", d:"手当・医学判定をした時、1シナリオにつき合計3回振り直しが可能となる"},
-        {n:"15．激務の過労", d:"手当・医学Lv+2、HP最大値が身体Lv×4に変化"}
-    ]
-},
-{
-    name: "ライブラビランス",
-    desc: "本や資料などの知識・情報の収集、閲覧を行う頭脳派の大規模会社。\n仕事内容はこういった本などの何かが記された紙媒体を収集することが中心。\nこの世界は学ぶことをどこか軽視している人が多く、ここに所属していない者たちを嫌ったり見下したりしている事がある。\nただルナード・ルーンズ、メローメディックとはまだ仲は良好と言えるだろう。\n特徴としてこの会社では会社員を司書と呼称することと、武器は槍か不思議な力を扱う事に統一されている事だ。",
-    abilities: [
-        {n:"1．本の虫", d:"知能Lv+1、調査Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"2．集中", d:"精神Lv+1、コスト回復値+1"},
-        {n:"3．知識堆積", d:"全ての知識能力の判定難度-3"},
-        {n:"4．情報戦闘", d:"攻撃能力使用時、対象の守備判定の判定難度+3"},
-        {n:"5．弱点を突く", d:"攻撃能力的中時、能力判定に出た6の目の数だけダメージロール時に追加ダメージを与える（最大6）"},
-        {n:"6．揺れ槍", d:"武器：槍使用時、対象の守備判定のダイス数-1"},
-        {n:"7．呪力操術", d:"攻撃能力に『呪力』を使用できる（呪力：コストを消耗してダメージを与える特殊遠距離攻撃）"},
-        {n:"8．増幅", d:"コスト回復値+1、精神Lv8につきコスト最大値+1"},
-        {n:"9．行動阻害", d:"コスト消耗量2につき対象の判定結果のダイスの目を1にする"},
-        {n:"10．情報の重要性", d:"ターン開始時敵一名を対象に知識能力判定を行い、成功した場合対象への能力判定のダイス数+1"},
-        {n:"11．知識の盾", d:"ターン開始時コストを消費でき、消費した値d6だけ自分を含む味方1名にバリアを付与"},
-        {n:"12．知識の信条", d:"知識能力判定をした時、1シナリオにつき合計3回振り直しが可能となる"},
-        {n:"13．警戒心", d:"ライブラビランス所属以外の相手から対人能力の対象にされた時判定難度+3。威圧Lv+1、ライブラビランス所属以外の相手に威圧以外の対人能力使用時判定難度+3"},
-        {n:"14．部屋籠り", d:"知能・精神Lv+2、身体・筋力・速度Lv-1"},
-        {n:"15．対人恐怖症", d:"物体や事象などに対する全ての能力判定のダイス数+1、人に対する全ての能力判定のダイス数-2"}
-    ]
-},
-{
-    name: "センス",
-    desc: "感覚派の中規模会社。\nとにかく自由度が高いことが特徴。\n自分の判断だけで動く会社と会社員、受けている依頼の幅と人員の多様性は随一。\nその自由度から個性的会社員が多いものの、分野の違い幅が広すぎる為社員同士の繋がりがあまりにも希薄。\nこのつまらない特殊能力で自らの個性を輝かせられる者だけがこの会社に勤められるでしょうね。",
-    abilities: [
-        {n:"1．戦闘センス", d:"戦闘能力の内3つの能力Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"2．感覚センス", d:"感覚能力の内3つの能力Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"3．行動センス", d:"行動能力の内3つの能力Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"4．対人センス", d:"対人能力の内3つの能力Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"5．知識センス", d:"知識能力の内3つの能力Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"6．基礎センス", d:"基礎能力の内2つの能力Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"7．集中的戦闘センス", d:"戦闘能力の内1つの能力Lv+3、Lv10ごとに増加量+2（Lv90は超過しない）"},
-        {n:"8．集中的感覚センス", d:"感覚能力の内1つの能力Lv+3、Lv10ごとに増加量+2（Lv90は超過しない）"},
-        {n:"9．集中的行動センス", d:"行動能力の内1つの能力Lv+3、Lv10ごとに増加量+2（Lv90は超過しない）"},
-        {n:"10．集中的対人センス", d:"対人能力の内1つの能力Lv+3、Lv10ごとに増加量+2（Lv90は超過しない）"},
-        {n:"11．集中的知識センス", d:"知識能力の内1つの能力Lv+3、Lv10ごとに増加量+2（Lv90は超過しない）"},
-        {n:"12．集中的基礎センス", d:"基礎能力の内1つの能力Lv+2、Lv10ごとに増加量+2（Lv90は超過しない）"},
-        {n:"13．一種の才能", d:"技術能力判定をした時、1シナリオにつき合計3回振り直しが可能となる"}
-    ]
-},
-{
-    name: "決闘連盟",
-    desc: "1対1の戦闘や双方の合意の下行う戦闘などを重視する中規模会社。\n高らかに名乗り上げる、手袋を投げるなどといった様々な行為を事前に行い相手へ攻撃するといったことを全員行う。\nこれに違反するものは決闘連盟から除名処分を受けるが、前例はほとんどない。\n名誉のために決闘は行われるため、基本対象を殺害する事は無いが当然双方の合意があれば命を懸けた決闘も行える。\n社内では常にお互いを高め合う戦闘訓練があり、仕事は代理決闘という依頼を主に受け活動している。",
-    abilities: [
-        {n:"0．決闘", d:"この特殊能力は決闘連盟に所属する全てのキャラクターが獲得する。キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。攻撃使用時、対象にマークを付与する"},
-        {n:"1．いざ、尋常に勝負！", d:"速度Lv+1、マークの付いた相手へ攻撃能力使用時ダイス数+1"},
-        {n:"2．決闘連盟の名に懸けて", d:"速度Lv+1、マークの付いた相手の攻撃を受ける際回避判定のダイス数+2"},
-        {n:"3．決闘宣布", d:"速度Lv+1、ターン開始時マークの付いた対象が居ない場合コストを1消耗し、任意の対象一名にマークを付与する"},
-        {n:"4．受けてみよ！", d:"マークの付いた相手へのダメージロールのダイス数+2"},
-        {n:"5．弱点は見えた！", d:"マークの付いた相手へ攻撃時コストを1消耗するごとにそのターンの対象の防護効果-2"},
-        {n:"6．隙あり！", d:"速度Lv+1、マークの付いた対象の攻撃を受ける際反撃判定のダイス数+2"},
-        {n:"7．素早く決めようではないか", d:"ターン開始時コストを消耗すれば、そのターン中消耗した数だけ速度Lvが増加。マークの付いた対象よりも自分の速度Lvが高ければ、自分の判定値+（速度Lv差÷2）"},
-        {n:"8．素晴らしき決闘であった", d:"マークの付いた対象を討伐時、コスト2回復"},
-        {n:"9．全員で来るが良い！", d:"反撃の回数制限が最大5回になる。マークの付いた対象以外からの攻撃を受ける際、回避・反撃判定のダイス数+1"},
-        {n:"10．鮮やかな受け流し", d:"1ターンの間に回避・反撃の併用が可能、マークの付いた対象への回避・反撃判定難度-4"},
-        {n:"11．決闘の心得", d:"マークの付いた対象へ判定をした時、1シナリオにつき合計3回振り直しが可能となる"},
-        {n:"12．対決", d:"マークの付いた対象がいる時、対象と自分は他の対象を攻撃できない。マークの付いた対象がいる時、対象と自分は他の対象からの攻撃を受けない。（味方が居ない場合は発動しない）"},
-        {n:"13．決闘のプライド", d:"マークの付いた対象への全ての判定にダイス数+2。マークの付いた対象がいる時、その対象以外を攻撃する場合全ての判定にダイス数-2"}
-    ]
-},
-{
-    name: "無所属",
-    desc: "どこの会社にも所属していない。\nならずもの、没落者、弱者、負け犬、浮浪者と様々です。\n淘汰されるべくしてされた、そんな人達の総称が無所属です。\nなお、分類し難い存在も無所属として扱われることもあります。\nしかし忘れないでください、世の中には誰も寄せ付けない超人的存在がいることを。\nエリートと呼ばれる様々な分野で最高峰に立つ彼らは、基本無所属で例外的存在なのです。\nまた、この場では同カテゴリとして扱いますが、会社以外の所属として個人事業という所属もございます。\nその場合は7、8を選択してください。",
-    abilities: [
-        {n:"0．エリート", d:"（※無所属でなくとも条件次第で獲得可能）この特殊能力はキャラクターLvが81以上のキャラクターが保有できる。通常特殊能力の枠に入らない特別な特殊能力として獲得する。無所属の特殊能力のデメリットが全て無効となるか、特殊能力を固有のものへと変化させることもできる。全ての技術能力のLvが10増加"},
-        {n:"0．無才", d:"（※無所属でなくとも獲得可能）キャラクターの獲得可能通常特殊能力の上限が2つになる。最大Lv上限が70で固定される。通常特殊能力の枠に入らない特別な特殊能力として獲得する"},
-        {n:"1．ならずものの暴虐", d:"近接攻撃判定時、判定値が18を超える度ダメージロール+1d6。ただし話術判定時、常時難度+6。対人能力判定時、常時難度+2"},
-        {n:"2．没落者の勘", d:"難度8以上の感知判定時、難度8ごとにダイス数+1。ただし信用判定時、常時難度+6。対人能力判定時、常時難度+2"},
-        {n:"3．弱者の生存戦略", d:"心理学判定で対抗が発生した場合、対象の判定ダイス数2につき自身の判定値に+4。ただし威圧判定時、常時難度+6。心理学を除く対人能力判定時、常時難度+2"},
-        {n:"4．負け犬の意地", d:"行動能力のLv合計値60につき、HP+10・コスト+1。ただし詐術判定時、常時難度+6。対人能力判定時、常時難度+2"},
-        {n:"5．浮浪者の知恵", d:"感覚・思案・隠密・手当・自然の判定失敗時、判定毎に1回振り直すことができる。ただし心理学判定時、常時難度+6。対人能力判定時、常時難度+2"},
-        {n:"6．崩れた企業の非検体", d:"任意の基礎能力を1つ選択し、その基礎能力のLv+8。ただし他基礎能力のLv-1。任意の技術能力カテゴリー判定時、常時難度+2"},
-        {n:"7．個人事業主", d:"（この効果は基礎能力の合計Lvが25、信用Lvが4以上のキャラクターのみ獲得できる）任意の技術能力のカテゴリーを1つ選択。選択したカテゴリーの内2つの技術能力のLv+2。選択したカテゴリーの技術能力を、1シナリオにつき3回振り直せる"},
-        {n:"8．個人事業所属", d:"（※この効果は個人事業主の効果を持つキャラクターのデータも必要となる）（自身の所属する個人事業主の効果を持つキャラクターよりも基礎能力の合計Lvが高ければ、個人事業主に上書きする事も出来るが必ず行うものではない）個人事業主が選択した技術能力のカテゴリーを1つ選択。選択したカテゴリーの内2つの技術能力のLv+1。選択したカテゴリーの技術能力を、1シナリオにつき1回振り直せる"},
-        {n:"9．残された者", d:"（※無所属でなくとも獲得可能）装備品や持ち物などから一つだけ特殊な固有アイテムを保有する事ができる。武器の場合は武器特殊能力として『半壊した○○』が付与される（○○には任意の名前を記載可能）。『半壊した○○』：武器Lvが上昇しない。スキル1しか使用できない。（以下任意の効果を設定可能）"},
-        {n:"10．名家の一族", d:"（※無所属でなくとも獲得可能）信用判定時、ダイス数+3。エリート以外の無所属の他特殊能力を保有している場合、代わりにダイス数-3。装備品や持ち物などから一つだけ特殊な固有アイテムを保有する事ができる。固有アイテムは任意の特殊能力を保有できる"}
-    ]
-},
-{
-    name: "一般労働者",
-    desc: "あらゆる仕事の総称。\n何の個性もありません。",
-    abilities: [
-        {
-            n:"0．一般労働者",
-            d:"この特殊能力は一般労働者に所属する全てのキャラクターが獲得する、キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。基礎能力が全て初期値でシナリオを開始する、特殊能力を獲得できない"
+    function switchTab(type) {
+        // すべてのタブコンテンツとボタンをリセット
+        document.getElementById('tab-normal').classList.remove('active');
+        document.getElementById('tab-dlc').classList.remove('active');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+        // 対象のタブとボタンをアクティブにする
+        if(type === 'normal') {
+            document.getElementById('tab-normal').classList.add('active');
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        } else if(type === 'dlc') {
+            document.getElementById('tab-dlc').classList.add('active');
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
         }
-    ]
-},
-{
-    name: "電務工房",
-    desc: "インフラ・武器整備をしている大規模会社。\n武器防具などの制作を認可するといった事や、建物に関する規則（建築法的なもの）の制定なども行なっている。\n影響力の大きい会社の為、電務工房公認ではない工房は違法武器を取り扱っていると言われることもあるが、認可の為に必要な申請書類や金額だけでもかなりのものであり、そのような申請が難しい工房などの場合もある。\nただ、電務工房の認可が下りていない工房が危険であったり、不備が見られる場合や不備に対する対応が悪かったりすることが多いので、認可の下りている工房が良い事に間違いはない。",
-    abilities: [
-        {n:"1．整備知識", d:"知能Lv+1、修繕Lv+1、Lv10ごとに増加量+1（Lv90は超過しない）"},
-        {n:"2．工事で鍛えた体力", d:"身体Lv+1、身体Lv10につき最大HP+6"},
-        {n:"3．武器応用学", d:"自分の使用する武器の武器Lv5につき要求値が1減少（要求値が二つ以上あるなら一つを選択して減少）（最大10）"},
-        {n:"4．ひらめき", d:"思案Lv+1、武器種の違う武器の武器スキルを他の武器に装着可能にする"},
-        {n:"5．慧眼", d:"調査判定時視覚と複合判定をしたならダイス数+4"},
-        {n:"6．改善", d:"自分を含む任意の対象一名にコストと行動回数を1消耗し、次の攻撃判定とダメージロールのダイス数+1（ターン終了時この効果は消滅する）"},
-        {n:"7．特別改造", d:"コストと行動回数を1消耗することができる。消耗したなら、自分を含む任意の対象一名に以下の中からランダムな効果を付与する（ターン終了時この効果は消滅する）\n・攻撃判定のダイス数+2\n・反撃判定のダイス数+2\n・ダメージロール+2d6\n・コスト消費量-1\n・失敗"},
-        {n:"8．地道な作業", d:"コスト最大値+1、キャラクターLv上昇量+1"},
-        {n:"9．失敗は成功の母", d:"判定に失敗した際、次の判定のダイス数+1（最大3回まで重複）"},
-        {n:"10．建築家の観点", d:"自然Lv10につき修繕判定のダイス数+1"},
-        {n:"11．使い切り強化ガジェット", d:"1シナリオに1回、任意のタイミングで攻撃判定のダイス数を3ターンの間5上昇させる"},
-        {n:"12．欠点利用", d:"スキル使用時ダイス数減少効果がある場合、コスト1回復"},
-        {n:"13．職人のこだわり", d:"武器・建造物に対する判定をした時、1シナリオにつき合計3回振り直しができる"},
-        {n:"14．暴発", d:"攻撃スキル使用時5%の確率で攻撃判定のダイス数-5、防護無視の20ダメージの効果がスキルに付与される。この効果の付いたスキルが外れた場合バースト状態を得る。（バースト状態：コストが0になる、攻撃判定のダイス数-5。ターン終了時この効果は消滅する）"},
-        {n:"15．異常発熱", d:"経過ターン数÷3（小数点切り捨て）だけ攻撃判定のダイス数-1（最大3）、ダメージロールのダイス数+2（最大5）"}
-    ]
-},
-{
-    name: "刻",
-    desc: "中規模会社。\n会社として動くことはほとんどない。\n各々が各々の目的のために武器を振るい戦う者達。\n会社として存在している理由も、採用条件も、会社の目的も不明。\n判明していることはトワイライトとデイブレイクの二つの派閥が存在している事、それぞれが1〜3名程度の少人数で活動しているという事だけだ。\n中規模会社の括りではあるが、彼らを侮る者は一人もいない。\n彼の者らは個々が強く、たった一人で大人数を相手取ることも、姿を見られることなく全員を暗殺することも出来るのだから。\n「夜は必ず訪れてくる」\n「そして、明けない夜は無い」",
-    abilities: [
-        {n:"0．刻の夜", d:"この特殊能力は刻に所属する全てのキャラクターが獲得する、キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。キャラクターLvが40以上でなければこの効果は獲得できない。この効果を保有していない限り、刻の特殊能力は獲得できない。この能力を保有した時点で、既存の特殊能力は全て消滅し、消滅した分だけ刻の特殊効果を代わりに獲得する"},
-        
-        {n:"1．黄昏時", d:"全ての基礎能力Lv+2、隠密Lv10につき隠密判定のダイス数+1。自分を対象とする攻撃判定のダイス数-1。この特殊能力はトワイライト派閥のみ選択可能"},
-        {n:"2．逢魔", d:"攻撃能力に『呪力』を使用出来る。精神Lv10につきコスト+1（最大6）、精神Lv20につきコスト回復値+1（最大3）。この特殊能力はトワイライト派閥のみ選択可能"},
-        {n:"3．宵の帷", d:"コスト消耗時、消耗したコスト量に応じて攻撃判定のダイス数増加。1〜2消耗：攻撃判定のダイス数+1、3〜5消耗：攻撃判定のダイス数+2、6以上消耗：攻撃判定のダイス数+4。この特殊能力はトワイライト派閥のみ選択可能"},
-        {n:"4．日没", d:"行動回数+1。ターン毎に自分の最後の行動回数で使用するスキルのダメージロールのダイス数+3。この特殊能力はトワイライト派閥のみ選択可能"},
-        {n:"5．夕焼け", d:"自分の攻撃終了時、ランダムな味方一名がスキル1で対象を攻撃する（対象が討伐されているならランダムな対象を攻撃）（1ターンにつき1回）。この効果で攻撃する時、対象は回避・反撃を使用できない。この特殊能力はトワイライト派閥のみ選択可能"},
-        {n:"6．薄暮", d:"保有する武器のうち1つにスキルEx『薄暮』が使えるようになる。この特殊能力はトワイライト派閥のみ選択可能"},
-        {n:"7．沈む空", d:"沈む空を保有する味方がいる場合発動。上記の効果を持つ味方が攻撃判定時、自分の行動回数を1消耗し連携攻撃が可能になる。（連携攻撃：味方の攻撃判定に任意のスキルで追加判定し判定値を加算、ダメージロールとスキル効果を指定したスキル分追加で対象に与える。スキル効果は連携対象のスキルには影響を与えず、自分のスキルにのみ効果を発揮する）この特殊能力はトワイライト派閥のみ選択可能"},
-        
-        {n:"8．彼誰時", d:"全ての基礎能力Lv+2、追跡Lv10につき追跡判定のダイス数+1。自分を対象とする攻撃判定のダイス数-1。この特殊能力はデイブレイク派閥のみ選択可能"},
-        {n:"9．暁", d:"HPとコストを変換可能にする（HP10↔︎コスト1）。身体Lv10につきDBダイス最大値+1（最大4）、身体Lv20につきコスト+1（最大3）。この特殊能力はデイブレイク派閥のみ選択可能"},
-        {n:"10．東雲", d:"コスト消耗時、味方へ消耗数に応じて下記の効果を付与。1〜2消耗：ランダムな味方1名へ次の攻撃判定のダイス数+1。3〜5消耗：ランダムな味方2名へ次に使用するスキルのダメージロールのダイス数+1（対象重複可）。6以上消耗：全味方へこのターンの間攻撃判定のダイス数+1、防護+1。この特殊能力はデイブレイク派閥のみ選択可能"},
-        {n:"11．明け方", d:"行動回数+1。ターンの最初に使用するスキルの攻撃判定のダイス数+5。この特殊能力はデイブレイク派閥のみ選択可能"},
-        {n:"12．朝焼け", d:"味方の攻撃終了時、自分のスキル1で対象を攻撃する（対象が討伐されているならランダムな対象を攻撃）（1ターンにつき1回）。この効果で攻撃する時、対象は回避・反撃を使用できない。この特殊能力はデイブレイク派閥のみ選択可能"},
-        {n:"13．黎明", d:"保有する武器のうち1つにスキルEx『黎明』が使えるようになる。この特殊能力はデイブレイク派閥のみ選択可能"},
-        {n:"14．白む空", d:"白む空を保有する味方がいる場合発動。上記の効果を持つ味方が攻撃判定時、自分の行動回数を1消耗し連携攻撃が可能になる。（連携攻撃：味方の攻撃判定に任意のスキルで追加判定し判定値を加算、ダメージロールとスキル効果を指定したスキル分追加で対象に与える。スキル効果は連携対象のスキルには影響を与えず、自分のスキルにのみ効果を発揮する）この特殊能力はデイブレイク派閥のみ選択可能"},
-        
-        {n:"15．孤高", d:"1ターンの間に守備能力を全て使用可能になり、反撃の使用回数制限値+3"}
-    ]
-},
-{
-    name: "Mysticism",
-    desc: "教会や宗教を統括する一応会社の中規模会社。\nこの会社自体は問題ない普通の会社であるものの、傘下である教会はほとんど狂った奴ら。\nまともな宗教が無いわけではないので、そこだけは勘違いしないでほしいが、それはそれとして碌でもない集団の母数が多すぎる。\nこの会社が存在する意味はあるのだろうか?",
-    abilities: [
-        {n:"0．信仰", d:"この特殊能力はMysticismに所属する全てのキャラクターが獲得する、キャラクターの保有できる4つの枠に入らない特別な特殊能力として扱う。攻撃能力に『呪力』を使用出来る。銃火器の使用が不可能になる（Mysticismに所属していない状態の場合無効化される）。精神判定のダイスがd6からd10に変化する（Mysticismに所属していない状態の場合無効化される）"},
-        
-        {n:"1．神父", d:"精神Lv+1、戦闘開始時バリアを30得る。ターン終了時にこの効果で得たバリアが残っているなら、次のターンに残った分だけバリアが引き継がれる"},
-        {n:"2．修道者", d:"精神Lv+1、被ダメージ時コスト1回復（1ターンにつき3回）"},
-        {n:"3．告解", d:"自分のターンの時、コストを2消耗して全味方のHPを10回復できる"},
-        {n:"4．信心", d:"呪力スキルのコスト消費量-1、コスト回復値+1"},
-        {n:"5．果てしない忍耐", d:"防御判定時、ダイスの数だけ追加バリアを得る。バリアを保有した状態でターン終了時コスト2回復、体力10回復"},
-        {n:"6．赦しの心", d:"対人判定の判定難度-3、話術判定のダイス数+1。神父・修道者の効果を保有しているなら更に対人判定のダイス数+2"},
-        {n:"7．天啓", d:"回避判定失敗時、その攻撃にのみ再度回避を使用可能にする。上記の効果での回避判定のダイス数+1"},
-        {n:"8．神の導きに従い", d:"コストを2消耗する事ができ、消耗したならそのターン中任意の味方一名に下記の効果から一つを適応できる（1ターンにつき2回）（同じ味方に重複して使用不可）\n-HP15回復\n-防護2付与\n-攻撃判定のダイス数+1\n-回避または反撃判定のダイス数+1\n-ダメージ判定値に+3"},
-        {n:"9．教えを説く", d:"味方が知能または精神判定をする時、判定のダイス数+1"},
-        {n:"10．克服", d:"基礎能力判定をした時、1シナリオにつき合計3回振り直しができる"},
-        {n:"11．預言？", d:"判定時、1d10を振り出た数値-5だけ判定のダイス数が変動する"},
-        {n:"12．過剰な神力", d:"毎ターン開始時コストが全回復する。ターン終了前、コストを1以上保有しているなら次のターン開始時バースト状態を得る。（バースト状態：コストが0になる、攻撃判定のダイス数-5。ターン終了時この効果は消滅する）"},
-        {n:"13．狂信", d:"精神Lv+4、全コスト消費量+1。対人能力使用不可、対人能力判定無効。神の導きに従いの効果が自分にのみ適応される代わりに、効果数値が2倍になる"}
-    ]
-}
-    ];
-
-    const navContainer = document.getElementById('nav-container');
-    const compName = document.getElementById('comp-name');
-    const compDesc = document.getElementById('comp-desc');
-    const abiContainer = document.getElementById('ability-container');
-
-    data.forEach((c, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'nav-btn';
-        btn.innerText = c.name;
-        btn.onclick = () => {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            compName.innerText = c.name;
-            compDesc.innerText = c.desc;
-            abiContainer.innerHTML = "";
-            c.abilities.forEach(a => {
-                abiContainer.innerHTML += `
-                    <div class="ability-row">
-                        <div class="ability-name">${a.n}</div>
-                        <div class="ability-desc">${a.d}</div>
-                    </div>
-                `;
-            });
-        };
-        navContainer.appendChild(btn);
-    });
-    document.querySelectorAll('.nav-btn')[0].click();
+    }
 </script>
+
 </body>
 </html>
