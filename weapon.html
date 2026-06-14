@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>クライングシティ - 武器データ</title>
+    <title>クライングシティ - 武器一覧</title>
     <style>
         /* --- 基本設定 & ディストピア風カラー --- */
         :root {
@@ -12,7 +12,9 @@
             --accent-color: #ff3b30; /* 警告用ネオンレッド */
             --accent-gray: #b3bac2;  
             --accent-blue: #00bcd4;  /* サイバーブルー */
-            --accent-green: #34c759; /* 遠距離・コスト用緑 */
+            --accent-green: #34c759; /* エメラルドグリーン */
+            --accent-orange: #ff9500;
+            --accent-purple: #9d4edd;
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #2d3748;
@@ -111,10 +113,18 @@
         h2 {
             font-size: 1.2rem;
             color: #fff;
-            border-left: 4px solid var(--accent-gray);
+            border-left: 4px solid var(--accent-blue);
             padding-left: 10px;
             margin-bottom: 15px;
             letter-spacing: 0.05em;
+        }
+
+        h3 {
+            font-size: 1rem;
+            color: #fff;
+            margin: 25px 0 12px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
         }
 
         p {
@@ -172,198 +182,111 @@
             color: #fff;
         }
 
-        /* --- 武器選択クイックリスト --- */
-        .list-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            list-style: none;
-            padding: 5px 0;
-        }
-        .list-grid li button {
-            width: 100%;
-            background-color: #12151c;
-            color: var(--text-color);
-            border: none;
-            padding: 8px 5px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border-left: 3px solid var(--accent-blue);
-            text-align: left;
-            padding-left: 10px;
-            transition: background 0.2s;
-        }
-        .list-grid li button:hover { background-color: #1c2230; }
-        .list-grid.range-list li button { border-left-color: var(--accent-green); }
-
-        /* --- カテゴリ切り替えタブ --- */
-        .tab-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn {
-            flex: 1; background-color: #222733; color: var(--text-muted); border: 1px solid var(--border-color);
-            padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: all 0.3s;
-        }
-        .tab-btn:hover { color: #fff; border-color: var(--accent-gray); }
-        .tab-btn.active {
-            background-color: #1a2233; color: var(--accent-blue); border-color: var(--accent-blue);
-            box-shadow: 0 0 10px rgba(0, 188, 212, 0.2);
-        }
-        .tab-btn.active.range-tab { color: var(--accent-green); border-color: var(--accent-green); box-shadow: 0 0 10px rgba(52, 199, 89, 0.2); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* --- 弾丸価格目安表カード --- */
-        .bullet-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 0.85rem;
-        }
-        .bullet-table th, .bullet-table td {
-            border: 1px solid var(--border-color);
-            padding: 6px 10px;
-            text-align: left;
-        }
-        .bullet-table th { background-color: #12151c; color: var(--accent-green); }
-
-        /* --- カルーセルスライダー（武器カード切り替え） --- */
-        .slider-wrapper {
+        /* --- サイド矢印付きスライド図鑑共通スタイル --- */
+        .carousel-container {
             position: relative;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
+            background-color: #0d0f12;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 45px;
+            margin-bottom: 25px;
+            overflow: hidden;
         }
-        .slide-arrow {
+        .carousel-track-wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .carousel-slide {
+            flex-shrink: 0;
+            width: 100%;
+            display: none;
+        }
+        .carousel-slide.active {
+            display: block;
+            animation: slideFadeIn 0.3s ease-out;
+        }
+        @keyframes slideFadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .carousel-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background-color: rgba(22, 26, 34, 0.9);
+            background-color: #1e2533;
+            color: var(--accent-blue);
             border: 1px solid var(--border-color);
-            color: #fff;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
-            align-items: center;
             justify-content: center;
-            z-index: 10;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .slide-arrow:hover { background-color: #12151c; }
-        .close-range-wrapper .slide-arrow:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
-        .range-wrapper .slide-arrow:hover { border-color: var(--accent-green); color: var(--accent-green); }
-        .arrow-prev { left: -15px; }
-        .arrow-next { right: -15px; }
-
-        .slider-container {
-            width: 100%;
-            overflow-x: auto;
-            display: flex;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            scrollbar-width: none;
-        }
-        .slider-container::-webkit-scrollbar { display: none; }
-
-        .weapon-card {
-            flex: 0 0 100%;
-            width: 100%;
-            scroll-snap-align: start;
-            background-color: #1a202c;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .weapon-header {
-            background-color: #222a38;
-            padding: 15px 20px;
+            align-items: center;
+            font-size: 0.8rem;
             font-weight: bold;
-            font-size: 1.1rem;
-            color: #fff;
-            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+            user-select: none;
+            transition: 0.2s;
+        }
+        .carousel-btn:hover {
+            background-color: var(--accent-blue);
+            color: #0d0f12;
+            box-shadow: 0 0 10px var(--accent-blue);
+        }
+        .carousel-btn.btn-prev { left: 8px; }
+        .carousel-btn.btn-next { right: 8px; }
+
+        .skill-panel-item {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .skill-panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #1f2733;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
         }
-        .weapon-req {
-            font-size: 0.8rem;
-            background-color: #2d3748;
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: #e2e8f0;
-        }
-        .weapon-desc {
-            padding: 15px 20px;
-            font-size: 0.9rem;
-            background-color: #141923;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-muted);
-            white-space: pre-line;
-        }
-        .skill-main-box {
-            padding: 12px 20px;
-            background-color: #11141c;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-        .skill-title-badge {
-            color: #fff;
+        .skill-panel-name {
             font-weight: bold;
-            border-left: 3px solid var(--accent-gray);
-            padding-left: 8px;
-            display: block;
-            margin-bottom: 4px;
+            color: #fff;
+            font-size: 1.1rem;
         }
 
-        /* スキルリストアコーディオン */
-        .skill-details { border: none; background: transparent; }
-        .skill-summary {
-            padding: 12px 20px; cursor: pointer; background-color: #1c2331; color: var(--accent-blue);
-            font-weight: bold; font-size: 0.9rem; outline: none; list-style: none; position: relative;
+        .ability-list {
+            margin-top: 10px;
+            padding-left: 5px;
         }
-        .range-card .skill-summary { color: var(--accent-green); }
-        .skill-summary::after { content: '▼ 追加スキル・データテーブルを展開'; position: absolute; right: 20px; font-size: 0.8rem; color: var(--text-muted); }
-        .skill-details[open] .skill-summary::after { content: '▲ 閉じる'; color: #fff; }
-        
-        .skill-list-container {
-            background-color: #0f131c;
-            padding: 10px 20px;
+        .ability-item {
+            font-size: 0.9rem;
+            border-bottom: 1px dashed #222a38;
+            padding: 6px 0;
+            white-space: pre-line;
         }
-        .skill-sub-block {
-            margin: 10px 0 15px 0;
+        .ability-item:last-child {
+            border-bottom: none;
         }
-        .skill-sub-block:last-child { margin-bottom: 5px; }
-        .skill-table-title {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: bold;
-            border-bottom: 1px solid #232d3f;
-            padding-bottom: 2px;
-            margin-bottom: 6px;
-        }
-        .skill-item {
-            padding: 6px 0 8px 0;
-            border-bottom: 1px dotted #232d3f;
-            font-size: 0.85rem;
-        }
-        .skill-item:last-child { border-bottom: none; }
-        .sk-num { font-weight: bold; color: #fff; margin-right: 5px; }
-        .sk-meta { color: #00bcd4; font-family: monospace; }
-        .range-card .sk-meta { color: #34c759; }
-        .sk-effect { display: block; padding-left: 15px; color: var(--text-color); margin-top: 2px; }
+
+        .highlight-blue { color: var(--accent-blue); font-weight: bold; }
+        .highlight-orange { color: var(--accent-orange); font-weight: bold; }
+        .highlight-purple { color: var(--accent-purple); font-weight: bold; }
 
         @media (max-width: 480px) {
             .nav-grid { grid-template-columns: 1fr; }
-            .list-grid { grid-template-columns: repeat(2, 1fr); }
             .nav-button.highlight { grid-column: span 1; }
             .main-title { font-size: 1.6rem; }
-            .slide-arrow { width: 35px; height: 35px; font-size: 0.8rem; }
-            .arrow-prev { left: -8px; }
-            .arrow-next { right: -8px; }
-            .skill-summary::after { content: '▼ 展開'; }
+            .carousel-container { padding: 15px 38px; }
+            .carousel-btn { width: 30px; height: 34px; }
         }
     </style>
 </head>
@@ -371,15 +294,15 @@
 
 <header>
     <div class="main-title">クライングシティ</div>
-    <div class="sub-title">都市支給・流通兵装＆スキルアーカイブ</div>
+    <div class="sub-title">市民登録プロトコル // 兵装・武器スキル体系</div>
 </header>
 
 <div class="banner-container">
     <div class="banner-track">
-        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
     </div>
 </div>
 
@@ -395,519 +318,484 @@
             <a href="company.html" class="nav-button">◆会社◆</a>
             <a href="weapon.html" class="nav-button current-page">◆武器◆</a>
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
-            <a href="npc_list.html" class="nav-button">◆重要人物一覧◆</a>
+            <a href="npc_list.html" class="nav-button">◆公開キャラクター一覧◆</a>
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
 
-    <!-- カテゴリ切り替えタブ -->
-    <div class="tab-container">
-        <button class="tab-btn active" onclick="switchTab('close')">▽近距離武器</button>
-        <button class="tab-btn range-tab" onclick="switchTab('range')">▽遠距離武器</button>
-    </div>
+    <!-- 武器一覧セクション -->
+    <div class="section-panel">
+        <h2>〇武器一覧と各種スキル表</h2>
+        <p>クライングシティで流通している各武器種の特徴と、固有スキル表の詳細データです。
+左右の矢印（◀ ▶）で各武器を切り替えることができます。</p>
 
-    <!-- ==================== 近距離武器タブ ==================== -->
-    <div id="tab-close" class="tab-content active">
-        <div class="section-panel">
-            <h2>近距離兵装 一覧 (タップでスライド)</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">※様々な武器種に、それぞれの戦闘法と応用が存在する生活必需品。</p>
-            <ul class="list-grid">
-                <li><button onclick="scrollToWeapon('close', 0)">ナイフ</button></li>
-                <li><button onclick="scrollToWeapon('close', 1)">剣</button></li>
-                <li><button onclick="scrollToWeapon('close', 2)">刀</button></li>
-                <li><button onclick="scrollToWeapon('close', 3)">大剣</button></li>
-                <li><button onclick="scrollToWeapon('close', 4)">長柄</button></li>
-                <li><button onclick="scrollToWeapon('close', 5)">鈍器</button></li>
-                <li><button onclick="scrollToWeapon('close', 6)">格闘</button></li>
-            </ul>
-        </div>
-
-        <div class="slider-wrapper close-range-wrapper">
-            <button class="slide-arrow arrow-prev" onclick="moveSlider('close', -1)">◀</button>
-            <div class="slider-container" id="slider-close">
-
-                <!-- 1. ナイフ -->
-                <div class="weapon-card">
-                    <div class="weapon-header">ナイフ <span class="weapon-req">要求: 速度Lv4 (+3/計4Lv)</span></div>
-                    <div class="weapon-desc">短い刃で小回りよく的確に攻撃する武器。相手の急所を突いたり素早く攻撃する事に特化している。
-                    ダメージ量は控えめだが、低コストかつ連続した攻撃が特徴的。自己強化も多く上手く扱えば非常に有利に戦闘を進められる。
-                    速度を重視した戦い方ができる一方、複数攻撃が専門の為防護のある敵にはダメージを与えづらい。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge">スキル1</span>
-                        ダメージロール: 1d4+DB <span style="color:var(--accent-blue);">（武器Lv10ごとにダイス+1）</span>
-                    </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表2〜4を閲覧</summary>
-                        <div class="list-grid" style="padding:10px 20px; font-size:0.8rem; background-color:#090d14; border-bottom:1px solid var(--border-color);">
-                            <div>※投擲時、DB不変</div><div>※全ナイフに強化適応</div>
-                        </div>
-                        <div class="skill-list-container">
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル2表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト1]</span> ダメージ: 1d4+DB（武器Lv4ごとにダイス+1）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト2]</span> ダメージ: 1d4（武器Lv6ごとにダイス+1） / 的中時、このスキルを再使用可能（最大2回）</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d4+DB（武器Lv6ごとにダイス+1） / 攻撃判定時、速度Lvの複合ロールで判定する</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d4+DB（武器Lv10ごとにダイス+1） / ロールで出た「4」の目の数だけ追加ダメージ</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト2]</span> ダメージ: 1d4+DB（武器Lv10ごとにダイス+1） / このターン中、回避判定のダイス数+1</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト2]</span> ダメージ: 1d4+DB（武器Lv10ごとにダイス+1） / 投擲時、DBが減少しない</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル3表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト2]</span> ダメージ: 2d4（武器Lv5ごとにダイス+1） / 攻撃判定ダイス+1、ダメージダイス-1（武器Lv10ごとに各1増）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d4（武器Lv6ごとにダイス+1） / このスキルは、反撃されない</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d6（武器Lv5ごとにダイス+1） / 敵討伐時、別対象へコスト0で再使用（最大1回）</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d4+DB（武器Lv8ごとにダイス+1） / 次のターン最速行動（重複時は速度Lv優先）</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d4+DB（武器Lv8ごとにダイス+1） / 武器2つ所有時、行動回数を消費せずその武器のスキル1を使用</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d4（武器Lv8ごとにダイス+1） / 行動回数分だけダメージロールのダイス数+1</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル4表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト2]</span> ダメージ: 1d4+DB（武器Lv10ごとにダイス+1） / 1ターンに使用する度ダメージダイス+2</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト4]</span> ダメージ: 1d4+DB（武器Lv8ごとにダイス+1） / 倒せなかった場合スキル1〜3をランダムにコスト0で発動</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> ダメージ: 1d4（武器Lv10ごとにダイス+2） / 一番最初に行動する場合、ダメージ量2倍</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト1]</span> ダメージ: 1固定 / 事前に1〜10を記載。1d10を振り指定以外ならコスト0再使用。再使用時ダメージ+1（最大5回、武器Lv10ごとに上限+1回）</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト1〜3]</span> ダメージ: 1d6（武器Lv8ごとにダイス+1） / 的中時、（消費コスト×25）％で追加ダメージ（最大3回）</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト5]</span> 使用時、この戦闘中行動回数+1（最大2回）</div>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- 2. 剣 -->
-                <div class="weapon-card">
-                    <div class="weapon-header">剣 <span class="weapon-req">要求: 身体Lv3 (+3/4Lv), 筋力or精神Lv2 (+2/4Lv)</span></div>
-                    <div class="weapon-desc">ごくごく一般的な両刃武器。短所も少なく扱いやすい、種類も様々で多岐にわたる。
-                    安定的な判定とダメージを両立させやすく、コストも平均的。癖があまり無くシンプルだが、一つのスキルで完結しているものが多い。あらゆる能力が生かされ様々な構成で役に立つ。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge">スキル1</span>
-                        ダメージロール: 1d6+DB <span style="color:var(--accent-blue);">（武器Lv10ごとにダイス+1）</span>
-                    </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表2〜4を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル2表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv5ごとにダイス+1）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv7ごとにダイス+1） / ダメージロールで出た「1」の目の数だけダメージ量+2</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト2]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 攻撃判定のダイス数+2</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv7ごとにダイス+1） / このターンの間、反撃判定のダイス数+1</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト5]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 次のターン、全味方に防御判定のダイス数+1</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト1+]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 消費コスト分、次のダメージロールのダイス数+1</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル3表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv6ごとにダイス+1） / HP半分以上の対象へダメージ量2倍</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv6ごとにダイス+1） / コスト回復値+1、次に使用するスキルのコスト-1</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv6ごとにダイス+1） / 12ダメージ以上与えたならこの戦闘中このスキルのコスト-1</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> 1d10+DB（武器Lv6ごとにダイス+1） / 次のターンの間、ダメージロールのダイス数+2</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv6ごとにダイス+1） / 次のターンの間、対象の速度Lv2減少</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv6ごとにダイス+1） / 次のターンの間、防護2を得る</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル4表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト5]</span> 1d10+DB（武器Lv6ごとにダイス+1） / 敵討伐時コスト3回復、次のダメージダイス+2</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト5]</span> 1d10+DB（武器Lv6ごとにダイス+1） / 敵討伐時、ランダムな敵へこのスキルをコスト0で再使用</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト5]</span> 1d4（武器Lv8ごとに最大値+1） / [ダメージロール値×5] の防護無視追加ダメージを与える</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> 4d6+DB（武器Lv6ごとにダイス+1） / この戦闘中、スキル1〜3をすべて使用している場合のみ発動可</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv6ごとにダイス+1） / 攻撃判定で出た「6」の数だけ、コスト回復値+1、ダメージダイス+1</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト5]</span> 1d6+DB（武器Lv6ごとにダイス+1） / このスキルは遠距離攻撃として扱う</div>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- 3. 刀 -->
-                <div class="weapon-card">
-                    <div class="weapon-header">刀 <span class="weapon-req">要求: 身体Lv3 (+3/5Lv), 速度Lv3 (+3/5Lv)</span></div>
-                    <div class="weapon-desc">剣と違い片方のみ刃の付いている武器。両刃と違い身幅が細く軽量で素早い断ち切りが可能となる。
-                    ダメージに特化しつつ、確実な効果を発揮しやすい。行動回数が多ければ構成次第で1人で完結する事もある。
-                    逆にスキル一つでは完全に回り切らないため、武器Lvや速度Lvが低い間は注意が必要だろう。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge">スキル1</span>
-                        ダメージロール: 1d6+DB <span style="color:var(--accent-blue);">（武器Lv10ごとにダイス+1）</span>
-                    </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表2〜4を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル2表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv5ごとにダイス+1）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト1]</span> 1d6+DB（武器Lv10ごとにダイス+1） / 使用時コスト2回復</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 次のターンの間、速度Lv+2</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 次のターンの間、回避判定にダイス数+1</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 次のターンの間、全スキルに的中時コスト1回復の効果を付与</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv8ごとにダイス+1） / このターンの間、全てのダメージロールのダイス数+1</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル3表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 対象のHP半分以下ならダメージ2倍、コスト1回復</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 自身のHP半分以下ならダメージ+4、コスト2回復</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 次のターンの間、全スキルのコスト-2</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 対象との速度Lv差が3以上なら攻撃判定・ダメージダイス+2</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 回避・反撃に敗北時、次ターン反撃のダメージダイス+3（武器Lv3ごとにさらに+1）</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 遠距離攻撃へ反撃可能。反撃時コスト-3、攻撃判定ダイス数+3</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル4表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト4]</span> 1d4（防護無視） / ダメージ最大値ならさらにダメージ+10（武器Lv10ごとにさらに+10）（防護無視）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト5]</span> 2d4+DB（武器Lv6ごとにダイス+1） / 攻撃終了時、このスキルを再使用できる（最大3回）</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト5]</span> 1d6+DB（武器Lv6ごとにダイス+1） / 次に使用するスキルを2回再使用可能にする</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト5]</span> 2d6+DB（武器Lv6ごとにダイス+1） / 回避成功時、コストを3減少してこのスキルでカウンター攻撃可能</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト6]</span> 2d6（武器Lv8ごとにダイス+1） / 対象を5体任意選択し、それぞれにダメージを与える</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト5]</span> 2d6+DB（武器Lv6ごとにダイス+1） / 次のターンの間、コスト回復値+2</div>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- 4. 大剣 -->
-                <div class="weapon-card">
-                    <div class="weapon-header">大剣 <span class="weapon-req">要求: 筋力Lv5 (+4/5Lv)</span></div>
-                    <div class="weapon-desc">巨大で強力な攻撃を叩き込む武器。火力は相当なものだが、その分大振りな動きで見切られやすい。
-                    コストが高く攻撃判定が低くなりやすい事が欠点だが、一撃の威力を期待できる。ダメージの振れ幅が大きいのが特徴。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge">スキル1</span>
-                        ダメージロール: 1d10+DB <span style="color:var(--accent-blue);">（武器Lv10ごとにダイス+1）</span>
-                    </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表2〜4を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル2表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト4]</span> 1d10+DB（武器Lv5ごとにダイス+1）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト2]</span> 4d10+DB（武器Lv10ごとにダイス+2） / このターン中、自身の全攻撃判定のダイス数-2</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> 2d10+DB（武器Lv10ごとにダイス+1） / このスキルの攻撃判定のダイス数-1</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト2]</span> 3d10+DB（武器Lv10ごとにダイス+1） / 次のターン中、自身の行動回数-2</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト4]</span> 1d10+DB（武器Lv10ごとにダイス+1） / 次のターン防護2を得る</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト4]</span> 1d10+DB（武器Lv10ごとにダイス+1） / このスキルでコストが0になった場合、コスト2回復</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル3表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト5]</span> 1d10+DB（武器Lv9ごとにダイス+1） / 的中時、次ターンの対象の行動回数-1</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト5]</span> 1d10+DB（武器Lv9ごとにダイス+1） / 的中時、対象の次の判定ダイス数-1</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト5]</span> 1d10+DB（武器Lv9ごとにダイス+1） / このスキルが自身の最後の攻撃ならダメージダイス+2</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> 1d10+DB（武器Lv9ごとにダイス+1） / 前のターンに攻撃していなければダメージダイス+2</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト5]</span> 1d10+DB（武器Lv9ごとにダイス+1） / 自身の「防護」の値だけダメージ量が増加する</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト5]</span> 1d10+DB（武器Lv9ごとにダイス+1） / 的中時、対象のコスト回復値-1</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル4表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト8]</span> 5d10（武器Lv9ごとにダイス+2）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト7]</span> 3d10（武器Lv9ごとにダイス+1） / 対象を4体任意選択し、それぞれにダメージ</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト6]</span> 2d10+DB（武器Lv8ごとにダイス+1） / 次のターンの間、防御のダイス数+4</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト7]</span> 2d10+DB（武器Lv8ごとにダイス+1） / 的中時、今回と次ターンの対象の行動回数-2</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト7]</span> 2d10+DB（武器Lv8ごとにダイス+1） / 敵を討伐した時、このスキルのコスト2減少</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト4]</span> 3d10+DB（武器Lv8ごとにダイス+1） / このスキルの攻撃判定ダイスを任意の数消耗し、その分ダメージダイスを増加させる</div>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- 5. 長柄 -->
-                <div class="weapon-card">
-                    <div class="weapon-header">長柄 <span class="weapon-req">要求: 知能Lv4 (+3/4Lv), 筋力Lv2 (+4/6Lv)</span></div>
-                    <div class="weapon-desc">柄の長く比較的遠くから攻撃可能な武器。距離を保つ戦闘と複数人との戦闘に有利に戦える。
-                    複数人対象の攻撃が多く多人数戦に強みを持つ。しかし単体戦での火力はイマイチで、火力不足が目立ちやすい。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge">スキル1</span>
-                        ダメージロール: 1d8+DB <span style="color:var(--accent-blue);">（武器Lv10ごとにダイス+1）</span>
-                    </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表2〜4を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル2表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト3]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 対象を2体選択可（発動時DBなし）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト3]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 対象の回避ダイス-1。対象を2体選択可（発動時DBなし）</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> 1d10（武器Lv10ごとにダイス+1） / コストを1多く消費すれば対象を+1体。対象2体選択可（発動時DBなし）</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> 1d8+DB（武器Lv8ごとにダイス+1） / 対象の回避・反撃判定のダイス数-2</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト3]</span> 1d8+DB（武器Lv8ごとにダイス+1） / 次のターン、対象の攻撃判定のダイス数-1</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト1]</span> 1d8（武器Lv8ごとにダイス+1） / 使用時コスト2回復</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル3表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト4]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 対象を3体選択可（発動時DBなし）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト4]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 使用後、行動を消費せずスキル2を発動可。対象3体選択可（発動時DBなし）</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト4]</span> 1d8（武器Lv8ごとにダイス+1） / 保有するランダムなスキル効果発動（スキル3除外）。対象を3体選択しダメージ</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト4]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 1体のみ攻撃時、行動消費なしで消費コストを-2して3体に対象を広げて攻撃可</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト4]</span> 1d8+DB（武器Lv8ごとにダイス+1） / 次のターンに、防御判定のダイス数+2</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト4]</span> 1d8+DB（武器Lv8ごとにダイス+1） / コストを1多く消費すればもう一度ダメージロール（最大1回）</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル4表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト5]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 対象を5体選択可能</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト5]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 的中した敵の数だけコスト2回復。対象を3体選択可（発動時DBなし）</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト5]</span> 1d8+DB（武器Lv10ごとにダイス+1） / 次ターン、対象の判定難度+3。対象を3体選択可（発動時DBなし）</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト5]</span> 1d8+DB（武器Lv8ごとにダイス+1） / 攻撃判定時ダメージなし。次ターンコスト消費・判定なしで全敵を対象にダメージロールを行う</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト5]</span> 1d8+DB（武器Lv8ごとにダイス+1） / このスキルで対象を倒せなかった場合、スキルを再使用する</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト5]</span> 1d8（武器Lv8ごとにダイス+1） / 的中時に対象へ「標的」付与。標的に対してダメージ5倍、標的討伐時コスト3回復</div>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- 6. 鈍器 -->
-                <div class="weapon-card">
-                    <div class="weapon-header">鈍器 <span class="weapon-req">要求: 速度or筋力Lv3 (+3/5Lv)</span></div>
-                    <div class="weapon-desc">殴打・打撃を主とする武器。相手を粉砕する能力が高く、破壊に特化している。ハンマー、バット、棍棒の他、スパナやバールも含む。
-                    手軽な攻撃手段が多いが、ナイフより相手の妨害や振れ幅の大きい火力に偏っている。（巨大な鈍器は大剣扱いとなる）</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge">スキル1</span>
-                        ダメージロール: 1d6+DB <span style="color:var(--accent-blue);">（武器Lv10ごとにダイス+1）</span>
-                    </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表2〜4を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル2表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト1]</span> 1d4+2+DB（武器Lv6ごとにダイス+1、8Lvごとに固定ダメ+2）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト1]</span> 1d6+DB（武器Lv10ごとにダイス+1） / 使用時コスト3回復</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト2]</span> 1d6+DB（武器Lv8ごとにダイス+1） / このターンの間、相手の攻撃判定のダイス数-1</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト2]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 使用時、対象の防御判定のダイス数-1</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト2]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 判定で出た「6」の数だけ対象の防御・反撃・回避判定-1</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 攻撃判定時に「1」の目を1つでも出したなら判定に+5</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル3表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 攻撃終了時、このスキルを再使用可能（最大1回）</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト4]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 与えたダメージ10ごとに、対象の次の判定のダイス数-1</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> 1d6+DB（武器Lv7ごとにダイス+1） / 敵討伐時、コスト2回復</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト5]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 対象のHPが最大なら、防護無視</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト5]</span> 1d6+DB（武器Lv8ごとにダイス+1） / 攻撃終了時、対象のHPが半分以下なら再度ダメージロール</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト4]</span> 1d10+DB（武器Lv8ごとにダイス+1） / 攻撃終了時、行動回数を消費せずスキル2をコスト0で使用</div>
-                            </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#1c2331; margin-bottom:5px;">■ スキル4表</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト6]</span> 1d8+DB（武器Lv8ごとにダイス+1） / 的中時、次ターンの間対象の全判定ダイス数-2</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト6]</span> 1d8+DB（武器Lv8ごとにダイス+1） / 的中時、次ターンの間対象の行動回数-3</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト5]</span> 1d8+DB（武器Lv8ごとにダイス+1） / 的中時再使用可（最大1回）。再使用時ダメージダイス最大値+4</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト4]</span> 1d10+DB（武器Lv8ごとにダイス+1） / 的中時、対象のコスト-2</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト4]</span> 1d10+DB（武器Lv8ごとにダイス+1） / 対象がこのスキルに防御判定をした時、ダメージダイス+2</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト1]</span> 1d6+DB（武器Lv10ごとにダイス+1） / 使用する度にコスト1増（戦闘中継続）、その分攻撃判定とダメージダイス+1</div>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- 7. 格闘 -->
-                <div class="weapon-card">
-                    <div class="weapon-header">格闘 <span class="weapon-req">要求: なし</span></div>
-                    <div class="weapon-desc">武器を保有しない身体能力や技巧を武器にして戦う。素手喧嘩から空手、柔道、中国武術など独自の発展を遂げる。そのためスキル2〜4は独自の戦闘スタイルに合わせて自由に記載・設定可能。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge">スキル1</span>
-                        ダメージロール: 1d4+DB <span style="color:var(--accent-blue);">（武器Lv10ごとにダイス+1）</span>
-                    </div>
-                    <div class="skill-main-box" style="background-color:#121620; border-top:1px solid var(--border-color);">
-                        <span class="skill-title-badge" style="border-left-color:var(--accent-blue);">スキル2〜4表</span>
-                        <span style="color:var(--text-muted); font-size:0.85rem;">【自由記載枠】ただし、その内容はワールドマスター（WM）に許可を求める必要があります。</span>
-                    </div>
-                </div>
-
-            </div>
-            <button class="slide-arrow arrow-next" onclick="moveSlider('close', 1)">▶</button>
-        </div>
-    </div>
-
-    <!-- ==================== 遠距離武器タブ ==================== -->
-    <div id="tab-range" class="tab-content">
-        <div class="section-panel" style="border-color: var(--accent-green);">
-            <h2 style="border-left-color: var(--accent-green);">遠距離兵装 一覧 (タップでスライド)</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
-                ※スキル表は1つのみ、スキル3まで保有可（スキル4なし）。基本『最速行動』適応。コストの代わりに弾丸を消費。<br>
-                ※総弾丸保有数は[射撃Lv×5]。撃ち切ると1行動を消費しリロードが必要。
-            </p>
-            <ul class="list-grid range-list">
-                <li><button onclick="scrollToWeapon('range', 0)">拳銃</button></li>
-                <li><button onclick="scrollToWeapon('range', 1)">ライフル</button></li>
-                <li><button onclick="scrollToWeapon('range', 2)">ショットガン</button></li>
-                <li><button onclick="scrollToWeapon('range', 3)">弓矢</button></li>
-                <li><button onclick="scrollToWeapon('range', 4)">呪力</button></li>
-            </ul>
-
-            <h3 style="font-size:0.9rem; margin:15px 0 5px 0; color:#fff;">▽ 弾丸・維持コストの目安</h3>
-            <table class="bullet-table">
-                <thead><tr><th>弾丸種別 / 装備</th><th>ダメージ効果</th><th>価格目安</th></tr></thead>
-                <tbody>
-                    <tr><td>武器Lv3の剣(参考)</td><td>1d6+DB</td><td>約4,000</td></tr>
-                    <tr><td>粗悪品の弾丸 (1発)</td><td>1d4</td><td>約5,000</td></tr>
-                    <tr><td>普及品の弾丸 (1発)</td><td>1d8</td><td>約10,000</td></tr>
-                    <tr><td>高級品の弾丸 (1発)</td><td>1d10+5</td><td>約50,000</td></tr>
-                    <tr><td>防護無視弾丸 (1発)</td><td>1d6 (防護無視)</td><td>約100,000</td></tr>
-                    <tr><td>最高品の弾丸 (1発)</td><td>2d6 (防護無視)</td><td>約200,000</td></tr>
-                </tbody>
-            </table>
-            <p style="font-size:0.75rem; color:var(--accent-color); margin-top:5px;">※高収入の背景がなければ、銃弾の補充は認められ難い。</p>
-        </div>
-
-        <div class="slider-wrapper range-wrapper">
-            <button class="slide-arrow arrow-prev" onclick="moveSlider('range', -1)">◀</button>
-            <div class="slider-container" id="slider-range">
-
-                <!-- 1. 拳銃 -->
-                <div class="weapon-card range-card">
-                    <div class="weapon-header">拳銃 <span class="weapon-req" style="border-color:var(--accent-green);">要求: 知能Lv4 (+2/5Lv)</span></div>
-                    <div class="weapon-desc">片手で撃てる遠距離武器。小回りが利き持ち運びやすい。近距離武器との遠近両刀が主流だが、両方中途半端になるリスクもある。
-                    装填数: 10 （武器Lv5につき+5 / 最大上限30）</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge" style="border-left-color:var(--accent-green);">スキル1</span>
-                        ダメージロール: 2d6 + 弾丸1発 <span class="sk-meta">[弾丸1消耗]</span>
-                    </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表(1〜6)を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[弾丸1〜2消耗]</span> 2d6 + 弾丸1〜2発 / 弾丸を任意数消耗しその数だけロールを行う</div>
-                            <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[弾丸1消耗]</span> 1d10 + 弾丸1発 / 弾丸のダメージロールにダイス数+1</div>
-                            <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[弾丸5消耗]</span> 2d6 + 弾丸1d5発 / 1d5で的中数を決定し、その分のみダメージロール</div>
-                            <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[弾丸2消耗]</span> 1d6 + 弾丸2発 / 2発目の弾丸のダメージ最大値+3</div>
-                            <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[弾丸3消耗]</span> 固定値2 + 弾丸3発</div>
-                            <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[弾丸2消耗]</span> 1d6 + 弾丸2発 / ナイフ等所持時、コスト1消耗で近接武器のスキル1のダメージを追加</div>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- 2. ライフル -->
-                <div class="weapon-card range-card">
-                    <div class="weapon-header">ライフル <span class="weapon-req">要求: 知能Lv5 (+3/5Lv)</span></div>
-                    <div class="weapon-desc">カービン・狙撃銃（スナイパー）・自動小銃（アサルト）の総称。命中精度と貫通力が非常に高い。キャラクター作成時に[スナイパー系統]か[アサルト系統]のどちらかを選択。</div>
+        <!-- ==================== 武器一覧図鑑（スライド形式） ==================== -->
+        <h3 id="weapon-title" class="highlight-orange" style="font-size:1.2rem; margin: 20px 0 5px 0;">▽武器詳細：[ナイフ]</h3>
+        <p id="weapon-desc" style="font-size:0.9rem; color:var(--text-color); margin-bottom:15px; text-align:justify; white-space:pre-line;"></p>
+        
+        <div class="carousel-container">
+            <button class="carousel-btn btn-prev" onclick="moveWeaponSlide(-1)">◀</button>
+            <button class="carousel-btn btn-next" onclick="moveWeaponSlide(1)">▶</button>
+            
+            <div class="carousel-track-wrapper">
+                <div class="carousel-track" id="weapon-track">
                     
-                    <div class="list-grid" style="padding:10px 20px; background:#11141c; font-size:0.85rem; border-bottom:1px solid var(--border-color);">
-                        <div><strong>[スナイパー]</strong><br>装填数: 6（Lv5毎+2/上限20）<br>スキル1: 2d10+弾丸1発<br><span class="sk-meta">[弾丸1消耗]</span></div>
-                        <div><strong>[アサルト]</strong><br>装填数: 30（Lv5毎+5/上限70）<br>スキル1: 1d6+弾丸4発<br><span class="sk-meta">[弾丸4消耗]</span></div>
-                    </div>
-
-                    <details class="skill-details">
-                        <summary class="skill-summary">それぞれのスキル表(1〜6)を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#142318; color:var(--accent-green); margin-bottom:5px;">■ スキル表：スナイパー系統</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[弾丸1消耗]</span> 2d10 + 弾丸1発 / 弾丸のダメージロールダイス数+1</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[弾丸1消耗]</span> 1d10 + 弾丸1発 / 50%の確率で最終ダメージが2倍になる</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[弾丸2消耗]</span> 弾丸2発 / 2回ダメージロールを行う</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[弾丸1消耗]</span> 1d10 + 弾丸1発 / [視覚Lv÷5] だけ攻撃判定のダイス数+1（最大10）</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[弾丸1消耗]</span> 固定値4 + 弾丸1発</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[弾丸1消耗]</span> 1d10 + 弾丸1発 / このスキルで装填数が0になった場合、ダメージダイス+2</div>
+                    <!-- 1. ナイフ -->
+                    <div class="carousel-slide active" data-type="近距離武器" data-name="ナイフ" data-desc="短い刃で小回りよく的確に攻撃する武器。
+相手の急所を突いたり、素早く攻撃する事に特化している。
+ダメージ量は控えめだが、低コストかつ連続した攻撃が特徴的。
+自己強化も多く上手く扱えば非常に有利に戦闘を進められるだろう。
+速度を重視した戦い方ができる一方、複数攻撃が専門の為防護のある敵にはダメージを与えずらい。
+要求値：速度Lv2
+スキル1
+ダメージロール：1d4+DB">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル2表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d4+DB/コスト：1
+2．ダメージロール：1d4/コスト：1/攻撃的中時、このスキルを再使用できる（最大2回）
+3．ダメージロール：1d4+DB/コスト：3/攻撃判定時、速度Lvの複合ロールで判定する
+4．ダメージロール：1d4+DB/コスト：3/ダメージロールにて出た4の目の数だけ追加ダメージ
+5．ダメージロール：1d4+DB/コスト：2/このターン中回避判定のダイス数+1
+6．ダメージロール：1d4+DB/コスト：2/投擲時、DBが減しない
+（投擲用として用意している場合、武器強化効果は全てのナイフに適応される）</div>
                             </div>
-                            <div class="skill-sub-block">
-                                <div class="weapon-req" style="background:#142318; color:var(--accent-green); margin-bottom:5px;">■ スキル表：アサルト系統</div>
-                                <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[弾丸6消耗]</span> 3d6 + 弾丸4発</div>
-                                <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[弾丸10消耗]</span> 1d6 + 弾丸1d10発 / 1d10で命中数を決定、その分のみロール</div>
-                                <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[弾丸5消耗]</span> 2d6 + 弾丸1d5発 / 1d5で命中数を決定、その分のみロール</div>
-                                <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[弾丸4消耗]</span> 弾丸4発 - 1d4 / 攻撃判定のダイス数+1</div>
-                                <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[弾丸5消耗]</span> 1d10 / 1d3+2名の対象にダメージを与える</div>
-                                <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト2]</span> 1d6+DB（武器Lv10毎にダイス+1） / 近接の格闘・棍棒・棒術のいずれかで判定を行う</div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル3表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：3d4/コスト：2/攻撃判定のダイス数+1ダメージロールのダイス数-1（武器Lv1ごとに数値がそれぞれ1増加する）
+2．ダメージロール：1d6/コスト：3/このスキルは、反撃されない
+3．ダメージロール：2d6/コスト：3/敵討伐時、別の対象へこのスキルをコスト0で再使用（最大1回）
+4．ダメージロール：2d4+DB/コスト：3/使用時、次のターンに最速で行動する（最速行動の効果を持つキャラクターが複数いる場合速度Lvを優先）
+5．ダメージロール：2d4+DB/コスト：3/武器をもう一つ所有している場合、行動回数を消費せずその武器のスキル1を使用する
+6．ダメージロール：1d6/コスト：3/行動回数分だけダメージロールのダイス数+2</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル4表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：1d4+DB/コスト：2/このスキルを1ターンに使用する度ダメージロールのダイス数+3
+2．ダメージロール：2d4+DB/コスト：4/このスキルで対象を倒せなかった場合スキル1～3の内1つをランダムにコスト0で使用
+3．ダメージロール：2d4/コスト：3/一番最初に行動する場合、このスキルのダメージ量2倍
+4．ダメージロール：1/コスト：1/事前に1～10の内任意の数値を記載する。1d10を振り、記載した数値以外が出ればコスト0で再使用。再使用時ダメージ量+1（最大5回、武器Lv1ごとに再使用回数が2増加）
+5．ダメージロール：1d6/コスト：1～3/攻撃的中時、（消費コスト×25）％の確率で追加のダメージロール（最大3回発動）
+6．ダメージロール：1d4+DB/コスト5/使用時、この戦闘中行動回数+1（最大2回）</div>
                             </div>
                         </div>
-                    </details>
-                </div>
-
-                <!-- 3. ショットガン -->
-                <div class="weapon-card range-card">
-                    <div class="weapon-header">ショットガン <span class="weapon-req">要求: 知能Lv3 (+2/3Lv)</span></div>
-                    <div class="weapon-desc">多数の小さい弾丸を散開発射する大口径の銃。ライフルより射程や貫通力は低いが近距離での威力が非常に高い。
-                    装填数: 6 （武器Lv10につき+2 / 最大上限12）</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge" style="border-left-color:var(--accent-green);">スキル1</span>
-                        ダメージロール: 4d4 + 弾丸1発 <span class="sk-meta">[弾丸1消耗]</span> / 距離が遠い場合、遠くなるにつれダイス数-1
                     </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表(1〜6)を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[弾丸2消耗]</span> 4d4+弾丸2発 / 距離が遠い場合、遠くなるにつれダイス数-1</div>
-                            <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[弾丸1消耗]</span> 2d4+弾丸1発 / 距離がそれなりに遠い場合でもダイス数が減少しない</div>
-                            <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[弾丸1消耗]</span> 2d10+弾丸1発 / 距離が遠い場合、遠くなるにつれダイス数-1</div>
-                            <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[弾丸3消耗]</span> 3d4+弾丸1発 / 距離比例でダイス減 / 3名にそれぞれダメージロール(対象重複可)</div>
-                            <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[弾丸1消耗]</span> 4d4+弾丸1発 / 距離比例でダイス減 / 敵討伐時、総弾丸保有数-1・装填数+1</div>
-                            <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト2]</span> 1d6+DB（武器Lv10毎にダイス+1） / 近接の格闘・棍棒・棒術のいずれかで判定を行う</div>
-                        </div>
-                    </details>
-                </div>
 
-                <!-- 4. 弓矢 -->
-                <div class="weapon-card range-card">
-                    <div class="weapon-header">弓矢 <span class="weapon-req">要求: 知能Lv3 (+3/5Lv), 筋力Lv2 (+2/5Lv)</span></div>
-                    <div class="weapon-desc">弓と矢を組み合わせる古典的兵装。矢は基本的に1ダメージ。※銃と違い【装填数】がなく、総弾丸保有数から直接消費する。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge" style="border-left-color:var(--accent-green);">スキル1</span>
-                        ダメージロール: 1d6 + 矢1発 <span style="color:var(--accent-blue);">（武器Lv15ごとにダイス+1）</span> <span class="sk-meta">[矢1消耗]</span>
+                    <!-- 2. 剣 -->
+                    <div class="carousel-slide" data-type="近距離武器" data-name="剣" data-desc="ごくごく一般的な両刃武器。
+短所も少なく扱いやすい、種類も様々で多岐にわたる。
+安定的な判定とダメージを両立させやすく、コストも平均的。
+癖があまり無くシンプルだが、一つのスキルで完結しているものが多いので、あらゆる能力が生かされ様々な構成で役に立つ事が期待できるだろう。
+要求値：身体Lv3、筋力または精神Lv2
+スキル1
+ダメージロール：2d6+DB">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル2表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：3d6+DB/コスト3
+2．ダメージロール：2d6+DB/コスト3/ダメージロールにて出た1の目の数だけダメージ量+2
+3．ダメージロール：2d6+DB/コスト2/攻撃判定のダイス数+2
+4．ダメージロール：2d6+DB/コスト3/このターンの間、反撃判定のダイス数+1
+5．ダメージロール：2d6+DB/コスト5/次のターン、自分を含む全ての味方に防御判定のダイス数+1
+6．ダメージロール：2d6+DB/コスト1+/このターンの間消費したコスト分コスト増加、増加したコスト分だけダメージロールにダイス数+1</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル3表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6+DB/コスト4/HPが半分以上の対象へのダメージ量2倍
+2．ダメージロール：2d6+DB/コスト4/このターンのコスト回復値+1、次に使用するスキルのコスト-1
+3．ダメージロール：3d6+DB/コスト4/ダメージロールにてこのスキルが与えられるダメージの50%以上のダメージを与えたならこの戦闘中このスキルのコストが1減少(最大2)
+4．ダメージロール：2d10+DB/コスト3/次のターンの間、ダメージロールのダイス数+2(最大6)
+5．ダメージロール：2d6+DB/コスト4/次のターンの間、対象の速度Lv2減少
+6．ダメージロール：2d6+DB/コスト4/次のターンの間、防護2を得る(最大6)</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル4表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d10+DB/コスト4/敵討伐時、コスト3回復し次のダメージロールのダイス数+2
+2．ダメージロール：2d10+DB/コスト5/敵討伐時、ランダムな敵へこのスキルをコスト0で再使用
+3．ダメージロール：1d4/コスト5/ダメージロールの値×5だけ防護無視の追加ダメージを与える
+このスキルは武器Lv1増加するごとにダイス数の代わりに最大値が1増加する
+4．ダメージロール：4d6+DB/コスト4/この戦闘中スキル1～3をすべて使っているなら使用可能
+5．ダメージロール：2d6+DB/コスト4/攻撃判定にて出た6の目の数だけコスト1回復、ダメージロールのダイス数+1(最大4)
+6．ダメージロール：2d6+DB/コスト4/このスキルは遠距離攻撃として扱う</div>
+                            </div>
+                        </div>
                     </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">スキル表(1〜6)を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[矢2消耗]</span> 2d6 + 矢2発（武器Lv15ごとにダイス+2）</div>
-                            <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[矢3消耗]</span> 3d6 + 矢3発（武器Lv15ごとにダイス+3）</div>
-                            <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[矢1消耗・コスト2]</span> 1d20 + 矢1発（武器Lv20ごとにダイス+2）</div>
-                            <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[矢3消耗]</span> 1d6 + 矢1発（武器Lv15毎にダイス+1） / 対象を3体任意選択しダメージ(対象重複可)</div>
-                            <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[矢5消耗]</span> 1d6 + 矢1発（武器Lv15毎にダイス+1） / ランダムな5体を選択しダメージ(対象重複可)</div>
-                            <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[矢1消耗・コスト4]</span> 1d6 + 矢1発（武器Lv15毎にダイス+1） / 対象を5体選択しダメージを与える</div>
-                        </div>
-                    </details>
-                </div>
 
-                <!-- 5. 呪力 -->
-                <div class="weapon-card range-card">
-                    <div class="weapon-header">呪力 <span class="weapon-req">要求: 精神Lv3 (+4/5Lv)</span></div>
-                    <div class="weapon-desc">特別で不思議な力を扱う遠距離攻撃。他と違い【コスト】を消費して戦うため管理が最重要。素手と同様にスキル2以降は自由に選択・決定可能。</div>
-                    <div class="skill-main-box">
-                        <span class="skill-title-badge" style="border-left-color:var(--accent-green);">スキル1</span>
-                        ダメージロール: 1d6 <span style="color:var(--accent-blue);">（武器Lv8ごとにダイス+1）</span> <span class="sk-meta">[コスト1消費]</span>
+                    <!-- 3. 刀 -->
+                    <div class="carousel-slide" data-type="近距離武器" data-name="刀" data-desc="剣と違い片方のみ刃として機能する武器。
+両刃武器と違い身幅が細く軽量で素早い断ち切りが可能となる。
+ダメージに特化しつつ、確実な効果を発揮しやすい。
+行動回数が多ければ構成次第で1人で完完結する事もある。
+逆にスキル一つでは完全に回り切らないため、武器Lvや速度Lvが低い間は注意が必要だろう。
+要求値：身体Lv3、速度Lv3
+スキル1
+ダメージロール：2d6+DB">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル2表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：3d6+DB/コスト3
+2．ダメージロール：2d6+DB/コスト1/使用時コスト2回復
+3．ダメージロール：2d6+DB/コスト3/次のターンの間、速度Lv+2
+4．ダメージロール：2d6+DB/コスト3/次のターンの間、回避判定のダイス数+2
+5．ダメージロール：2d6+DB/コスト3/次のターンの間、全てのスキルに的中時コスト1回復の効果を得る
+6．ダメージロール：2d6+DB/コスト3/このターンの間、全てのダメージロールのダイス数+1</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル3表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6+DB/コスト4/使用時対象のHPが半分以下ならダメージ量2倍、コスト1回復
+2．ダメージロール：2d6+DB/コスト3/使用時自身のHPが半分以下ならダメージ量+4、コスト2回復
+3．ダメージロール：2d6+DB/コスト4/次のターンの間、全スキルのコスト-2
+4．ダメージロール：2d6+DB/コスト4/対象との速度Lvの差5につき攻撃判定とダメージロールにダイス数+3(最大9)
+5．ダメージロール：2d6+DB/コスト3/攻撃判定時に回避・反撃に敗北したなら、次のターンの反撃のダメージロールのダイス数+(武器Lv×2増加)
+6．ダメージロール：2d6+DB/コスト4/遠距離攻撃に対し、このスキルで反撃する事ができる。反撃時コストを3減少し、攻撃判定にダイス数+(武器Lv×2)</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル4表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：1d6（防護無視）/コスト4/ダメージロールが最大値なら防護無視ダメージ+（武器Lv×10）
+このスキルは武器Lvが増加してもダメージロールのダイス数が増加しない
+2．ダメージロール：3d4+DB/コスト5/攻撃終了時、このスキルを再使用できる（最大3回）
+3．ダメージロール：3d6+DB/コスト5/次に使用するスキルを2回再使用可能にする
+4．ダメージロール：3d6+DB/コスト5/回避判定成功時、このスキルで攻撃する事ができる。この効果で攻撃時このスキルの使用コストが3減少する
+5．ダメージロール：3d6/コスト6/このスキルは対象を5体選択し、選択した対象にダメージを与える
+6．ダメージロール：3d6+DB/コスト5/次のターンの間、コスト回復値+2</div>
+                            </div>
+                        </div>
                     </div>
-                    <details class="skill-details">
-                        <summary class="skill-summary">選択可能なスキル表(1〜16)を閲覧</summary>
-                        <div class="skill-list-container">
-                            <div class="skill-item"><span class="sk-num">1.</span> <span class="sk-meta">[コスト2]</span> 2d6（武器Lv6毎にダイス+1）</div>
-                            <div class="skill-item"><span class="sk-num">2.</span> <span class="sk-meta">[コスト2]</span> 1d6（武器Lv6毎にダイス+1） / 精神対抗を行い、勝利時に対象のコストを2吸収</div>
-                            <div class="skill-item"><span class="sk-num">3.</span> <span class="sk-meta">[コスト3]</span> 1d6（武器Lv6毎にダイス+1） / コストを追加で2消耗すれば、もう一度ダメージロール</div>
-                            <div class="skill-item"><span class="sk-num">4.</span> <span class="sk-meta">[コスト3]</span> 1d6（武器Lv6毎にダイス+1） / 的中時、対象に3点分の防護無視ダメージ</div>
-                            <div class="skill-item"><span class="sk-num">5.</span> <span class="sk-meta">[コスト3]</span> 1d6（武器Lv6毎にダイス+1） / このターンの間、対象の行動回数-1</div>
-                            <div class="skill-item"><span class="sk-num">6.</span> <span class="sk-meta">[コスト3]</span> 1d6（武器Lv6毎にダイス+1） / 次のターンの間、対象のダメージロールのダイス数-1</div>
-                            <div class="skill-item"><span class="sk-num">7.</span> <span class="sk-meta">[コスト4]</span> 1d6（武器Lv6毎にダイス+1） / 使用時、このターンの全攻撃に回避・反撃不可を付与</div>
-                            <div class="skill-item"><span class="sk-num">8.</span> <span class="sk-meta">[コスト4]</span> 1d6（武器Lv6毎にダイス+1） / このターンの間、自分と対象が行動不能状態になる</div>
-                            <div class="skill-item"><span class="sk-num">9.</span> <span class="sk-meta">[コスト4]</span> 1d6（武器Lv6毎にダイス+1） / 味方も指定可、ダメージロールを「回復ロール」に変換する</div>
-                            <div class="skill-item"><span class="sk-num">10.</span> <span class="sk-meta">[コスト4]</span> 1d6（武器Lv6毎にダイス+1） / 的中時、対象のバリアを強制的に0にする</div>
-                            <div class="skill-item"><span class="sk-num">11.</span> <span class="sk-meta">[コスト5]</span> 2d6（武器Lv6毎にダイス+1） / 対象を4体任意選択し、それぞれにダメージ</div>
-                            <div class="skill-item"><span class="sk-num">12.</span> <span class="sk-meta">[コスト5]</span> 1d6（武器Lv6毎にダイス+1） / このターンの間、自身の防御判定のダイス数+3</div>
-                            <div class="skill-item"><span class="sk-num">13.</span> <span class="sk-meta">[コスト6]</span> 1d6（武器Lv6毎にダイス+1） / 的中時、全味方のコスト1回復。対象を3体選択しそれぞれダメージ</div>
-                            <div class="skill-item"><span class="sk-num">14.</span> <span class="sk-meta">[コスト6]</span> 2d6（武器Lv6毎にダイス+1） / 対象の防護を3減少（このターン間）。対象を3体選択しダメージ</div>
-                            <div class="skill-item"><span class="sk-num">15.</span> <span class="sk-meta">[コスト7]</span> 1d6（武器Lv6毎にダイス+1） / 的中時、このターン中対象の行動回数および全判定ダイス数-2</div>
-                            <div class="skill-item"><span class="sk-num">16.</span> <span class="sk-meta">[コスト7]</span> 5d6（武器Lv6毎にダイス+1） / <strong>【防護無視】</strong></div>
-                        </div>
-                    </details>
-                </div>
 
+                    <!-- 4. 大剣 -->
+                    <div class="carousel-slide" data-type="近距離武器" data-name="大剣" data-desc="巨大で強力な攻撃を叩き込む武器。
+火力は相当なものだが、その分大振りな動きで見切られやすい。
+コストが高く攻撃判定が低くなりやすい事が欠点だが、強力なダメージを期待できるだろう。
+ダメージの振れ幅が大きいので、場合によってはダメージが上手く出ない事もあるかもしれない。
+要求値：身体Lv4、筋力Lv5
+スキル1
+ダメージロール：2d10+DB">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル2表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール： 3d10+DB/コスト4
+2．ダメージロール： 4d10+1d6DB/コスト2/このターンの間、自身の全ての攻撃判定のダイス数-2
+3．ダメージロール： 2d10+DB/コスト3/このスキルの攻撃判定のダイス数-1
+4．ダメージロール： 3d10+DB/コスト2/次のターンの間、自身の行動回数-2
+5．ダメージロール： 2d10+DB/コスト4/次のターン防護2を得る
+6．ダメージロール： 1d10+DB/コスト3/このスキルでコストが0になったら、コストを3回復</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル3表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール： 2d10+DB/コスト5/攻撃的中時、次のターンの対象の行動回数-1
+2．ダメージロール： 3d10+DB/コスト5/このスキルの攻撃判定のダイス数-1
+攻撃的中時、対象の次の判定のダイス数-1
+3．ダメージロール： 2d10+DB/コスト5/このスキルが最後の攻撃ならダメージロールのダイス数+(武器Lv-1)
+4．ダメージロール： 2d10+DB/コスト3/前回のターン中、攻撃していなければダメージロールのダイス数+(武器Lv×2)
+5．ダメージロール： 3d10+DB/コスト5/防護の値だけダメージ量増加
+6．ダメージロール： 2d10+DB/コスト5/攻撃的中時、対象のコスト回復値-1</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル4表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール： 5d10/コスト8
+2．ダメージロール： 3d10/コスト7/このスキルは対象を4体選択し、選択した対象にダメージを与える
+3．ダメージロール： 2d10+DB/コスト6/次のターンの間、防御のダイス数+4
+4．ダメージロール： 3d10+DB/コスト7/攻撃的中時、今回と次のターンの対象の行動回数-2
+5．ダメージロール： 3d10+DB/コスト7/敵討伐時、このスキルのコスト2減少(戦闘につき2回)
+6．ダメージロール： 3d10+DB/コスト4/このスキルの攻撃判定のダイス数を任意の数だけ消耗し、消耗した分だけダメージロールのダイス数を増加する</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. 長柄 -->
+                    <div class="carousel-slide" data-type="近距離武器" data-name="長柄" data-desc="柄の長く比較的遠くから攻撃可能な武器。
+距離を保つ戦闘と複数人との戦闘に有利に戦える。
+複数人対象の攻撃が多く、多人数戦に有利に働く。
+しかし単体戦での火力はイマイチで、火力不足が目立つだろう。
+要求値：知能Lv4、筋力Lv2
+スキル1
+ダメージロール：1d8+DB">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル2表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：1d8+DB/コスト2/このスキルは対象を2体を選択することができ、選択した対象にダメージを与える。ただしこの効果が発動しているならDBは乗らない
+2．ダメージロール：1d8+DB/コスト3/対象の回避判定のダイス数-1
+対象を2体を選択することができ、選択した対象にダメージを与える。ただしこの効果が発動しているならDBは乗らない
+3．ダメージロール：1d10/コスト3/コストを1多く消費すれば攻撃の対象を1体増加する
+対象を2体を選択することができ、選択した対象にダメージを与える。ただしこの効果が発動しているならDBは乗らない
+4．ダメージロール：1d8+DB/コスト3/対象の回避・反撃判定のダイス数-2
+5．ダメージロール：1d8+DB/コスト3/次のターンに、対象の攻撃判定のダイス数-1
+6．ダメージロール：1d8/コスト1/このスキル使用時、コスト2回復</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル3表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6+DB/コスト4/このスキルは対象を4体を選択することができ、選択した対象にダメージを与える。ただしこの効果が発動しているならDBは乗らない
+2．ダメージロール：2d6+DB/コスト4/このスキル使用後、行動回数を消費せずにスキル2を使用可能
+このスキルは対象を3体を選択することができ、選択した対象にダメージを与える。ただしこの効果が発動しているならDBは乗らない
+3．ダメージロール：1d8/コスト4/保有するスキルのランダムなスキル効果が発動する（スキル3,4は除外）
+このスキルは対象を3体を選択し、選択した対象にダメージを与える
+4．ダメージロール： 1d8+DB/コスト4/このスキルで1体のみに攻撃した後、行動回数を消費せずにこのスキルの消費コストを-2して3体を対象に追加攻撃可能
+5．ダメージロール：2d6+DB/コスト4/次のターンに、防御判定のダイス数+2
+6．ダメージロール：1d8+DB/コスト4/コストを1多く消費すればもう一度ダメージロールを行う（最大1回）</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル4表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d8+DB/コスト5/このスキルは対象を5体を選択することができ、選択した対象にダメージを与える
+2．ダメージロール：2d8+DB/コスト5/このスキルが的中した相手の数だけコスト2回復
+このスキルは対象を3体を選択することができ、選択した対象にダメージを与える。ただしこの効果が発動しているならDBは乗らない
+3．ダメージロール：2d8+DB/コスト5/次のターンの間、対象の判定難度+3
+このスキルは対象を3体を選択することができ、選択した対象にダメージを与える。ただしこの効果が発動しているならDBは乗らない
+4．ダメージロール：2d10+DB/コスト5/このスキルの攻撃判定時、ダメージロールを行わない。次のターンにコストさらに1消費して攻撃判定をせずに、そのまま全ての敵を対象にダメージロールを行う。
+5．ダメージロール：1d8+DB/コスト5/このスキルで対象を倒せなかった場合スキルを再使用
+6．ダメージロール：1d8/コスト5/攻撃的中時、対象に標的を付与。このスキルで標的の付いた対象を攻撃時ダメージ量3倍、標的の付いた対象討伐時コスト3回復</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. 鈍器 -->
+                    <div class="carousel-slide" data-type="近距離武器" data-name="鈍器" data-desc="鋭利さを持たないが殴打・打撃による攻撃を主とする武器。
+相手を粉砕する能力が高く、破壊に特化している。
+ハンマーやメイス、バットに棍棒の他場合によってはスパナやバールなども鈍器として扱う。
+手軽な攻撃手段が多いが、類似するナイフより相手の妨害や振れ幅の大きい火力に偏っている。
+スレッジハンマーなどの巨大な鈍器は大剣として扱われる事も多い。
+要求値：身体または筋力Lv2
+スキル1
+ダメージロール：1d6+DB">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル2表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：1d4+DB/コスト：1/武器Lvの値だけ追加ダメージ
+2．ダメージロール：1d6+DB/コスト：1/使用時コスト3回復
+3．ダメージロール：1d6+DB/コスト：2/このターンの間、相手の攻撃判定のダイス数-1
+4．ダメージロール：1d6+DB/コスト：2/このスキル使用時、対象の防御判定のダイス数-1
+5．ダメージロール：1d6+DB/コスト：2/攻撃判定時にて出た6の目の数だけ、対象の防御・反撃・回避判定-1(最大3)
+6．ダメージロール：1d6+DB/コスト：3/攻撃判定時にて1の目を1つでも出したなら判定に+5</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル3表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6+DB/コスト：3/攻撃終了時、このスキルを再使用できる（最大1回）
+2．ダメージロール：2d6+DB/コスト：4/対象へ与えたダメージ25ごとに、対象の次の判定のダイス数-1
+3．ダメージロール：2d6+DB/コスト：3/敵討伐時、コスト2回復
+4．ダメージロール：1d8+DB/コスト：5/対象のHPが最大なら防護無視
+5．ダメージロール：1d6+DB/コスト：5/攻撃終了時、対象のHPが半分以下なら再度ダメージロール
+6．ダメージロール：1d10+DB/コスト：4/攻撃終了時、行動回数を消費せずスキル2をコスト0で使用</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル4表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6+DB/コスト：6/攻撃的中時、次のターンの間対象の全ての判定のダイス数-2
+2．ダメージロール：2d6+DB/コスト：6/攻撃的中時、次のターンの間対象の行動回数-3
+3．ダメージロール：1d6+DB/コスト：4/攻撃的中時、このスキルを再使用可能。（最大1回）
+再使用時ダメージロールのダイス最大値+4
+4．ダメージロール：1d10+DB/コスト：4/攻撃的中時、対象のコスト-2
+5．ダメージロール：1d10+DB/コスト：4/対象がこのスキルに対し防御判定をした時、ダメージロールダイス数+2
+6．ダメージロール：1d6+DB/コスト：1/この戦闘の間使用する度にコスト1増加、増加した分だけ攻撃判定とダメージロールのダイス数+2</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. 格闘 -->
+                    <div class="carousel-slide" data-type="近距離武器" data-name="格闘" data-desc="武器を保有せず、身体能力や技巧を武器にして戦う。
+その術の種類は多く、それぞれに個性を秘めている。
+ただの素手喧嘩から空手や柔道、太極拳・八卦掌・形意拳などの中国武術など様々な形でかつ、独自の発展を遂げます。
+そのためスキルは自由に決められる。
+要求値が存在しない
+スキル1
+ダメージロール：1d4+DB">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル2～4</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．自由記載。ただしその内容はワールドマスターに許可を求める必要があります。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 8. 拳銃 -->
+                    <div class="carousel-slide" data-type="遠距離武器" data-name="拳銃" data-desc="【遠距離武器共通仕様】近距離武器と違いスキル表が武器それぞれに1つしかない。弾丸を消費しダメージロールは武器ダメージ+消費弾丸。基本『最速で行動する』適用。武器Lv上昇時のダイス増加効果は1増加に固定。総弾丸保有数は射撃Lv×5。銃・弓矢にスキル4は無く、スキル3まで保有。
+
+片手で撃てる遠距離武器。
+銃器の中でも小回りが利いて持ち運びもしやすい。
+近距離武器との遠近両刀が主流だが、両方中途半端になる場合もあるため注意が必要。
+要求値：知能Lv3
+装填数 10（武器Lv1につき5上昇）（最大装填上限30）
+スキル1
+ダメージロール：1d6+弾丸1発/弾丸1消耗">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：1d6+弾丸1～2発/弾丸1～2消耗/弾丸を任意の数消耗してその数だけダメージロール
+2．ダメージロール：1d10+弾丸1発/弾丸1消耗/弾丸のダメージロールにダイス数+1
+3．ダメージロール：1d6+弾丸1d5発/弾丸5消耗/1d5で命中した弾数を決め、命中した分のみダメージロール
+4．ダメージロール：1d6+弾丸2発/弾丸2消耗/2発目の弾丸のダメージロールの最大値+3
+5．ダメージロール：武器Lvの値+弾丸3発/弾丸3消耗
+6．ダメージロール：1d6+弾丸2発/弾丸2消耗/ナイフ等の片手武器を所有している場合、コストを1消耗すれば近接武器のスキル1のダメージロールを追加できる</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 9. ライフル -->
+                    <div class="carousel-slide" data-type="遠距離武器" data-name="ライフル" data-desc="【遠距離武器共通仕様】近距離武器と違いスキル表が武器それぞれに1つしかない。弾丸を消費しダメージロールは武器ダメージ+消費弾丸。基本『最速で行動する』適用。武器Lv上昇時のダイス増加効果は1増加に固定。総弾丸保有数は射撃Lv×5。銃・弓矢にスキル4は無く、スキル3まで保有。
+
+カービン・狙撃銃（スナイパー）・自動小銃（アサルト）などの総称。
+命中精度が高く貫通力が非常に強い特徴的。
+スナイパー系統とアサルト系統の2種の中でどちらかを選択できる。
+要求値：知能Lv4
+[スナイパー系統]
+装填数 6（武器Lv1につき1上昇）(最大保有上限10)
+スキル1：ダメージロール：2d10+弾丸1発/弾丸1消耗
+[アサルト系統]
+装填数 30（武器Lv1につき10上昇）(最大保有上限70)
+スキル1：ダメージロール：1d6+弾丸4発/弾丸4消耗">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル表[スナイパー系統]</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d10+弾丸1発/弾丸1消耗/弾丸のダメージロールのダイス数+1
+2．ダメージロール：1d10+弾丸1発/弾丸1消耗/50％の確率でダメージが2倍
+3．ダメージロール：弾丸2発/弾丸2消耗/2回ダメージロールを行う
+4．ダメージロール：1d10+弾丸1発/弾丸1消耗/視覚Lv÷5だけ攻撃判定にダイス数+1(最大10)
+5．ダメージロール：4+弾丸1発/弾丸1消耗
+6．ダメージロール：1d10+弾丸1発/弾丸1消耗/このスキルで装填数が0になった場合、ダメージロールのダイス数+2</div>
+                            </div>
+                            <div class="skill-panel-header" style="margin-top:15px;"><span class="skill-panel-name">スキル表[アサルト系統]</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6+弾丸4発/弾丸6消耗
+2．ダメージロール：1d6+弾丸1d10発/弾丸10消耗/1d10で命中した弾数を決め、命中した分のみダメージロール
+3．ダメージロール：2d6+弾丸1d5発/弾丸5消耗/1d5で命中した弾数を決め、命中した分のみダメージロール
+4．ダメージロール：弾丸4発-1d4/弾丸4消耗/攻撃判定にダイス数+1
+5．ダメージロール：1d6+弾丸1発/弾丸5消耗/1d4+1名にダメージを与える
+6．ダメージロール：1d6+DB/コスト2/近接攻撃（格闘）または（棍棒）または（棒術）で判定する
+このスキルは武器Lvによるダメージロールのダイス数増加効果を受ける</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 10. ショットガン -->
+                    <div class="carousel-slide" data-type="遠距離武器" data-name="ショットガン" data-desc="【遠距離武器共通仕様】近距離武器と違いスキル表が武器それぞれに1つしかない。弾丸を消費しダメージロールは武器ダメージ+消費弾丸。基本『最速で行動する』適用。武器Lv上昇時のダイス増加効果は1増加に固定。総弾丸保有数は射撃Lv×5。銃・弓矢にスキル4は無く、スキル3まで保有。
+
+多数の小さい弾丸を散開発射する大口径の銃。
+ライフルより遠距離まで飛ばず貫通力も低いものの、近距離での威力が非常に高い。
+要求値：知能Lv3
+装填数 6（武器Lv1につき2上昇）(最大保有上限12)
+スキル1
+ダメージロール：4d4+弾丸1発/弾丸1消耗/弾丸のダメージロールのダイス数が2倍、距離が遠い場合、遠くなるにつれダメージロールのダイス数-1">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：4d4+弾丸2発/弾丸2消耗/弾丸のダメージロールのダイス数が2倍、距離が遠い場合、遠くなるにつれダメージロールのダイス数-1
+2．ダメージロール：2d4+弾丸1発/弾丸1消耗/距離が遠い場合でもダイス数が減少しない
+3．ダメージロール：2d10+弾丸1発/弾丸1消耗/弾丸のダメージロールのダイス数が2倍、距離が遠い場合、遠くなるにつれダメージロールのダイス数-1
+4．ダメージロール：3d4+弾丸1発/弾丸3消耗/距離が遠い場合、遠くなるにつれダイス数-1/3名にそれぞれダメージロール(対象重複可)
+5．ダメージロール：4d4+弾丸1発/弾丸1消耗/弾丸のダメージロールのダイス数が2倍、距離が遠い場合、遠くなるにつれダメージロールのダイス数-1
+敵討伐時総弾丸保有数-1、装填数+1
+6．ダメージロール：1d6+DB（武器Lv10につきダイス数が1増加）/コスト2/近接攻撃（格闘）または（棍棒）または（棒術）で判定する
+このスキルは武器Lvによるダメージロールのダイス数増加効果を受ける</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11. 弓矢 -->
+                    <div class="carousel-slide" data-type="遠距離武器" data-name="弓矢" data-desc="【遠距離武器共通仕様】近距離武器と違いスキル表が武器それぞれに1つしかない。矢を消費。基本『最速で行動する』適用。武器Lv上昇時のダイス増加効果は1増加に固定。銃と違い装填数が存在せず、総弾丸保有数から弾を消費する。銃・弓矢にスキル4は無く、スキル3まで保有。
+
+弓と矢を組み合わせ使う遠距離武器。
+古来より存在する遠距離攻撃手段であり、様々な技術力で多様な扱いが期待できる。
+矢は基本的に1ダメージとする。
+ただし、特殊な弓及び矢の場合は大きく変動することが見込まれるだろう。
+要求値：知能Lv3、筋力Lv2
+スキル1
+ダメージロール：1d6+矢1発/矢1消耗">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6+矢2発/矢2消耗
+2．ダメージロール：3d6+矢3発/矢3消耗
+3．ダメージロール：1d20+矢1発/矢1消耗/コスト2
+4．ダメージロール：1d6+矢1発/矢3消耗/このスキルは対象を3体を選択することができ、選択した対象にダメージを与える(対象重複可)
+5．ダメージロール：1d6+矢1発/矢5消耗/このスキルはランダムな5体を選択することができ、選択した対象にダメージを与える(対象重複可)
+6．ダメージロール：1d6+矢1発/矢1消耗/コスト4/このスキルは対象を5体を選択することができ、選択した対象にダメージを与える</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 12. 呪力 -->
+                    <div class="carousel-slide" data-type="遠距離武器" data-name="呪力" data-desc="【遠距離武器（特殊型）】他遠距離武器と違いコストを消費して戦う。スキル1にもコストを消耗するため、コスト管理が非常に重要となる。素手と同様にスキル表を自由に選択可能。また、ほか遠距離武器と違い武器Lvによるダメージロールのダイス数増加効果を近接武器と同様に増加していく。
+
+特別で不思議な力を扱い、攻撃する遠距離武器。
+要求値：精神Lv4(呪力印を保有している場合、Lv3として適応)
+スキル1
+ダメージロール：1d6/コスト1">
+                        <div class="skill-panel-item">
+                            <div class="skill-panel-header"><span class="skill-panel-name">スキル表</span></div>
+                            <div class="ability-list">
+                                <div class="ability-item">1．ダメージロール：2d6/コスト2
+2．ダメージロール：1d8/コスト2/精神対抗判定を行い、勝利した場合対象のコストを2吸収する
+3．ダメージロール：1d8/コスト3/コストを追加で2消耗すれば、もう一度ダメージロール
+4．ダメージロール：1d8/コスト3/的中時、対象に3の防護無視ダメージ
+5．ダメージロール：1d8/コスト3/このターンの間、対象の行動回数-1
+6．ダメージロール：1d8/コスト3/次のターンの間、対象のダメージロールのダイス数-1
+7．ダメージロール：1d6+1d4/コスト4/使用時、このターンの全ての攻撃に回避・反撃不可の効果を得る
+8．ダメージロール：2d6/コスト4/このターンの間、自分と対象が行動不能状態になる
+9．ダメージロール：1d6/コスト4/味方を対象に指定可能、このスキルのダメージロールを回復ロールに変化することができる
+10．ダメージロール：1d8/コスト4/的中時、対象のバリアを0にする
+11．ダメージロール：2d4/コスト5/このスキルは対象を4体を選択することができ、選択した対象にダメージを与える
+12．ダメージロール：2d4/コスト5/このターンの間、自身の防御判定のダイス数+3
+13．ダメージロール：1d6/コスト6/的中時、自分を含む全ての味方のコスト1回復。このスキルは対象を3体を選択することができ、選択した対象にダメージを与える
+14．ダメージロール：2d6/コスト6/このターンの間、対象の防護3減少。このスキルは対象を3体を選択することができ、選択した対象にダメージを与える
+15．ダメージロール：1d8/コスト7/的中時、このターンの間対象の行動回数・全ての判定のダイス数-2
+16．ダメージロール：3d6/コスト7/防護無視</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <button class="slide-arrow arrow-next" onclick="moveSlider('range', 1)">▶</button>
         </div>
-    </div>
 
+        <!-- 補足・購入目安セクション -->
+        <h3>▽遠距離武器の弾丸目安・ルール補足</h3>
+        <p>遠距離武器の運用にかかるコストや調達に関する都市内ルールです。
+ダメージを出すには弾を購入する必要がありますが、コスパはあまり良くないため利用頻度は低いです。
+その為マシンガンなどの連射力の高い銃は非常に扱いが困難とされ、市場で流通しているところはほぼ無いと言っていいでしょう。
+ただ、製造工程や費用を考えると工房としては扱いが難しく、元より銃器は入手が困難であるといった点の方が大きいです。
+唯一の利点は非力な者でも一方的にある程度弱い人物を相手取ることができる事です。
+それなりに戦える者は銃の他に何らかの近接攻撃手段を用いることが一般的となります。</p>
+
+        <div class="skill-panel-item" style="background-color: #0d0f12; border: 1px solid var(--border-color);">
+            <p style="font-size:0.9rem; margin-bottom: 5px;"><strong>弾丸の目安価格：</strong>
+・武器Lv1の剣1本：1d6+DB 値段：約1500
+・粗悪品の弾丸1発：1d4 値段：約1500
+・普及品の弾丸1発：1d8 値段：約3000
+・高級品の弾丸1発：1d10+5 値段：約6000
+・防護無視弾丸1発：1d6（防護無視） 値段：約1万
+・最高品の弾丸1発：2d6（防護無視） 値段：約2万
+※収入が高額であるというものが無ければ、銃の弾丸を補充する事は認められ難いでしょう。</p>
+            <p style="font-size:0.9rem; margin-bottom: 0;"><strong>リロード・装填ルール：</strong>
+装填数は銃に入っている弾丸の量で、撃ち切った場合行動回数1回分をリロードに充てなければならない。
+シナリオ中特に補充できるタイミングが無ければ、総弾丸保有数が0になったタイミングで銃の射撃使用は不可能となる。</p>
+        </div>
+
+    </div>
 </div>
 
-<!-- スライダー・タブ制御スクリプト -->
+<!-- スライド制御スクリプト -->
 <script>
-    function switchTab(type) {
-        document.getElementById('tab-close').classList.remove('active');
-        document.getElementById('tab-range').classList.remove('active');
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    let currentWeaponIdx = 0;
+    const weaponSlides = document.querySelectorAll('#weapon-track .carousel-slide');
+    const weaponTitle = document.getElementById('weapon-title');
+    const weaponDesc = document.getElementById('weapon-desc');
 
-        if(type === 'close') {
-            document.getElementById('tab-close').classList.add('active');
-            document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        } else if(type === 'range') {
-            document.getElementById('tab-range').classList.add('active');
-            document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        }
+    function moveWeaponSlide(dir) {
+        weaponSlides[currentWeaponIdx].classList.remove('active');
+        currentWeaponIdx += dir;
+        if (currentWeaponIdx >= weaponSlides.length) currentWeaponIdx = 0;
+        if (currentWeaponIdx < 0) currentWeaponIdx = weaponSlides.length - 1;
+        weaponSlides[currentWeaponIdx].classList.add('active');
+        updateWeaponInfo();
+    }
+    
+    function updateWeaponInfo() {
+        const slide = weaponSlides[currentWeaponIdx];
+        const type = slide.getAttribute('data-type');
+        const name = slide.getAttribute('data-name');
+        weaponTitle.innerText = "▽" + type + "詳細：[" + name + "]";
+        weaponDesc.innerText = slide.getAttribute('data-desc');
     }
 
-    function moveSlider(idType, direction) {
-        const container = document.getElementById('slider-' + idType);
-        const cardWidth = container.clientWidth;
-        container.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
-    }
-
-    function scrollToWeapon(idType, index) {
-        const container = document.getElementById('slider-' + idType);
-        const cardWidth = container.clientWidth;
-        container.scrollTo({ left: cardWidth * index, behavior: 'smooth' });
-    }
+    // 初期実行
+    updateWeaponInfo();
 </script>
 
 </body>
