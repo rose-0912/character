@@ -70,7 +70,7 @@
             letter-spacing: 0.05em;
         }
 
-        /* --- ナびゲーション戻るボタン --- */
+        /* --- ナビゲーション戻るボタン --- */
         .back-nav { margin-bottom: 20px; display: flex; gap: 10px; }
         .btn-nav {
             background-color: #222733; color: #fff; padding: 10px 15px; text-decoration: none;
@@ -316,6 +316,11 @@
                 <label>名前 (PC名)</label>
                 <input type="text" id="p-name" placeholder="名無しの市民">
             </div>
+            <!-- 【復活】キャラクターレベル入力欄 -->
+            <div class="form-group">
+                <label>キャラクターレベル (能力上限に影響)</label>
+                <input type="number" id="p-level" value="1" min="1" oninput="recalculate()">
+            </div>
             <div class="form-group">
                 <label>所属会社（現在）</label>
                 <select id="p-faction" onchange="updateFactionAndTraits()">
@@ -398,8 +403,8 @@
 
     <!-- ==================== 3. 基礎能力 ==================== -->
     <div class="section-panel" id="sec-base">
-        <h2>〇 基礎能力（固定一律：40ポイント割り振りシステム）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。基本能力ポイントを消費して割り振ります。上限は各能力最大30までとなります。</p>
+        <h2>〇 基礎能力（割り振りポイント総数：キャラクターレベル × 4）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は1。獲得した基本能力ポイントを消費して割り振ります。上限はキャラレベル値までとなります。</p>
         
         <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
@@ -408,7 +413,7 @@
             </div>
             <div class="form-group">
                 <label style="color: var(--accent-orange);">⚠️ 未割り振り基本能力ポイント</label>
-                <input type="text" id="calc-rem-base-pt" value="40 pt" readonly style="font-weight:bold; font-size:1.1rem; text-align:center; color: var(--accent-orange);">
+                <input type="text" id="calc-rem-base-pt" value="4 pt" readonly style="font-weight:bold; font-size:1.1rem; text-align:center; color: var(--accent-orange);">
             </div>
         </div>
 
@@ -462,25 +467,25 @@
         </div>
     </div>
 
-    <!-- ==================== 5. 特殊能力スロット ==================== -->
+    <!-- ==================== 5. 特殊能力スロット（会社アビリティ・スキル0動的連動仕様） ==================== -->
     <div class="section-panel" id="sec-traits">
-        <h2>〇 特殊能力（最大4枠 // 現職と追加した全前職の能力が自動融合）</h2>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">選択した固有能力に応じて、対応するHPや基礎能力への自動適用・ステータス加算補正が瞬時に発動します。</p>
+        <h2>〇 特殊能力（最大4枠 // 所属会社に応じてスキル0等の選択肢が動的変化）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※決闘連盟、無所属、刻、Mysticismでは「スキル0」の固有アビリティがブレンドされ、一般労働者ではスキル0以外の選択肢が除外されます。</p>
         
         <div class="form-grid" id="special-slots-container"></div>
     </div>
 
     <!-- ==================== 6. 所持兵装管理 ==================== -->
     <div class="section-panel" id="sec-weapons">
-        <h2>〇 所持武器・スキル・弾数管理</h2>
+        <h2>〇 所持武器・スキル・弾数管理（複数所持カード管理）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">※武器を複数所持する場合、要求能力値がそれぞれ加算されます。1つ目のカードの弾数がステータスへ最優先連動します。</p>
         <div id="weapons-list-area"></div>
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
     </div>
 
-    <!-- ==================== 7. 通過シナリオ一覧（経験ポイント撤廃版） ==================== -->
+    <!-- ==================== 7. 通過シナリオ一覧 ==================== -->
     <div class="section-panel" id="sec-scenarios">
-        <h2>〇 通過シナリオ記録・履歴管理</h2>
+        <h2>〇 通過シナリオ記録・履歴管理（動的追加削除対応）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">通過したシナリオ名、到達エンド、獲得アイテムや備考欄を綺麗に記録・管理できます。</p>
         <div id="scenarios-list-area"></div>
         <button type="button" class="btn-add-card" style="background-color:#1c2533; color:var(--accent-blue); border-color:#2a394a;" onclick="addNewScenarioField()">＋ 通過シナリオの記録を追加する</button>
@@ -506,14 +511,32 @@
 
     <!-- ==================== 9. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box" id="sec-closet">
-        <h2>ブラウザ保存済みキャラクター一覧</h2>
+        <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
         <div class="closet-list" id="closet-list-area"></div>
     </div>
 
 </div> <!-- sheet-app終了 -->
 
+<!-- 常時最前面右下固定配置型 ページ内目次パネル -->
+<div class="floating-menu">
+    <button type="button" class="menu-trigger-btn" onclick="toggleFloatingMenu()">☰</button>
+    <div class="menu-content-panel" id="floating-menu-panel">
+        <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
+        <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
+        <a onclick="scrollToSection('sec-profile')">👤 2. プロフィール ＆ 経歴</a>
+        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
+        <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
+        <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
+        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
+        <a onclick="scrollToSection('sec-scenarios')">🎬 7. 通過シナリオ履歴</a>
+        <a onclick="scrollToSection('sec-story')">📖 8. キャラクターバックストーリー</a>
+        <a onclick="scrollToSection('sec-closet')">📂 9. 端末内セーブデータ一覧</a>
+    </div>
+</div>
+
 <!-- ==================== コアエンジン・スクリプト ==================== -->
 <script>
+    // 会社・組織別の基本アビリティデータ
     const companyTraitsData = {
         "赤色戦派": ["武の才能", "戦意高揚", "死線越え", "肉弾戦", "暗殺の瞳", "正面突破", "強靭な肩", "撃ち合い特化", "戦術指揮", "各個撃破", "背水", "屈強な身体", "安定した呼吸", "戦いの信条", "バーサーカー", "不安定"],
         "ディフィポリディ": ["守護者", "絶対秩序", "重装盾陣", "迅速な護衛", "護衛行動", "頑丈", "防御振動", "受け身の攻撃", "防衛陣形", "根性", "暖かき守り人", "隙狙い", "防御強化", "攻撃は最大の防御", "護りの信条", "臆病者", "重装部隊"],
@@ -528,6 +551,14 @@
         "刻": ["時間跳躍", "未来視の片鱗", "瞬転の構え", "刻の夜"],
         "Mysticism": ["神秘の術", "異界の加護"],
         "その他": ["自由記入アビリティ"]
+    };
+
+    // 特定会社で追加される「スキル0」アビリティの定義マップ
+    const skillZeroData = {
+        "決闘連盟": ["スキル0：決闘領域", "スキル0：一騎討ちの極意"],
+        "無所属": ["スキル0：アウトローアイズ", "スキル0：サバイバルギミック"],
+        "刻": ["スキル0：タイムラグ", "スキル0：刹那の予知"],
+        "Mysticism": ["スキル0：ミスティックオーラ", "スキル0：異界の侵食"]
     };
 
     const cryingCitySkills = [
@@ -747,24 +778,57 @@
         updateTraitDropdownOptions();
     }
 
+    // 【動的フィルター制御】所属会社リストに基づき、選択肢を再構成する
     function updateTraitDropdownOptions() {
-        let availableTraits = [];
         let currentFaction = document.getElementById('p-faction').value;
         if (currentFaction === "その他") currentFaction = document.getElementById('p-faction-free').value || "その他";
-        if (companyTraitsData[currentFaction]) { companyTraitsData[currentFaction].forEach(t => availableTraits.push({ traitName: t, source: `現職:${currentFaction}` })); }
-        
+
+        // 全所属組織（現職 ＋ 全前職）の統合リストを生成
+        let activeFactions = [currentFaction];
         document.querySelectorAll('.career-card').forEach(card => {
             let fac = card.querySelector('.career-faction-select').value;
             if(fac === "その他") fac = card.querySelector('.career-faction-free-input').value || "その他";
-            if(fac && companyTraitsData[fac]) { companyTraitsData[fac].forEach(t => availableTraits.push({ traitName: t, source: `前職:${fac}` })); }
+            if(fac && !activeFactions.includes(fac)) activeFactions.push(fac);
         });
 
+        // フィルターされたアビリティ群の組み立て
+        let filteredTraits = [];
+        let hasGeneralLaborer = activeFactions.includes("一般労働者");
+
+        if (hasGeneralLaborer && activeFactions.length === 1) {
+            // 現職・前職ともに「一般労働者」のみの場合は、一般労働者の能力だけを提示
+            if (companyTraitsData["一般労働者"]) {
+                companyTraitsData["一般労働者"].forEach(t => filteredTraits.push({ traitName: t, source: "一般労働枠" }));
+            }
+        } else {
+            // 一般労働者以外、あるいは転職を挟んでいる場合は通常のアビリティを収集
+            activeFactions.forEach(fac => {
+                if (fac !== "一般労働者" && companyTraitsData[fac]) {
+                    companyTraitsData[fac].forEach(t => {
+                        filteredTraits.push({ traitName: t, source: fac });
+                    });
+                }
+                // 【条件合致時】決闘連盟、無所属、刻、Mysticism の場合に「スキル0」の選択肢をブレンド注入
+                if (skillZeroData[fac]) {
+                    skillZeroData[fac].forEach(z => {
+                        filteredTraits.push({ traitName: z, source: `${fac}(特枠)` });
+                    });
+                }
+            });
+        }
+
+        // 4枚のスロットにフィルター結果を一斉適用
         for (let i = 1; i <= 4; i++) {
             const sel = document.getElementById(`special-trait-select-${i}`); const prev = sel.value;
             sel.innerHTML = `<option value="">-- 未設定（所属・前職アビリティから選択） --</option>`;
-            availableTraits.forEach(item => {
-                const opt = document.createElement('option'); opt.value = item.traitName; opt.innerText = `${item.traitName} [${item.source}]`; sel.appendChild(opt);
+            
+            filteredTraits.forEach(item => {
+                const opt = document.createElement('option'); 
+                opt.value = item.traitName; 
+                opt.innerText = `${item.traitName} [${item.source}]`; 
+                sel.appendChild(opt);
             });
+            
             const optFree = document.createElement('option'); optFree.value = "その他自由記入"; optFree.innerText = "★その他（完全独自記入効果）"; sel.appendChild(optFree);
             sel.value = prev; if (sel.selectedIndex === -1) sel.value = "";
             onTraitSelected(i);
@@ -789,7 +853,6 @@
         recalculate();
     }
 
-    // 通過シナリオ動的生成（経験ポイントを完全撤廃）
     function addNewScenarioField(name="", end="", note="") {
         scenarioIndexCounter++;
         const container = document.getElementById('scenarios-list-area');
@@ -807,9 +870,7 @@
         container.appendChild(div);
     }
 
-    function deleteScenarioField(id) { 
-        document.getElementById(`scenario-id-${id}`).remove(); 
-    }
+    function deleteScenarioField(id) { document.getElementById(`scenario-id-${id}`).remove(); }
 
     function addNewCustomSkillField(savedName = "", savedLv = 1, savedMod = 0) {
         customSkillCounter++;
@@ -861,8 +922,8 @@
     function deleteWeaponField(id) { document.getElementById(`weapon-card-id-${id}`).remove(); }
 
     function adjustBase(key, val) {
-        let current = baseStats[key];
-        if (current + val < 1 || (val > 0 && current + val > 30)) return; // 最大30上限固定
+        let current = baseStats[key]; let charLevel = parseInt(document.getElementById('p-level').value) || 1;
+        if (current + val < 1 || (val > 0 && current + val > charLevel)) return;
         if (val > 0 && (parseFloat(document.getElementById('calc-rem-base-pt').value) || 0) < 1) { alert("基本能力ポイントが不足しています。"); return; }
         baseStats[key] += val; document.getElementById(`base-${key}`).value = baseStats[key]; recalculate();
     }
@@ -876,17 +937,27 @@
     }
 
     function recalculate() {
+        let charLevel = parseInt(document.getElementById('p-level').value) || 1;
         let rankText = "一般労働階級";
+        if (charLevel >= 2 && charLevel <= 4) rankText = "ランクG(8級)";
+        else if (charLevel >= 5 && charLevel <= 10) rankText = "ランク F(7級)";
+        else if (charLevel >= 11 && charLevel <= 20) rankText = "ランク E(6級)";
+        else if (charLevel >= 21 && charLevel <= 34) rankText = "ランク D(5級)";
+        else if (charLevel >= 35 && charLevel <= 50) rankText = "ランク C(4級)";
+        else if (charLevel >= 51 && charLevel <= 62) rankText = "ランク B(3級)";
+        else if (charLevel >= 63 && charLevel <= 70) rankText = "ランク A(2級)";
+        else if (charLevel >= 71 && charLevel <= 80) rankText = "ランク S(1級)";
+        else if (charLevel >= 81) rankText = "エリート(1級)";
         document.getElementById('calc-rank-status').value = rankText;
 
-        let totalBasePoints = 40; // 40ポイント固定
+        let totalBasePoints = charLevel * 4;
         let usedBasePoints = (baseStats.body - 1) + (baseStats.str - 1) + (baseStats.int - 1) + (baseStats.spd - 1) + (baseStats.men - 1);
         let remBase = totalBasePoints - usedBasePoints;
         document.getElementById('calc-rem-base-pt').value = remBase + " pt";
 
         for (let key in baseStats) {
             let plusBtn = document.getElementById(`btn-base-plus-${key}`);
-            if (plusBtn) plusBtn.disabled = (remBase < 1 || baseStats[key] >= 30);
+            if (plusBtn) plusBtn.disabled = (remBase < 1 || baseStats[key] >= charLevel);
         }
 
         let finalBody = baseStats.body + traitAutoBonuses.body;
@@ -997,7 +1068,8 @@
             titlePrefixWord: document.getElementById('p-title-prefix').value, titleSuffixWord: document.getElementById('p-title-suffix').value,
             savedPrefixList: titlePrefixCollection, savedSuffixList: titleSuffixCollection,
             profile: {
-                name: document.getElementById('p-name').value, faction: factionValue, age: document.getElementById('p-age').value,
+                name: document.getElementById('p-name').value, faction: factionValue,
+                level: parseInt(document.getElementById('p-level').value) || 1, age: document.getElementById('p-age').value,
                 sex: document.getElementById('p-sex').value, height: document.getElementById('p-height').value, weight: document.getElementById('p-weight').value
             },
             lore: {
@@ -1109,7 +1181,11 @@
             
             document.getElementById('career-history-area').innerHTML = "";
             if(data.careerHistory) { data.careerHistory.forEach(c => addNewCareerField(c.faction, c.freeFaction)); }
+            
+            // 会社情報を元にアビリティの選択肢を生成
             updateFactionAndTraits();
+            
+            if(data.profile.level) document.getElementById('p-level').value = data.profile.level;
             document.getElementById('p-age').value = data.profile.age || ""; document.getElementById('p-sex').value = data.profile.sex || "";
             document.getElementById('p-height').value = data.profile.height || ""; document.getElementById('p-weight').value = data.profile.weight || "";
         }
