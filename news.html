@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>クライングシティ - お知らせ</title>
     <style>
-        /* --- 基本設定 & カラー --- */
+        /* --- 基本設定 & ディストピア風カラー --- */
         :root {
             --bg-color: #0d0f12;
             --panel-bg: #161a22;
-            --accent-color: #ff3b30; /* 警告用赤 */
+            --accent-color: #ff3b30; /* 警告用ネオンレッド */
+            --accent-gray: #b3bac2;  
             --accent-blue: #00bcd4;  /* サイバーブルー */
-            --accent-green: #34c759; /* アップデート用緑 */
-            --accent-purple: #af52de;/* 新要素用紫 */
+            --accent-green: #34c759; /* エメラルドグリーン */
+            --accent-orange: #ff9500;
+            --accent-purple: #9d4edd;
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #2d3748;
@@ -30,37 +32,28 @@
             color: var(--text-color);
             line-height: 1.8;
             padding-bottom: 60px;
-            
-            /* ページ遷移用フェードインの初期状態 */
             opacity: 0;
             animation: fadeInPage 0.6s ease-out forwards;
         }
 
-        /* --- ページ遷移用フェードインアニメーション --- */
         @keyframes fadeInPage {
-            0% {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         header {
-            background: linear-gradient(180deg, #05161a 0%, var(--panel-bg) 100%);
+            background: linear-gradient(180deg, #11141a 0%, var(--panel-bg) 100%);
             padding: 40px 20px;
             text-align: center;
-            border-bottom: 2px solid var(--accent-blue);
+            border-bottom: 2px solid var(--accent-gray);
         }
 
         .main-title {
             font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.2em;
             color: #fff;
-            text-shadow: 0 0 10px var(--accent-blue);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
         }
 
         .sub-title {
@@ -70,9 +63,9 @@
             letter-spacing: 0.1em;
         }
 
-        /* --- お知らせバナー（概要と同期した赤ベース仕様） --- */
+        /* --- お知らせバナー --- */
         .banner-container {
-            background-color: #1a0000;
+            background-color: #1a0000; 
             border-bottom: 1px solid var(--accent-color);
             overflow: hidden;
             position: relative;
@@ -92,7 +85,7 @@
         .banner-item {
             display: inline-block;
             padding-right: 50px;
-            color: var(--accent-color);
+            color: var(--accent-color); 
             font-weight: bold;
             font-size: 0.85rem;
             letter-spacing: 0.05em;
@@ -103,7 +96,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* --- メインレイアウト --- */
         .container {
             max-width: 700px;
             margin: 0 auto;
@@ -127,23 +119,19 @@
             letter-spacing: 0.05em;
         }
 
-        .toc-list {
-            list-style: none;
+        h3 {
+            font-size: 1rem;
+            color: #fff;
+            margin: 25px 0 12px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
         }
-        .toc-list li {
-            margin-bottom: 8px;
-        }
-        .toc-list a {
-            color: var(--text-color);
-            text-decoration: none;
+
+        p {
             font-size: 0.95rem;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dotted var(--border-color);
-            padding-bottom: 4px;
-        }
-        .toc-list a:hover {
-            color: var(--accent-blue);
+            margin-bottom: 15px;
+            text-align: justify;
+            white-space: pre-line;
         }
 
         /* --- ナビゲーション --- */
@@ -169,11 +157,10 @@
 
         .nav-button:hover {
             background-color: #2d3446;
-            border-color: #94a3b8;
+            border-color: var(--accent-gray);
             color: #fff;
         }
 
-        /* 現在開いているアクティブページの強調 */
         .nav-grid .nav-button.current-page,
         .nav-grid .nav-button.current-page:hover {
             background-color: #05161a !important;
@@ -183,13 +170,8 @@
             pointer-events: none; 
             box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
         }
-        .nav-grid .nav-button.current-page::before {
-            content: '● ';
-            font-size: 0.7rem;
-            vertical-align: middle;
-        }
+        .nav-grid .nav-button.current-page::before { content: '● '; font-size: 0.7rem; vertical-align: middle; }
 
-        /* キャラクターシート制作ボタン（赤グラデーション強調） */
         .nav-button.highlight {
             grid-column: span 2;
             background: linear-gradient(90deg, #ff3b30, #a20000);
@@ -199,386 +181,145 @@
             margin-top: 5px;
             color: #fff;
         }
-        .nav-button.highlight:hover {
-            opacity: 0.9;
-            border: none;
-        }
 
-        /* --- お知らせリスト（アコーディオン） --- */
-        .news-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        details {
-            background-color: var(--panel-bg);
+        /* --- ネオン装飾付きアナウンス枠 --- */
+        .news-article-card {
+            background-color: #0d0f12;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: border-color 0.3s;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-
-        details[open] {
-            border-color: var(--accent-blue);
+        .news-article-card.latest {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 12px rgba(255, 149, 0, 0.15);
         }
-
-        summary {
-            padding: 15px;
-            cursor: pointer;
-            list-style: none;
-            position: relative;
-            outline: none;
-        }
-        
-        summary::after {
-            content: '▼';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.8rem;
+        .news-date {
+            font-size: 0.85rem;
             color: var(--text-muted);
-            transition: transform 0.3s;
-        }
-        details[open] summary::after {
-            transform: translateY(-50%) rotate(180deg);
-            color: var(--accent-blue);
-        }
-
-        .meta-area {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 5px;
-        }
-
-        .date {
             font-family: monospace;
-            font-size: 0.9rem;
-            color: var(--accent-blue);
-            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
         }
-
-        .badge {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 3px;
+        .news-title-text {
+            font-size: 1.05rem;
+            font-weight: bold;
             color: #fff;
-            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #1f2733;
+            padding-bottom: 6px;
         }
-        .badge.important { background-color: var(--accent-color); }
-        .badge.update { background-color: var(--accent-green); }
-        .badge.dlc { background-color: var(--accent-purple); }
-        .badge.fix { background-color: #4a5568; }
-
-        .news-title {
-            font-size: 1rem;
-            color: #fff;
-            font-weight: bold;
-            padding-right: 25px;
-        }
-
-        .news-content {
-            padding: 15px;
-            background-color: #0f1217;
-            border-top: 1px solid var(--border-color);
+        .news-body-content {
             font-size: 0.95rem;
+            color: var(--text-color);
             white-space: pre-line;
+            text-align: justify;
         }
+
+        .highlight-blue { color: var(--accent-blue); font-weight: bold; }
+        .highlight-orange { color: var(--accent-orange); font-weight: bold; }
 
         @media (max-width: 480px) {
-            .nav-grid {
-                grid-template-columns: 1fr;
-            }
-            .nav-button.highlight {
-                grid-column: span 1;
-            }
-            .main-title {
-                font-size: 1.6rem;
-            }
+            .nav-grid { grid-template-columns: 1fr; }
+            .nav-button.highlight { grid-column: span 1; }
+            .main-title { font-size: 1.6rem; }
         }
     </style>
 </head>
-<!-- 戻るボタンでのフェード不具合を防止する記述を body に追加 -->
 <body onpageshow="if (event.persisted) window.location.reload();">
 
 <header>
-    <div class="main-title">クライングシティ // 通信記録</div>
-    <div class="sub-title">都市管理企業からの通達・お知らせ一覧</div>
+    <div class="main-title">クライングシティ</div>
+    <div class="sub-title">市民登録プロトコル // 統統括議会・電電公報システム</div>
 </header>
 
 <div class="banner-container">
     <div class="banner-track">
-        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
         <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
         <span class="banner-item">【企業通達】会社員としての義務を全うしてください。平和は存在しません。</span>
+        <span class="banner-item">【警告】クライングシティは閉鎖されました。自由の剥奪、倫理の喪失、未知との遭遇に備えてください。</span>
     </div>
 </div>
 
 <div class="container">
 
-    <div class="section-panel">
-        <h2>目次</h2>
-        <ul class="toc-list">
-            <li><a href="#about-menu">別ページ・ツール一覧 <span>➔</span></a></li>
-            <li><a href="#news-list-section">お知らせ一覧 <span>➔</span></a></li>
-        </ul>
-    </div>
-
+    <!-- ナビゲーション -->
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
             <a href="index.html" class="nav-button">◆概要◆</a> 
-            <a href="news.html" class="nav-button current-page">◆お知らせ◆</a> 
+            <a href="news.html" class="nav-button current-page">◆お知らせ◆</a>
             <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
             <a href="company.html" class="nav-button">◆会社◆</a>
             <a href="weapon.html" class="nav-button">◆武器◆</a>
+            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
-            <a href="npc_list.html" class="nav-button">◆重要人物一覧◆</a>
+            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
 
-    <div id="news-list-section" class="news-container">
+    <!-- お知らせセクション -->
+    <div class="section-panel">
+        <h2>〇お知らせ一覧</h2>
+        <p>都市端末機構から配信される最新のパッチアナウンス、および重要システム修正通知です。</p>
 
-        <!-- 2026/05/28 (大規模改修告知) -->
-        <details open>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2026.05.28</span>
-                    <span class="badge important">重要予告</span>
-                </div>
-                <div class="news-title">キャラクターシート制作に関する大規模改修の告知</div>
-            </summary>
-            <div class="news-content">
-                直感的に分かりやすく視認性の向上を目的としたキャラクターシート制作方法の大規模改修を予定しています
+        <!-- ==================== 【新設】最新のお知らせ ==================== -->
+        <div class="news-article-card latest">
+            <span class="news-date">2026年6月13日</span>
+            <div class="news-title-text highlight-orange">【キャラ制作における大幅改修および関連事項修正のお知らせ】</div>
+            <div class="news-body-content">キャラ制作における大幅改修および関連事項修正のお知らせ
 
-                ▼具体的な変更内容▼（※この内容は予告なく変更される可能性があります）
-                -キャラクターレベル実装
-                -キャラクターレベル実装に伴う能力値分配方法の変更
-                -基本能力、技術能力レベル上昇効率の均一化
-                -武器レベルの一部効果をキャラクターレベルへ移行
-                -武器レベルを1〜5までに変更
-                -武器スキルの獲得レベルの変更及びダメージロールと要求値増加幅変更
-                -経験ポイント廃止
-                -キャラクターレベル実装に伴う「階級とランク」の内容変更及び正式ルール化
-                -特殊能力獲得方法の変更
-                -上記の内容変更に伴う一部特殊能力の内容変更 
-            </div>
-        </details>
+基本能力ポイントに関して、本来の意図と異なる挙動を確認したため内容を修正します
 
-        <!-- 2026/05/28 (無所属追加) -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2026.05.28</span>
-                    <span class="badge update">UPDATE</span>
-                </div>
-                <div class="news-title">無所属の特殊能力追加と能力追加に伴う説明文の軽微な変更のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                ◉追加された特殊能力
-                0．無才
-                9．残された者
-                10．名家の一族
+修正前)キャラクターLv×5だけ獲得
 
-                ◉無所属の説明の追加文
-                ▼追加された文▼
-                なお、分類し難い存在も無所属として扱われることもあります。
-            </div>
-        </details>
+修正後)キャラクターLv×4だけ獲得
 
-        <!-- 2025/11/28 -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.11.28</span>
-                    <span class="badge fix">仕様補足</span>
-                </div>
-                <div class="news-title">呪力に関する追加説明のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                ・追加説明に呪力についての追加情報を記載しました
-            </div>
-        </details>
+キャラクターの制作に関する大幅改修を行いました
 
-        <!-- 2025/10/15 -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.10.15</span>
-                    <span class="badge fix">表記修正</span>
-                </div>
-                <div class="news-title">表記修正のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                ・追記説明の「上限の追加」についての変更
-                本来想定していた意図に合った内容に変更
+階級とランクを追記、追加説明からキャラクター制作欄に移動しました
 
-                変更前)全てのLv、ダイス数増加効果に上限を追加
+速度によって増加する行動回数の増加条件をLv10から20に変更
 
-                変更後)ダイス数増加は上限の影響を受けないように変更
-            </div>
-        </details>
+無所属
+0．エリート
+獲得条件変更点
 
-        <!-- 2025/09/22 -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.09.22</span>
-                    <span class="badge fix">表記修正</span>
-                </div>
-                <div class="news-title">軽微な表記修正のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                反撃の説明文を微修正 
-            </div>
-        </details>
+電務工房
+8．地道な作業
+効果変更
+11．使い切りガジェット
+効果変更
 
-        <!-- 2025/09/18 -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.09.18</span>
-                    <span class="badge update">UPDATE</span>
-                </div>
-                <div class="news-title">名称表記修正とスナイパーのスキル修正のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                弾丸保有数、総弾丸保有数の表記ではぱっと見で判断しづらく、見間違いをしてしまう可能性を考慮し弾丸保有数を装填数に変更します
+刻
+0．刻の夜
+獲得条件変更
 
-                回避・防御・反撃を総じて守備(守備行動、守備能力、守備判定)と呼称することにします
-                スキルや特殊能力にて3種全てを含むものは、順次守備に記載変更を行なっていく予定です
+無所属
+0．無才
+9．残された者
+レベルの表記揺れをLvに統一
 
-                スナイパースキル表4の効果発生条件難度を上げ、上限を追加しました
-            </div>
-        </details>
+武器Lvの仕様変更に伴う要求値やダメージロールの上昇値変更による数値の変更
+変更対象
+・全て
 
-        <!-- 2025/09/14 (追加会社修正) -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.09.14</span>
-                    <span class="badge fix">バグ修正</span>
-                </div>
-                <div class="news-title">追加会社の特殊能力に関する修正のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                ◉電務工房
-                14．暴発
-                発動確率が上昇
+また、一部スキルの効果を変更しました
 
-                ◉刻
-                11．明け方
-                効果記載漏れの修正
+・近距離武器の一部(剣や刀など)説明文に誤植が多く見られたため、修正しました
 
-                ……薄暮と黎明のスキル追加はまだちゃんと考えてません、ごめんなさい
-                （仮称kP@6/25が命日 — 2025/09/14 17:29）
-            </div>
-        </details>
+・遠距離武器の全体説明を一部変更、及び弾丸の値段緩和を行いました</div>
+        </div>
 
-        <!-- 2025/09/14 (DLC追加) -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.09.14</span>
-                    <span class="badge dlc">DLC追加</span>
-                </div>
-                <div class="news-title">DLC会社追加のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                ・電務工房
-                ・刻
-                ・Mysticism
-                の3種を追加しました
-            </div>
-        </details>
-
-        <!-- 2025/09/12 -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.09.12</span>
-                    <span class="badge update">UPDATE</span>
-                </div>
-                <div class="news-title">武器：弓矢・ショットガンのバランス調整に関するお知らせ</div>
-            </summary>
-            <div class="news-content">
-                ダメージロール内容に+矢n発の記載が欠落していた問題を修正しました
-                また、スキル表1〜6の武器Lv増加に伴うダメージロール増加をナーフ、スキル表5の効果内容を対象ランダムに変更しました
-
-                弓矢スキル表4・5、ショットガンスキル表4に(対象重複可)の追記をしました 
-            </div>
-        </details>
-
-        <!-- 2025/09/09 (追加変更) -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.09.09</span>
-                    <span class="badge update">UPDATE</span>
-                </div>
-                <div class="news-title">特殊能力に関する追加変更のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                Lv上昇のみの特殊能力全てに
-                Lv10ごとに増加量+1(Lv90は超過しない)
-                を追加しました
-                また、センスの集中的センスのみ増加量が+2になっています
-            </div>
-        </details>
-
-        <!-- 2025/09/09 (初期) -->
-        <details>
-            <summary>
-                <div class="meta-area">
-                    <span class="date">2025.09.09</span>
-                    <span class="badge update">UPDATE</span>
-                </div>
-                <div class="news-title">特殊能力に関する変更のお知らせ</div>
-            </summary>
-            <div class="news-content">
-                能力の効果変更や表記の変更を行いました
-
-                ◉赤色戦派
-                -7．撃ち合い特化
-                増加ダイス数が1から2になりました
-
-                ◉ディフィポリディ
-                -11．防御強化
-                発動条件緩和、上限追加
-                -12．攻撃は最大の防御
-                固定ダメージから自身の防護参照に変更
-                -15．重装部隊
-                獲得バリア数を×4から×3に変更
-
-                ◉メローメディック
-                -2．医務の合間に
-                回復量を1から1d6に変更
-
-                ◉ライブラビランス
-                -2．集中
-                表記揺れの修正
-                -5．弱点を突く
-                ダメージ量に上限を追加
-                -8．増幅
-                魔力増幅から増幅に名称変更
-
-                ◉決闘連盟
-                7．素早く決めようではないか
-                効果を相手の判定がマイナスから自身の判定がプラスに変更
-
-                ◉無所属
-                -1．ならずものの暴虐
-                Lv上昇のポイント効率変化に伴に効果発動条件を判定値8から18に変更
-                4．負け犬の意地
-                Lv上昇のポイント効率変化に伴い効果発動の条件のLv合計値を8から60に変更
-                HP上昇量を5から10に増加
-            </div>
-        </details>
+        <!-- 過去のお知らせ保管枠例 -->
+        <div class="news-article-card">
+            <span class="news-date">2026年5月20日</span>
+            <div class="news-title-text">【システムパッチ】登録機構のネットワーク同期テスト</div>
+            <div class="news-body-content">ネットワークプロトコルの最適化を完了しました。
+キャラクターシート制作スロットにおけるLocalStorageの同期感度は現在すべて正常稼働中です。各市民の皆様は端末機器のキャッシュクリアを定期的に実行してください。</div>
+        </div>
 
     </div>
 </div>
