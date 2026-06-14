@@ -150,6 +150,20 @@
         }
         .btn-add-card:hover { background-color: #34c759; color: #0d0f12; }
 
+        /* 称号管理枠の独自装飾 */
+        .title-badge-box {
+            background-color: #11151d;
+            border: 1px solid var(--accent-purple);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 6px var(--accent-purple);
+        }
+
         /* --- バックストーリー開閉用 --- */
         .story-accordion { background-color: #11141b; border: 1px solid var(--border-color); border-radius: 6px; margin-top: 10px; }
         .story-summary { padding: 12px 15px; color: var(--accent-blue); font-weight: bold; cursor: pointer; font-size: 0.95rem; outline: none; }
@@ -183,9 +197,6 @@
         .btn-delete-char { background-color: #331c20; color: #ff4444; border: 1px solid #552222; padding: 4px 10px; font-size: 0.75rem; border-radius: 4px; }
         .btn-delete-char:hover { background-color: #ff4444; color: #fff; }
         .no-data-msg { font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 15px 0; }
-
-        .readonly-mode input, .readonly-mode select, .readonly-mode textarea { pointer-events: none; background-color: #11141a; border-color: #1f2430; color: #cbd5e1; }
-        .readonly-mode .btn-calc, .readonly-mode .btn-add-card, .readonly-mode .btn-delete-card { display: none; }
 
         @media (max-width: 480px) {
             .form-grid { grid-template-columns: 1fr; }
@@ -233,7 +244,7 @@
         </div>
 
         <div class="share-url-box" id="share-box">
-            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL</label>
+            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL（管理名ジャンプ方式）</label>
             <div class="share-url-text" id="share-url"></div>
         </div>
     </div>
@@ -276,10 +287,41 @@
                 <button type="button" class="btn-add-card" onclick="addNewCareerField()">＋ 新しい前職の経歴を追加</button>
             </div>
 
-            <div class="form-group">
-                <label>称号（出力用）</label>
-                <input type="text" id="p-title" placeholder="例：白銀">
+            <!-- 【全面刷新】あつ森風カスタム二部構成称号システム -->
+            <div class="form-group span-2" style="border-top:1px dashed var(--border-color); padding-top:10px; margin-top:10px;">
+                <label style="color: var(--accent-purple);">🏅 現在のカスタム結合称号プレビュー</label>
+                <div class="title-badge-box" id="calc-full-title">【未設定】</div>
+                
+                <div class="form-grid" style="gap:10px;">
+                    <div class="form-group">
+                        <label>前半フレーズの選択</label>
+                        <select id="p-title-prefix" onchange="combineTitles()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>後半フレーズの選択</label>
+                        <select id="p-title-suffix" onchange="combineTitles()"></select>
+                    </div>
+                </div>
+
+                <!-- 単語の新規獲得エディタ -->
+                <div class="form-grid" style="gap:10px; margin-top:10px; background-color:#0f131a; padding:10px; border-radius:4px; border:1px solid #1f2836;">
+                    <div class="form-group">
+                        <label>前半フレーズの新規獲得追加</label>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="input-new-prefix" placeholder="例：熱い、漆黒の">
+                            <button type="button" class="btn-add-card" onclick="addNewTitleWord('prefix')" style="margin:0; padding:10px;">獲得</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>後半フレーズの新規獲得追加</label>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="input-new-suffix" placeholder="例：拳、死神">
+                            <button type="button" class="btn-add-card" onclick="addNewTitleWord('suffix')" style="margin:0; padding:10px;">獲得</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="form-group">
                 <label>キャラクターレベル (1〜90)</label>
                 <input type="number" id="p-level" value="1" min="1" max="90" oninput="recalculate()">
@@ -295,10 +337,6 @@
             </div>
             <div class="form-group">
                 <label>体重</label><input type="text" id="p-weight" placeholder="60kg">
-            </div>
-            <div class="form-group span-2">
-                <label>獲得称号（報酬等）</label>
-                <input type="text" id="p-earned-title" placeholder="特になし">
             </div>
         </div>
     </div>
@@ -320,7 +358,6 @@
         </div>
 
         <div class="status-header-bar"><span>能力項目</span><span>現在Lv</span></div>
-
         <div id="base-stats-rows-container"></div>
 
         <div class="form-grid" style="margin-top: 15px; background-color:#11141c; padding:15px; border-radius:4px;">
@@ -333,12 +370,12 @@
         </div>
     </div>
 
-    <!-- ==================== 4. 技術能力（左右スライド ◀ ▶ ループ対応式） ==================== -->
+    <!-- ==================== 4. 技術能力（左右スライド ◀ ▶ ループ式） ==================== -->
     <div class="section-panel" id="sec-skills">
         <h2>〇 技術能力（共通一律コスト：1レベル上昇につき1pt消費）</h2>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">初期値は一律Lv1。戦闘系技能は自由に独自の兵装・流派名に変更可能です。</p>
         
-        <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f/#232d3f;">
+        <div class="form-grid" style="background-color: #11141c; padding: 12px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #232d3f;">
             <div class="form-group">
                 <label>特技ポイントの【補正追加分】</label>
                 <input type="number" id="bonus-sp" value="0" min="0" oninput="recalculate()">
@@ -410,7 +447,7 @@
         <div class="closet-list" id="closet-list-area"></div>
     </div>
 
-</div> <!-- sheet-app終了 -->
+</div>
 
 <!-- ==================== コアエンジン・スクリプト ==================== -->
 <script>
@@ -421,7 +458,7 @@
         "メローメディック": ["現場医療班", "再生医療", "トリアージ", "医療知識", "医務の合間に", "医者", "連続処置", "回復薬", "救助活動", "精神科", "対応力", "白衣の天使", "パワー系", "医療式戦闘術", "修理手当", "医療の信条", "激務の過労"],
         "ライブラビランス": ["情報検索", "監査権限", "頭脳明晰", "本の虫", "集中", "知識堆積", "情報戦闘", "弱点を突く", "揺れ槍", "呪力操術", "増幅", "行動阻害", "情報の重要性", "知識の盾", "知識の信条", "警戒心", "部屋籠り", "対人恐怖症"],
         "センス": ["感覚同調", "超感覚", "隠密暗殺", "戦闘センス", "感覚センス", "行動センス", "対人センス", "知識センス", "基礎センス", "集中的戦闘センス", "集中的感覚センス", "集中的行動センス", "集中的対人センス", "集中的知識センス", "集中的基礎センス", "一種の才能"],
-        "決闘連盟": ["果敢な挑戦", "一騎打ち", "見切り", "決闘", "いざ、尋常勝負！", "決闘連盟の名に懸けて", "決闘宣布", "受けてみよ！", "弱点は見えた！", "隙あり！", "素早く決めようではないか", "素晴らしき決闘であった", "全員で来るが良い！", "鮮やかな受け流し", "決闘の心得", "対決", "決闘のプライド"],
+        "決闘連盟": ["果敢な挑戦", "一騎打ち", "見切り", "決闘", "いざ、尋常勝負！", "決闘連盟の名に懸けて", "決闘宣布", "受けてみよ！", "弱点は見えた！", "隙あり！", "素べく決めようではないか", "素晴らしき決闘であった", "全員で来るが良い！", "鮮やかな受け流し", "決闘の心得", "対決", "決闘のプライド"],
         "無所属": ["傭兵気質", "裏社会のコネ", "サバイバリティ", "エリート", "無才", "ならずものの暴虐", "没落者の勘", "弱者の生存戦略", "負け犬の意地", "浮浪者の知恵", "崩れた企業の非検体", "個人事業主", "個人事業所属", "残された者", "名家の一族"],
         "一般労働者": ["一般労働者"],
         "電務工房": ["機械改造", "ハッキングデバイス", "オーバークロック", "整備知識", "工事で鍛えた体力", "武器応用学", "ひらめき", "慧眼", "改善", "特別改造", "地道な作業"],
@@ -459,16 +496,71 @@
     let careerIndexCounter = 0;
     const storagePrefix = "crying_city_sheet_";
 
+    // あつ森風称号用の初期フレーズマスターコレクション
+    let titlePrefixCollection = ["熱い", "漆黒の", "鈍色の", "真紅の", "名無しの", "彷徨う", "電子の", "呪われし"];
+    let titleSuffixCollection = ["拳", "死神", "会社員", "ブレード", "市民", "サバイバー", "亡霊", "人形"];
+
     window.onload = function() {
         initBaseStatsRows();
         initSkillsSlides();
         initSpecialSlots();
         addNewWeaponField();
+        renderTitleCollections(); // 称号コレクション展開
         recalculate();
         refreshClosetList();
         parseUrlOrLoadLocal();
         updateSkillSlideVisibility();
     };
+
+    // あつ森風称号コレクション描画
+    function renderTitleCollections() {
+        const preSel = document.getElementById('p-title-prefix');
+        const sufSel = document.getElementById('p-title-suffix');
+        
+        const currentPre = preSel.value;
+        const currentSuf = sufSel.value;
+
+        preSel.innerHTML = "";
+        sufSel.innerHTML = "";
+
+        titlePrefixCollection.forEach(w => {
+            let opt = document.createElement('option'); opt.value = w; opt.innerText = w; preSel.appendChild(opt);
+        });
+        titleSuffixCollection.forEach(w => {
+            let opt = document.createElement('option'); opt.value = w; opt.innerText = w; sufSel.appendChild(opt);
+        });
+
+        if(currentPre && titlePrefixCollection.includes(currentPre)) preSel.value = currentPre;
+        if(currentSuf && titleSuffixCollection.includes(currentSuf)) sufSel.value = currentSuf;
+        combineTitles();
+    }
+
+    function addNewTitleWord(type) {
+        if(type === 'prefix') {
+            const input = document.getElementById('input-new-prefix');
+            const val = input.value.trim();
+            if(val && !titlePrefixCollection.includes(val)) {
+                titlePrefixCollection.push(val);
+                document.getElementById('p-title-prefix').value = val;
+                input.value = "";
+            }
+        } else {
+            const input = document.getElementById('input-new-suffix');
+            const val = input.value.trim();
+            if(val && !titleSuffixCollection.includes(val)) {
+                titleSuffixCollection.push(val);
+                document.getElementById('p-title-suffix').value = val;
+                input.value = "";
+            }
+        }
+        renderTitleCollections();
+    }
+
+    function combineTitles() {
+        const pre = document.getElementById('p-title-prefix').value || "";
+        const suf = document.getElementById('p-title-suffix').value || "";
+        document.getElementById('calc-full-title').innerText = pre && suf ? `【${pre} ${suf}】` : "【未設定】";
+    }
 
     // 技術能力スライド（◀ ▶ ループ制御対応型）
     function changeSkillSlide(direction) {
@@ -799,33 +891,6 @@
         document.getElementById(`weapon-card-id-${id}`).remove();
     }
 
-    function adjustBase(key, val) {
-        let current = baseStats[key];
-        let charLevel = parseInt(document.getElementById('p-level').value) || 1;
-        if (current + val < 1 || (val > 0 && current + val > charLevel)) return;
-        if (val > 0 && (parseFloat(document.getElementById('calc-rem-base-pt').value) || 0) < 1) {
-            alert("基本能力ポイントが不足しています。"); return;
-        }
-        baseStats[key] += val;
-        document.getElementById(`base-${key}`).value = baseStats[key];
-        recalculate();
-    }
-
-    function updateModifier(skName, index) {
-        skillModifiers[skName] = parseInt(document.getElementById(`skmod-${index}`).value) || 0;
-    }
-
-    function adjustSkill(skName, index, val) {
-        let current = skillStats[skName];
-        if (current + val < 1 || current + val > 90) return;
-        if (val > 0 && (parseInt(document.getElementById('calc-rem-sp').value) || 0) < 1) {
-            alert("特技ポイントが不足しています。"); return;
-        }
-        skillStats[skName] += val;
-        document.getElementById(`sk-${index}`).value = skillStats[skName];
-        recalculate();
-    }
-
     function recalculate() {
         let charLevel = parseInt(document.getElementById('p-level').value) || 1;
         
@@ -976,12 +1041,15 @@
             baseStats, skillStats, skillModifiers, customSkillsArray, combatAliases, careerHistory: careerArray, traitsSlotsArray,
             bonusSp: parseInt(document.getElementById('bonus-sp').value) || 0,
             plName: document.getElementById('p-pl-name').value,
+            titlePrefixWord: document.getElementById('p-title-prefix').value,
+            titleSuffixWord: document.getElementById('p-title-suffix').value,
+            savedPrefixList: titlePrefixCollection,
+            savedSuffixList: titleSuffixCollection,
             profile: {
                 name: document.getElementById('p-name').value, faction: factionValue,
                 level: parseInt(document.getElementById('p-level').value) || 1, age: document.getElementById('p-age').value,
                 sex: document.getElementById('p-sex').value, height: document.getElementById('p-height').value,
-                weight: document.getElementById('p-weight').value, title: document.getElementById('p-title').value,
-                earnedTitle: document.getElementById('p-earned-title').value
+                weight: document.getElementById('p-weight').value
             },
             lore: {
                 event: document.getElementById('f-past-event').value, emotion: document.getElementById('f-past-emotion').value,
@@ -1005,11 +1073,13 @@
         let regCost = 1 + Math.floor((baseStats.men + traitAutoBonuses.men) / 10);
         let weaponNames = d.weaponsList?.map(w => w.name || "未設定").join(', ') || "なし";
 
+        let fullTitleStr = (d.titlePrefixWord && d.titleSuffixWord) ? `${d.titlePrefixWord} ${d.titleSuffixWord}` : "未設定";
+
         let traitsText = d.traitsSlotsArray.map((t, idx) => t.selected ? `[枠${idx+1}]:${t.selected}${t.freeText ? '('+t.freeText+')':''}` : '').filter(x=>x).join(', ');
         let careerDisplayList = d.careerHistory.map(c => c.faction === "その他" ? c.freeFaction : c.faction);
         let careerStr = careerDisplayList.length > 0 ? `\n転職経歴：${careerDisplayList.join(' ➔ ')}` : "";
 
-        let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${d.profile.title || ""}\n特殊能力： ${traitsText}${careerStr}\n武器： ${weaponNames}\n所属： ${d.profile.faction || ""}`;
+        let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${fullTitleStr}\n特殊能力： ${traitsText}${careerStr}\n武器： ${weaponNames}\n所属： ${d.profile.faction || ""}`;
 
         let commands = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
 
@@ -1075,6 +1145,14 @@
             });
         }
 
+        // 称号コレクションデータのロード復元
+        if(data.savedPrefixList) titlePrefixCollection = data.savedPrefixList;
+        if(data.savedSuffixList) titleSuffixCollection = data.savedSuffixList;
+        renderTitleCollections();
+        if(data.titlePrefixWord) document.getElementById('p-title-prefix').value = data.titlePrefixWord;
+        if(data.titleSuffixWord) document.getElementById('p-title-suffix').value = data.titleSuffixWord;
+        combineTitles();
+
         if(data.profile) {
             document.getElementById('p-name').value = data.profile.name || "";
             const selectElement = document.getElementById('p-faction');
@@ -1088,7 +1166,6 @@
             document.getElementById('p-level').value = data.profile.level || 1;
             document.getElementById('p-age').value = data.profile.age || ""; document.getElementById('p-sex').value = data.profile.sex || "";
             document.getElementById('p-height').value = data.profile.height || ""; document.getElementById('p-weight').value = data.profile.weight || "";
-            document.getElementById('p-title').value = data.profile.title || ""; document.getElementById('p-earned-title').value = data.profile.earnedTitle || "";
         }
 
         if(data.traitsSlotsArray) {
