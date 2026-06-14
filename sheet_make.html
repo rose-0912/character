@@ -198,19 +198,82 @@
         .btn-delete-char:hover { background-color: #ff4444; color: #fff; }
         .no-data-msg { font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 15px 0; }
 
+        /* ===============================
+           常時右下固定の目次メニュー
+        ================================ */
+        .floating-menu {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 2147483647;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            pointer-events: auto;
+        }
+
+        .menu-trigger-btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #008ba3 100%);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,188,212,0.4);
+            transition: transform 0.2s;
+        }
+
+        .menu-trigger-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .menu-content-panel {
+            position: absolute;
+            right: 0;
+            bottom: 70px;
+            width: 260px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background-color: #0e1117;
+            border: 1px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 10px;
+            display: none;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.9);
+            animation: menuFade 0.2s ease-out forwards;
+        }
+
+        @keyframes menuFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-content-panel .menu-section-title {
+            font-size: 0.75rem; color: var(--accent-orange); font-weight: bold;
+            padding: 4px 8px; border-bottom: 1px solid #2d3748; margin-top: 6px;
+        }
+        .menu-content-panel a {
+            display: block; color: #cbd5e1; padding: 6px 12px; text-decoration: none;
+            font-size: 0.85rem; border-radius: 4px; transition: all 0.15s; cursor: pointer;
+        }
+        .menu-content-panel a:hover {
+            background-color: #1e293b; color: var(--accent-blue); padding-left: 16px;
+        }
+
         @media (max-width: 480px) {
             .form-grid { grid-template-columns: 1fr; }
             .form-group.span-2 { grid-column: span 1; }
             .btn-action-row { grid-template-columns: 1fr; }
+            .floating-menu { bottom: 15px !important; right: 15px !important; }
         }
     </style>
 </head>
 <body onpageshow="if (event.persisted) window.location.reload();">
-
-<header>
-    <div class="main-title">CRYING CITY // 端末機構</div>
-    <div class="sub-title">市民データ・キャラクタープロトコル生成</div>
-</header>
 
 <div class="container" id="sheet-app">
 
@@ -244,7 +307,7 @@
         </div>
 
         <div class="share-url-box" id="share-box">
-            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL（管理名ジャンプ方式）</label>
+            <label style="color: var(--accent-blue);">▼ 外部公開用共有URL</label>
             <div class="share-url-text" id="share-url"></div>
         </div>
     </div>
@@ -287,7 +350,7 @@
                 <button type="button" class="btn-add-card" onclick="addNewCareerField()">＋ 新しい前職の経歴を追加</button>
             </div>
 
-            <!-- 【全面刷新】あつ森風カスタム二部構成称号システム -->
+            <!-- あつ森風カスタム二部構成称号システム（初期状態空欄） -->
             <div class="form-group span-2" style="border-top:1px dashed var(--border-color); padding-top:10px; margin-top:10px;">
                 <label style="color: var(--accent-purple);">🏅 現在のカスタム結合称号プレビュー</label>
                 <div class="title-badge-box" id="calc-full-title">【未設定】</div>
@@ -322,10 +385,6 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>キャラクターレベル (1〜90)</label>
-                <input type="number" id="p-level" value="1" min="1" max="90" oninput="recalculate()">
-            </div>
             <div class="form-group">
                 <label>年齢</label><input type="text" id="p-age" placeholder="23">
             </div>
@@ -423,7 +482,15 @@
         <button type="button" class="btn-add-card" onclick="addNewWeaponField()">＋ 新しい武器を追加装備する</button>
     </div>
 
-    <!-- ==================== 7. バックストーリー ==================== -->
+    <!-- ==================== 7. 【新設】通過シナリオ一覧セクション ==================== -->
+    <div class="section-panel" id="sec-scenarios">
+        <h2>〇 通過シナリオ記録・履歴管理（動的追加削除対応）</h2>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">これまで通過したシナリオ名、獲得経験P、エンド内容、および個別の備考テキストを記録できます。</p>
+        <div id="scenarios-list-area"></div>
+        <button type="button" class="btn-add-card" style="background-color:#1c2533; color:var(--accent-blue); border-color:#2a394a;" onclick="addNewScenarioField()">＋ 通過シナリオの記録を追加する</button>
+    </div>
+
+    <!-- ==================== 8. バックストーリー ==================== -->
     <div class="section-panel" id="sec-story">
         <h2>〇 キャラクターバックストーリー</h2>
         <details class="story-accordion">
@@ -441,12 +508,29 @@
         </details>
     </div>
 
-    <!-- ==================== 8. 保存キャラクター一覧 ==================== -->
+    <!-- ==================== 9. 保存キャラクター一覧 ==================== -->
     <div class="section-panel closet-box" id="sec-closet">
         <h2>📂 ブラウザ保存済みキャラクター一覧</h2>
         <div class="closet-list" id="closet-list-area"></div>
     </div>
 
+</div> <!-- sheet-app終了 -->
+
+<!-- 常時最前面右下固定配置型 ページ内目次パネル -->
+<div class="floating-menu">
+    <button type="button" class="menu-trigger-btn" onclick="toggleFloatingMenu()">☰</button>
+    <div class="menu-content-panel" id="floating-menu-panel">
+        <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
+        <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
+        <a onclick="scrollToSection('sec-profile">👤 2. プロフィール ＆ 経歴</a>
+        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
+        <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
+        <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
+        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
+        <a onclick="scrollToSection('sec-scenarios')">🎬 7. 通過シナリオ履歴</a>
+        <a onclick="scrollToSection('sec-story')">📖 8. キャラクターバックストーリー</a>
+        <a onclick="scrollToSection('sec-closet')">📂 9. 端末内セーブデータ一覧</a>
+    </div>
 </div>
 
 <!-- ==================== コアエンジン・スクリプト ==================== -->
@@ -494,40 +578,49 @@
     let weaponIndexCounter = 0;
     let customSkillCounter = 0;
     let careerIndexCounter = 0;
+    let scenarioIndexCounter = 0; // シナリオカウンター
     const storagePrefix = "crying_city_sheet_";
 
-    // あつ森風称号用の初期フレーズマスターコレクション
-    let titlePrefixCollection = ["熱い", "漆黒の", "鈍色の", "真紅の", "名無しの", "彷徨う", "電子の", "呪われし"];
-    let titleSuffixCollection = ["拳", "死神", "会社員", "ブレード", "市民", "サバイバー", "亡霊", "人形"];
+    let titlePrefixCollection = [""];
+    let titleSuffixCollection = [""];
 
     window.onload = function() {
         initBaseStatsRows();
         initSkillsSlides();
         initSpecialSlots();
         addNewWeaponField();
-        renderTitleCollections(); // 称号コレクション展開
+        renderTitleCollections(); 
         recalculate();
         refreshClosetList();
         parseUrlOrLoadLocal();
         updateSkillSlideVisibility();
     };
 
-    // あつ森風称号コレクション描画
+    function toggleFloatingMenu() {
+        const panel = document.getElementById('floating-menu-panel');
+        panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function scrollToSection(id) {
+        const target = document.getElementById(id);
+        if(target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('floating-menu-panel').style.display = 'none';
+        }
+    }
+
     function renderTitleCollections() {
         const preSel = document.getElementById('p-title-prefix');
         const sufSel = document.getElementById('p-title-suffix');
-        
         const currentPre = preSel.value;
         const currentSuf = sufSel.value;
 
-        preSel.innerHTML = "";
-        sufSel.innerHTML = "";
-
+        preSel.innerHTML = ""; sufSel.innerHTML = "";
         titlePrefixCollection.forEach(w => {
-            let opt = document.createElement('option'); opt.value = w; opt.innerText = w; preSel.appendChild(opt);
+            let opt = document.createElement('option'); opt.value = w; opt.innerText = w ? w : "-- 未選択 --"; preSel.appendChild(opt);
         });
         titleSuffixCollection.forEach(w => {
-            let opt = document.createElement('option'); opt.value = w; opt.innerText = w; sufSel.appendChild(opt);
+            let opt = document.createElement('option'); opt.value = w; opt.innerText = w ? w : "-- 未選択 --"; sufSel.appendChild(opt);
         });
 
         if(currentPre && titlePrefixCollection.includes(currentPre)) preSel.value = currentPre;
@@ -540,17 +633,13 @@
             const input = document.getElementById('input-new-prefix');
             const val = input.value.trim();
             if(val && !titlePrefixCollection.includes(val)) {
-                titlePrefixCollection.push(val);
-                document.getElementById('p-title-prefix').value = val;
-                input.value = "";
+                titlePrefixCollection.push(val); document.getElementById('p-title-prefix').value = val; input.value = "";
             }
         } else {
             const input = document.getElementById('input-new-suffix');
             const val = input.value.trim();
             if(val && !titleSuffixCollection.includes(val)) {
-                titleSuffixCollection.push(val);
-                document.getElementById('p-title-suffix').value = val;
-                input.value = "";
+                titleSuffixCollection.push(val); document.getElementById('p-title-suffix').value = val; input.value = "";
             }
         }
         renderTitleCollections();
@@ -559,10 +648,9 @@
     function combineTitles() {
         const pre = document.getElementById('p-title-prefix').value || "";
         const suf = document.getElementById('p-title-suffix').value || "";
-        document.getElementById('calc-full-title').innerText = pre && suf ? `【${pre} ${suf}】` : "【未設定】";
+        document.getElementById('calc-full-title').innerText = pre || suf ? `【${pre}${pre && suf ? ' ':''}${suf}】` : "【未設定】";
     }
 
-    // 技術能力スライド（◀ ▶ ループ制御対応型）
     function changeSkillSlide(direction) {
         currentSkillSlideIdx += direction;
         if(currentSkillSlideIdx < 0) currentSkillSlideIdx = 4; 
@@ -573,36 +661,27 @@
     function updateSkillSlideVisibility() {
         const track = document.getElementById('skills-slides-track');
         const slides = track.querySelectorAll('.skill-carousel-slide');
-        
         slides.forEach((slide, idx) => {
             if(idx === currentSkillSlideIdx) slide.classList.add('active');
             else slide.classList.remove('active');
         });
-        
         document.getElementById('carousel-skill-title').innerText = skillCategories[currentSkillSlideIdx].title;
-
         const prevIdx = (currentSkillSlideIdx - 1 < 0) ? 4 : currentSkillSlideIdx - 1;
         const nextIdx = (currentSkillSlideIdx + 1 > 4) ? 0 : currentSkillSlideIdx + 1;
-        const prevName = skillCategories[prevIdx].title.replace("技術能力：[", "").replace("]", "");
-        const nextName = skillCategories[nextIdx].title.replace("技術能力：[", "").replace("]", "");
-
-        document.getElementById('btn-prev-skill').innerHTML = `◀ 前：${prevName}`;
-        document.getElementById('btn-next-skill').innerHTML = `次：${nextName} ▶`;
+        document.getElementById('btn-prev-skill').innerHTML = `◀ 前：${skillCategories[prevIdx].title.replace("技術能力：[", "").replace("]", "")}`;
+        document.getElementById('btn-next-skill').innerHTML = `次：${skillCategories[nextIdx].title.replace("技術能力：[", "").replace("]", "")} ▶`;
     }
 
     function initBaseStatsRows() {
         const container = document.getElementById('base-stats-rows-container');
         container.innerHTML = "";
         const mapping = {
-            body: ["身体", "最大HPに影響（Lv×6）"],
-            str: ["筋力", "追加ダメージに影響（Lv7毎に+1d6加算）"],
-            int: ["知能", "技能ポイントに直結（Lv×3 ＋ Lv10毎に+10pt）"],
-            spd: ["速度", "行動順・最大行動回数に影響（Lv20毎行動回数+1）"],
+            body: ["身体", "最大HPに影響（Lv×6）"], str: ["筋力", "追加ダメージに影響（Lv7毎に+1d6加算）"],
+            int: ["知能", "技能ポイントに直結（Lv×3 ＋ Lv10毎に+10pt）"], spd: ["速度", "行動順・最大行動回数に影響（Lv20毎行動回数+1）"],
             men: ["精神", "コスト最大値（Lv4毎に+1）、コスト回復（Lv10毎に+1）"]
         };
         for(let key in mapping) {
-            const div = document.createElement('div');
-            div.className = 'stat-row';
+            const div = document.createElement('div'); div.className = 'stat-row';
             div.innerHTML = `
                 <div><span class="stat-name">${mapping[key][0]}</span><div class="stat-desc">${mapping[key][1]}</div></div>
                 <div class="stat-control">
@@ -616,32 +695,17 @@
     }
 
     function initSkillsSlides() {
-        const track = document.getElementById('skills-slides-track');
-        track.innerHTML = "";
-        
+        const track = document.getElementById('skills-slides-track'); track.innerHTML = "";
         skillCategories.forEach((cat, catIdx) => {
-            const slideDiv = document.createElement('div');
-            slideDiv.className = `skill-carousel-slide ${catIdx === 0 ? 'active' : ''}`;
-            
+            const slideDiv = document.createElement('div'); slideDiv.className = `skill-carousel-slide ${catIdx === 0 ? 'active' : ''}`;
             cat.range.forEach(index => {
-                const sk = cryingCitySkills[index];
-                skillStats[sk] = 1;
-                skillModifiers[sk] = 0;
-                
+                const sk = cryingCitySkills[index]; skillStats[sk] = 1; skillModifiers[sk] = 0;
                 const isCombat = combatSkillIndices.includes(index);
-                const nameInputHtml = isCombat ? 
-                    `<input type="text" class="combat-alias-input" id="skname-${index}" placeholder="オリジナル名称上書き可" style="font-size:0.75rem; padding:4px; margin-top:3px; border-color:#3a4b6e; height:26px;">` : '';
-                
-                const div = document.createElement('div');
-                div.className = 'stat-row';
+                const nameInputHtml = isCombat ? `<input type="text" class="combat-alias-input" id="skname-${index}" placeholder="オリジナル名称上書き可" style="font-size:0.75rem; padding:4px; margin-top:3px; border-color:#3a4b6e; height:26px;">` : '';
+                const div = document.createElement('div'); div.className = 'stat-row';
                 div.innerHTML = `
-                    <div style="width: 45%; display:flex; flex-direction:column;">
-                        <span class="stat-name" style="font-size:0.85rem;">${sk}</span>
-                        ${nameInputHtml}
-                    </div>
-                    <div style="width: 20%; text-align: center;">
-                        <input type="number" id="skmod-${index}" value="0" style="width:50px; text-align:center; border-color:var(--accent-purple);" oninput="updateModifier('${sk}', ${index})">
-                    </div>
+                    <div style="width: 45%; display:flex; flex-direction:column;"><span class="stat-name" style="font-size:0.85rem;">${sk}</span>${nameInputHtml}</div>
+                    <div style="width: 20%; text-align: center;"><input type="number" id="skmod-${index}" value="0" style="width:50px; text-align:center; border-color:var(--accent-purple);" oninput="updateModifier('${sk}', ${index})"></div>
                     <div class="stat-control" style="width: 35%; justify-content: flex-end;">
                         <button type="button" class="btn-calc" onclick="adjustSkill('${sk}', ${index}, -1)">-</button>
                         <input type="number" id="sk-${index}" value="1" style="width:42px; text-align:center;" readonly>
@@ -655,20 +719,13 @@
     }
 
     function initSpecialSlots() {
-        const container = document.getElementById('special-slots-container');
-        container.innerHTML = "";
+        const container = document.getElementById('special-slots-container'); container.innerHTML = "";
         for (let i = 1; i <= 4; i++) {
-            const div = document.createElement('div');
-            div.className = 'form-group span-2';
-            div.style = "border-bottom: 1px dashed #232d3f; padding-bottom:12px; margin-bottom:5px;";
+            const div = document.createElement('div'); div.className = 'form-group span-2'; div.style = "border-bottom: 1px dashed #232d3f; padding-bottom:12px; margin-bottom:5px;";
             div.innerHTML = `
                 <label style="color:var(--accent-blue);">▼ 特殊能力枠 スロット ${i}</label>
-                <select id="special-trait-select-${i}" onchange="onTraitSelected(${i})">
-                    <option value="">-- 未設定（所属・前職アビリティから選択） --</option>
-                </select>
-                <div id="special-trait-free-area-${i}" style="display:none; margin-top:5px;">
-                    <textarea id="special-trait-free-desc-${i}" rows="2" placeholder="自由記入能力の具体的効果テキストをここに記載してください" oninput="recalculate()"></textarea>
-                </div>
+                <select id="special-trait-select-${i}" onchange="onTraitSelected(${i})"><option value="">-- 未設定（所属・前職アビリティから選択） --</option></select>
+                <div id="special-trait-free-area-${i}" style="display:none; margin-top:5px;"><textarea id="special-trait-free-desc-${i}" rows="2" placeholder="自由記入能力の効果テキスト" oninput="recalculate()"></textarea></div>
             `;
             container.appendChild(div);
         }
@@ -678,38 +735,20 @@
     function addNewCareerField(savedValue = "", savedFreeValue = "") {
         careerIndexCounter++;
         const area = document.getElementById('career-history-area');
-        const div = document.createElement('div');
-        div.className = 'dynamic-card career-card';
-        div.id = `career-card-id-${careerIndexCounter}`;
+        const div = document.createElement('div'); div.className = 'dynamic-card career-card'; div.id = `career-card-id-${careerIndexCounter}`;
         div.innerHTML = `
             <button type="button" class="btn-delete-card" onclick="deleteCareerField(${careerIndexCounter})">削除</button>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>過去に在籍していた会社・組織名</label>
+                    <label>過去の所属組織名</label>
                     <select class="career-faction-select" onchange="handleCareerFactionChange(${careerIndexCounter})">
-                        <option value="赤色戦派">赤色戦派 [大規模]</option>
-                        <option value="ディフィポリディ">ディフィポリディ [大規模]</option>
-                        <option value="ルナード・ルーンズ">ルナード・ルーンズ [大規模]</option>
-                        <option value="メローメディック">メローメディック [大規模]</option>
-                        <option value="ライブラビランス">ライブラビランス [大規模]</option>
-                        <option value="センス">センス [中規模]</option>
-                        <option value="決闘連盟">決闘連盟 [中規模]</option>
-                        <option value="無所属">無所属 [特殊枠]</option>
-                        <option value="一般労働者">一般労働者 [一般枠]</option>
-                        <option value="電務工房">電務工房 [DLC]</option>
-                        <option value="刻">刻（とき） [DLC]</option>
-                        <option value="Mysticism">Mysticism [DLC]</option>
-                        <option value="その他">その他（自由記入）</option>
+                        <option value="赤色戦派">赤色戦派</option><option value="ディフィポリディ">ディフィポリディ</option><option value="ルナード・ルーンズ">ルナード・ルーンズ</option><option value="メローメディック">メローメディック</option><option value="ライブラビランス">ライブラビランス</option><option value="センス">センス</option><option value="決闘連盟">決闘連盟</option><option value="無所属">無所属</option><option value="一般労働者">一般労働者</option><option value="電務工房">電務工房</option><option value="刻">刻</option><option value="Mysticism">Mysticism</option><option value="その他">その他（自由記入）</option>
                     </select>
                 </div>
-                <div class="form-group span-2" id="career-free-group-${careerIndexCounter}" style="display:none;">
-                    <label style="color: var(--accent-orange);">▼ 自由記入 前職所属組織名</label>
-                    <input type="text" class="career-faction-free-input" value="${savedFreeValue}" placeholder="オリジナルの会社名や組織名を入力してください" oninput="updateFactionAndTraits()">
-                </div>
+                <div class="form-group span-2" id="career-free-group-${careerIndexCounter}" style="display:none;"><label style="color: var(--accent-orange);">▼ 自由記入 前職所属名</label><input type="text" class="career-faction-free-input" value="${savedFreeValue}" oninput="updateFactionAndTraits()"></div>
             </div>
         `;
         area.appendChild(div);
-        
         const sel = div.querySelector('.career-faction-select');
         if (savedValue) sel.value = savedValue;
         handleCareerFactionChange(careerIndexCounter);
@@ -718,21 +757,14 @@
     function handleCareerFactionChange(id) {
         const card = document.getElementById(`career-card-id-${id}`);
         const selVal = card.querySelector('.career-faction-select').value;
-        const freeGroup = document.getElementById(`career-free-group-${id}`);
-        if(selVal === "その他") freeGroup.style.display = "block";
-        else freeGroup.style.display = "none";
+        document.getElementById(`career-free-group-${id}`).style.display = (selVal === "その他") ? "block" : "none";
         updateFactionAndTraits();
     }
 
-    function deleteCareerField(id) {
-        document.getElementById(`career-card-id-${id}`).remove();
-        updateFactionAndTraits();
-    }
+    function deleteCareerField(id) { document.getElementById(`career-card-id-${id}`).remove(); updateFactionAndTraits(); }
 
     function updateFactionAndTraits() {
-        const currentFaction = document.getElementById('p-faction').value;
-        if (currentFaction === "その他") document.getElementById('faction-free-group').style.display = "block";
-        else document.getElementById('faction-free-group').style.display = "none";
+        document.getElementById('faction-free-group').style.display = (document.getElementById('p-faction').value === "その他") ? "block" : "none";
         updateTraitDropdownOptions();
     }
 
@@ -740,160 +772,131 @@
         let availableTraits = [];
         let currentFaction = document.getElementById('p-faction').value;
         if (currentFaction === "その他") currentFaction = document.getElementById('p-faction-free').value || "その他";
+        if (companyTraitsData[currentFaction]) { companyTraitsData[currentFaction].forEach(t => availableTraits.push({ traitName: t, source: `現職:${currentFaction}` })); }
         
-        if (companyTraitsData[currentFaction]) {
-            companyTraitsData[currentFaction].forEach(t => availableTraits.push({ traitName: t, source: `現職:${currentFaction}` }));
-        } else if (currentFaction) {
-            availableTraits.push({ traitName: `自由記入アビリティ（${currentFaction}）`, source: "現職(カスタム)" });
-        }
-
         document.querySelectorAll('.career-card').forEach(card => {
             let fac = card.querySelector('.career-faction-select').value;
-            if(fac === "その他") fac = card.querySelector('.career-faction-free-input').value || "その他";
-            if(fac) {
-                if (companyTraitsData[fac]) {
-                    companyTraitsData[fac].forEach(t => availableTraits.push({ traitName: t, source: `前職:${fac}` }));
-                } else {
-                    availableTraits.push({ traitName: `自由記入アビリティ（${fac}）`, source: "前職(カスタム)" });
-                }
-            }
+            if(fac === "other" || fac === "その他") fac = card.querySelector('.career-faction-free-input').value || "その他";
+            if(fac && companyTraitsData[fac]) { companyTraitsData[fac].forEach(t => availableTraits.push({ traitName: t, source: `前職:${fac}` })); }
         });
 
         for (let i = 1; i <= 4; i++) {
-            const sel = document.getElementById(`special-trait-select-${i}`);
-            const previousValue = sel.value;
+            const sel = document.getElementById(`special-trait-select-${i}`); const prev = sel.value;
             sel.innerHTML = `<option value="">-- 未設定（所属・前職アビリティから選択） --</option>`;
-            
             availableTraits.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.traitName;
-                opt.innerText = `${item.traitName} [${item.source}]`;
-                sel.appendChild(opt);
+                const opt = document.createElement('option'); opt.value = item.traitName; opt.innerText = `${item.traitName} [${item.source}]`; sel.appendChild(opt);
             });
-            
-            const optFree = document.createElement('option');
-            optFree.value = "その他自由記入";
-            optFree.innerText = "★その他（完全独自の特殊効果を自由記入）";
-            sel.appendChild(optFree);
-
-            sel.value = previousValue;
-            if (sel.selectedIndex === -1) sel.value = ""; 
+            const optFree = document.createElement('option'); optFree.value = "その他自由記入"; optFree.innerText = "★その他（完全独自記入効果）"; sel.appendChild(optFree);
+            sel.value = prev; if (sel.selectedIndex === -1) sel.value = "";
             onTraitSelected(i);
         }
     }
 
     function onTraitSelected(slotId) {
-        const sel = document.getElementById(`special-trait-select-${slotId}`);
-        const freeArea = document.getElementById(`special-trait-free-area-${slotId}`);
-        if (sel.value === "その他自由記入" || sel.value.includes("自由記入アビリティ")) {
-            freeArea.style.display = "block";
-        } else {
-            freeArea.style.display = "none";
-        }
+        document.getElementById(`special-trait-free-area-${slotId}`).style.display = (document.getElementById(`special-trait-select-${slotId}`).value === "その他自由記入") ? "block" : "none";
         executeTraitAutoCalculations();
     }
 
     function executeTraitAutoCalculations() {
         traitAutoBonuses = { body: 0, str: 0, int: 0, spd: 0, men: 0, hp: 0, sp: 0 };
-        
         for (let i = 1; i <= 4; i++) {
-            const val = document.getElementById(`special-trait-select-${i}`).value;
-            if(!val) continue;
-
+            const val = document.getElementById(`special-trait-select-${i}`).value; if(!val) continue;
             if (val === "武の才能" || val === "果敢な挑戦" || val.includes("武の才能")) traitAutoBonuses.str += 1;
             if (val === "守護者" || val === "死線越え" || val.includes("守護者")) traitAutoBonuses.body += 1;
             if (val === "迅速な護衛" || val === "感覚同調" || val.includes("迅速な護衛")) traitAutoBonuses.spd += 1;
             if (val === "頭脳明晰" || val === "魔導回路" || val.includes("頭脳明晰")) traitAutoBonuses.int += 1;
             if (val === "精神集中" || val === "呪術知識" || val.includes("精神集中")) traitAutoBonuses.men += 1;
-            if (val === "部屋籠り" || val.includes("部屋籠り")) {
-                traitAutoBonuses.int += 2; traitAutoBonuses.men += 2;
-                traitAutoBonuses.body -= 1; traitAutoBonuses.str -= 1; traitAutoBonuses.spd -= 1;
-            }
         }
         recalculate();
     }
 
+    // --- 【追加】動的通過シナリオ一覧の生成ロジック群 ---
+    function addNewScenarioField(name="", exp="", end="", note="") {
+        scenarioIndexCounter++;
+        const container = document.getElementById('scenarios-list-area');
+        const div = document.createElement('div');
+        div.className = 'dynamic-card scenario-item-card';
+        div.id = `scenario-id-${scenarioIndexCounter}`;
+        div.innerHTML = `
+            <button type="button" class="btn-delete-card" onclick="deleteScenarioField(${scenarioIndexCounter})">削除</button>
+            <div class="form-grid">
+                <div class="form-group"><label>シナリオ名</label><input type="text" class="sc-name" value="${name}" placeholder="例：VOID：01"></div>
+                <div class="form-group"><label>獲得経験ポイント数</label><input type="text" class="sc-exp" value="${exp}" placeholder="例：50pt"></div>
+                <div class="form-group span-2"><label>到達エンド</label><input type="text" class="sc-end" value="${end}" placeholder="例：END A（生存）"></div>
+                <div class="form-group span-2"><label>シナリオ備考・獲得アイテム・報酬等</label><textarea class="sc-note" rows="2" placeholder="例：前半フレーズ「覚醒せし」を獲得、特殊アイテム入手など">${note}</textarea></div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+    function deleteScenarioField(id) { document.getElementById(`scenario-id-${id}`).remove(); }
+
     function addNewCustomSkillField(savedName = "", savedLv = 1, savedMod = 0) {
         customSkillCounter++;
-        const area = document.getElementById('custom-skills-area');
-        const div = document.createElement('div');
-        div.className = 'custom-skill-card';
-        div.id = `custom-skill-id-${customSkillCounter}`;
-        
+        const area = document.getElementById('custom-skills-area'); const div = document.createElement('div');
+        div.className = 'custom-skill-card'; div.id = `custom-skill-id-${customSkillCounter}`;
         div.innerHTML = `
             <button type="button" class="btn-delete-element" onclick="deleteCustomSkillField(${customSkillCounter})">削除</button>
             <div class="form-grid" style="gap:10px; align-items: center;">
-                <div class="form-group">
-                    <label>別枠カスタム技能の名称変更</label>
-                    <input type="text" class="csk-name" value="${savedName}" placeholder="例：近接攻撃：高周波ブレード" oninput="recalculate()">
-                </div>
+                <div class="form-group"><label>別枠カスタム技能名称</label><input type="text" class="csk-name" value="${savedName}" oninput="recalculate()"></div>
                 <div class="form-group">
                     <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:15px;">
-                        <div class="form-group" style="align-items:center;">
-                            <label>補正</label>
-                            <input type="number" class="csk-mod" value="${savedMod}" style="width:48px; text-align:center; border-color:var(--accent-purple);" oninput="recalculate()">
-                        </div>
-                        <div class="form-group" style="align-items:center;">
-                            <label>Lv</label>
-                            <div style="display:flex; gap:4px;">
-                                <button type="button" class="btn-calc" onclick="adjustCustomSkill(${customSkillCounter}, -1)">-</button>
-                                <input type="number" class="csk-lv" value="${savedLv}" style="width:42px; text-align:center;" readonly>
-                                <button type="button" class="btn-calc" id="btn-csk-plus-${customSkillCounter}" onclick="adjustCustomSkill(${customSkillCounter}, 1)">+</button>
-                            </div>
+                        <div class="form-group" style="align-items:center;"><label>補正</label><input type="number" class="csk-mod" value="${savedMod}" style="width:48px; text-align:center; border-color:var(--accent-purple);" oninput="recalculate()"></div>
+                        <div class="form-group" style="align-items:center;"><label>Lv</label>
+                            <div style="display:flex; gap:4px;"><button type="button" class="btn-calc" onclick="adjustCustomSkill(${customSkillCounter}, -1)">-</button><input type="number" class="csk-lv" value="${savedLv}" style="width:42px; text-align:center;" readonly><button type="button" class="btn-calc" id="btn-csk-plus-${customSkillCounter}" onclick="adjustCustomSkill(${customSkillCounter}, 1)">+</button></div>
                         </div>
                     </div>
                 </div>
             </div>
         `;
-        area.appendChild(div);
-        recalculate();
+        area.appendChild(div); recalculate();
     }
 
-    function deleteCustomSkillField(id) {
-        document.getElementById(`custom-skill-id-${id}`).remove();
-        recalculate();
-    }
+    function deleteCustomSkillField(id) { document.getElementById(`custom-skill-id-${id}`).remove(); recalculate(); }
 
     function adjustCustomSkill(id, val) {
-        const card = document.getElementById(`custom-skill-id-${id}`);
-        const lvInput = card.querySelector('.csk-lv');
-        let current = parseInt(lvInput.value) || 1;
+        const card = document.getElementById(`custom-skill-id-${id}`); const lvInput = card.querySelector('.csk-lv'); let current = parseInt(lvInput.value) || 1;
         if (current + val < 1 || current + val > 90) return;
-
-        if (val > 0 && (parseInt(document.getElementById('calc-rem-sp').value) || 0) < 1) {
-            alert("特技ポイントが不足しています。"); return;
-        }
-        lvInput.value = current + val;
-        recalculate();
+        if (val > 0 && (parseInt(document.getElementById('calc-rem-sp').value) || 0) < 1) { alert("特技ポイントが不足しています。"); return; }
+        lvInput.value = current + val; recalculate();
     }
 
     function addNewWeaponField() {
-        weaponIndexCounter++;
-        const targetContainer = document.getElementById('weapons-list-area');
-        const card = document.createElement('div');
-        card.className = 'dynamic-card';
-        card.id = `weapon-card-id-${weaponIndexCounter}`;
+        weaponIndexCounter++; const targetContainer = document.getElementById('weapons-list-area'); const card = document.createElement('div');
+        card.className = 'dynamic-card'; card.id = `weapon-card-id-${weaponIndexCounter}`;
         card.innerHTML = `
             <button type="button" class="btn-delete-card" onclick="deleteWeaponField(${weaponIndexCounter})">削除</button>
             <div class="form-grid">
-                <div class="form-group span-2"><label>武器名 ＆ 要求値ステータス</label><input type="text" class="wp-name" placeholder="例：シルバーライト製の刀"></div>
-                <div class="form-group"><label>兵装Lv</label><input type="number" class="wp-lv" value="1" min="1" max="5"></div>
-                <div class="form-group"><label>スキル1</label><input type="text" class="wp-sk1" placeholder="追加効果やダメージロール"></div>
+                <div class="form-group span-2"><label>武器名 ＆ 要求値ステータス</label><input type="text" class="wp-name" placeholder="例：ライト製の刀"></div>
+                <div class="form-group"><label>兵装Lv (1〜5)</label><input type="number" class="wp-lv" value="1" min="1" max="5"></div>
+                <div class="form-group"><label>スキル1</label><input type="text" class="wp-sk1" placeholder="効果テキスト"></div>
                 <div class="form-group"><label>総弾数</label><input type="number" class="wp-bullet-total" value="0"></div>
-                <div class="form-group"><label>装弾</label><input type="number" class="wp-bullet-mag" value="0"></div>
+                <div class="form-group"><label>装弾数</label><input type="number" class="wp-bullet-mag" value="0"></div>
                 <div class="form-group span-2"><label>ランダム枠</label><textarea class="wp-sk-multi" rows="2"></textarea></div>
             </div>
         `;
         targetContainer.appendChild(card);
     }
 
-    function deleteWeaponField(id) {
-        document.getElementById(`weapon-card-id-${id}`).remove();
+    function deleteWeaponField(id) { document.getElementById(`weapon-card-id-${id}`).remove(); }
+
+    function adjustBase(key, val) {
+        let current = baseStats[key]; let charLevel = parseInt(document.getElementById('p-level').value) || 1;
+        if (current + val < 1 || (val > 0 && current + val > charLevel)) return;
+        if (val > 0 && (parseFloat(document.getElementById('calc-rem-base-pt').value) || 0) < 1) { alert("基本能力ポイントが不足しています。"); return; }
+        baseStats[key] += val; document.getElementById(`base-${key}`).value = baseStats[key]; recalculate();
+    }
+
+    function updateModifier(skName, index) { skillModifiers[skName] = parseInt(document.getElementById(`skmod-${index}`).value) || 0; }
+
+    // 技術能力レベル増減処理
+    function adjustSkill(skName, index, val) {
+        let current = skillStats[skName]; if (current + val < 1 || current + val > 90) return;
+        if (val > 0 && (parseInt(document.getElementById('calc-rem-sp').value) || 0) < 1) { alert("特技ポイントが不足しています。"); return; }
+        skillStats[skName] += val; document.getElementById(`sk-${index}`).value = skillStats[skName]; recalculate();
     }
 
     function recalculate() {
         let charLevel = parseInt(document.getElementById('p-level').value) || 1;
-        
         let rankText = "一般労働階級";
         if (charLevel >= 2 && charLevel <= 4) rankText = "ランクG(8級)";
         else if (charLevel >= 5 && charLevel <= 10) rankText = "ランク F(7級)";
@@ -929,19 +932,14 @@
         let basicSP = (finalInt * 3) + (Math.floor(finalInt / 10) * 10);
         document.getElementById('calc-sp').value = `${basicSP} pt`;
         
-        let totalUsedSP = 0;
-        cryingCitySkills.forEach(sk => { totalUsedSP += (skillStats[sk] - 1); });
-        
-        document.querySelectorAll('.custom-skill-card').forEach(card => {
-            totalUsedSP += ((parseInt(card.querySelector('.csk-lv').value) || 1) - 1);
-        });
+        let totalUsedSP = 0; cryingCitySkills.forEach(sk => { totalUsedSP += (skillStats[sk] - 1); });
+        document.querySelectorAll('.custom-skill-card').forEach(card => { totalUsedSP += ((parseInt(card.querySelector('.csk-lv').value) || 1) - 1); });
 
         let remainingSP = (basicSP + (parseInt(document.getElementById('bonus-sp').value) || 0)) - totalUsedSP;
         document.getElementById('calc-rem-sp').value = remainingSP + " pt";
 
         cryingCitySkills.forEach((sk, index) => {
-            let plusBtn = document.getElementById(`btn-plus-${index}`);
-            if (plusBtn) plusBtn.disabled = (remainingSP < 1);
+            let plusBtn = document.getElementById(`btn-plus-${index}`); if (plusBtn) plusBtn.disabled = (remainingSP < 1);
         });
 
         document.getElementById('calc-actions').value = `${1 + Math.floor(finalSpd / 20)} 回`;
@@ -950,29 +948,18 @@
     }
 
     function refreshClosetList() {
-        const listArea = document.getElementById('closet-list-area');
-        listArea.innerHTML = "";
-        let hasData = false;
+        const listArea = document.getElementById('closet-list-area'); listArea.innerHTML = ""; let hasData = false;
         for (let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             if (key.startsWith(storagePrefix)) {
-                hasData = true;
-                let slotName = key.replace(storagePrefix, "");
-                let rawData = localStorage.getItem(key);
+                hasData = true; let slotName = key.replace(storagePrefix, ""); let rawData = localStorage.getItem(key);
                 let charName = "未設定", faction = "無所属";
                 try {
-                    let parsed = JSON.parse(rawData);
-                    charName = parsed.profile?.name || "名無しの市民";
-                    faction = parsed.profile?.faction || "一般労働者";
+                    let parsed = JSON.parse(rawData); charName = parsed.profile?.name || "名無しの市民"; faction = parsed.profile?.faction || "一般労働者";
                 } catch(e){}
-
-                const item = document.createElement('div');
-                item.className = 'closet-item';
+                const item = document.createElement('div'); item.className = 'closet-item';
                 item.innerHTML = `
-                    <div class="closet-info" onclick="loadFromCloset('${slotName}')">
-                        <span class="closet-name">👤 ${charName} <span style="font-size:0.8rem; font-weight:normal; color:var(--accent-blue);">[${slotName}]</span></span>
-                        <span class="closet-meta">所属: ${faction}</span>
-                    </div>
+                    <div class="closet-info" onclick="loadFromCloset('${slotName}')"><span class="closet-name">👤 ${charName} <span style="font-size:0.8rem; font-weight:normal; color:var(--accent-blue);">[${slotName}]</span></span><span class="closet-meta">所属: ${faction}</span></div>
                     <button class="btn-delete-char" onclick="deleteFromCloset('${slotName}')">削除</button>
                 `;
                 listArea.appendChild(item);
@@ -983,11 +970,11 @@
 
     function saveToLocal() {
         localStorage.setItem(storagePrefix + (document.getElementById('slot-name').value.trim() || "デフォルト"), JSON.stringify(compileData()));
-        alert("市民データを端末へ記憶しました。"); refreshClosetList();
+        alert("市民データを端末機関にセーブしました。"); refreshClosetList();
     }
 
     function deleteFromCloset(slotName) {
-        if (confirm(`【${slotName}】を削除しますか？`)) { localStorage.removeItem(storagePrefix + slotName); refreshClosetList(); }
+        if (confirm(`本当に【${slotName}】を削除しますか？`)) { localStorage.removeItem(storagePrefix + slotName); refreshClosetList(); }
     }
 
     function compileData() {
@@ -996,60 +983,54 @@
 
         let careerArray = [];
         document.querySelectorAll('.career-card').forEach(card => {
-            let v = card.querySelector('.career-faction-select').value;
-            let freeV = card.querySelector('.career-faction-free-input').value.trim();
-            careerArray.push({ faction: v, freeFaction: freeV });
+            careerArray.push({ faction: card.querySelector('.career-faction-select').value, freeFaction: card.querySelector('.career-faction-free-input').value.trim() });
         });
 
         let combatAliases = {};
         cryingCitySkills.forEach((sk, index) => {
             if(combatSkillIndices.includes(index)) {
-                const inputVal = document.getElementById(`skname-${index}`).value.trim();
-                if(inputVal) combatAliases[sk] = inputVal;
+                const inputVal = document.getElementById(`skname-${index}`).value.trim(); if(inputVal) combatAliases[sk] = inputVal;
             }
         });
 
         let customSkillsArray = [];
         document.querySelectorAll('.custom-skill-card').forEach(card => {
-            customSkillsArray.push({
-                name: card.querySelector('.csk-name').value,
-                lv: parseInt(card.querySelector('.csk-lv').value) || 1,
-                mod: parseInt(card.querySelector('.csk-mod').value) || 0
-            });
+            customSkillsArray.push({ name: card.querySelector('.csk-name').value, lv: parseInt(card.querySelector('.csk-lv').value) || 1, mod: parseInt(card.querySelector('.csk-mod').value) || 0 });
         });
 
         let traitsSlotsArray = [];
         for(let i=1; i<=4; i++) {
-            traitsSlotsArray.push({
-                selected: document.getElementById(`special-trait-select-${i}`).value,
-                freeText: document.getElementById(`special-trait-free-desc-${i}`).value
-            });
+            traitsSlotsArray.push({ selected: document.getElementById(`special-trait-select-${i}`).value, freeText: document.getElementById(`special-trait-free-desc-${i}`).value });
         }
 
         let weaponsArray = [];
         document.querySelectorAll('.dynamic-card').forEach(card => {
             if(card.querySelector('.wp-name')) {
                 weaponsArray.push({
-                    name: card.querySelector('.wp-name').value, lv: card.querySelector('.wp-lv').value,
-                    skill1: card.querySelector('.wp-sk1').value, bulletTotal: card.querySelector('.wp-bullet-total').value,
-                    bulletMag: card.querySelector('.wp-bullet-mag').value, skillsMulti: card.querySelector('.wp-sk-multi').value
+                    name: card.querySelector('.wp-name').value, lv: card.querySelector('.wp-lv').value, skill1: card.querySelector('.wp-sk1').value,
+                    bulletTotal: card.querySelector('.wp-bullet-total').value, bulletMag: card.querySelector('.wp-bullet-mag').value, skillsMulti: card.querySelector('.wp-sk-multi').value
                 });
             }
         });
 
+        // 【新設】通過シナリオデータのコンパイル収集
+        let scenariosArray = [];
+        document.querySelectorAll('.scenario-item-card').forEach(card => {
+            scenariosArray.push({
+                name: card.querySelector('.sc-name').value, exp: card.querySelector('.sc-exp').value,
+                end: card.querySelector('.sc-end').value, note: card.querySelector('.sc-note').value
+            });
+        });
+
         return {
-            baseStats, skillStats, skillModifiers, customSkillsArray, combatAliases, careerHistory: careerArray, traitsSlotsArray,
-            bonusSp: parseInt(document.getElementById('bonus-sp').value) || 0,
-            plName: document.getElementById('p-pl-name').value,
-            titlePrefixWord: document.getElementById('p-title-prefix').value,
-            titleSuffixWord: document.getElementById('p-title-suffix').value,
-            savedPrefixList: titlePrefixCollection,
-            savedSuffixList: titleSuffixCollection,
+            baseStats, skillStats, skillModifiers, customSkillsArray, combatAliases, careerHistory: careerArray, traitsSlotsArray, weaponsList: weaponsArray, scenariosList: scenariosArray,
+            bonusSp: parseInt(document.getElementById('bonus-sp').value) || 0, plName: document.getElementById('p-pl-name').value,
+            titlePrefixWord: document.getElementById('p-title-prefix').value, titleSuffixWord: document.getElementById('p-title-suffix').value,
+            savedPrefixList: titlePrefixCollection, savedSuffixList: titleSuffixCollection,
             profile: {
                 name: document.getElementById('p-name').value, faction: factionValue,
                 level: parseInt(document.getElementById('p-level').value) || 1, age: document.getElementById('p-age').value,
-                sex: document.getElementById('p-sex').value, height: document.getElementById('p-height').value,
-                weight: document.getElementById('p-weight').value
+                sex: document.getElementById('p-sex').value, height: document.getElementById('p-height').value, weight: document.getElementById('p-weight').value
             },
             lore: {
                 event: document.getElementById('f-past-event').value, emotion: document.getElementById('f-past-emotion').value,
@@ -1060,8 +1041,7 @@
     }
 
     function generateShareLink() {
-        saveToLocal();
-        document.getElementById('share-url').innerText = window.location.origin + window.location.pathname + "?slot=" + encodeURIComponent(document.getElementById('slot-name').value.trim());
+        saveToLocal(); document.getElementById('share-url').innerText = window.location.origin + window.location.pathname + "?slot=" + encodeURIComponent(document.getElementById('slot-name').value.trim());
         document.getElementById('share-box').style.display = 'block';
     }
 
@@ -1072,17 +1052,22 @@
         let actionsMax = 1 + Math.floor((baseStats.spd + traitAutoBonuses.spd) / 20);
         let regCost = 1 + Math.floor((baseStats.men + traitAutoBonuses.men) / 10);
         let weaponNames = d.weaponsList?.map(w => w.name || "未設定").join(', ') || "なし";
-
         let fullTitleStr = (d.titlePrefixWord && d.titleSuffixWord) ? `${d.titlePrefixWord} ${d.titleSuffixWord}` : "未設定";
-
         let traitsText = d.traitsSlotsArray.map((t, idx) => t.selected ? `[枠${idx+1}]:${t.selected}${t.freeText ? '('+t.freeText+')':''}` : '').filter(x=>x).join(', ');
         let careerDisplayList = d.careerHistory.map(c => c.faction === "その他" ? c.freeFaction : c.faction);
         let careerStr = careerDisplayList.length > 0 ? `\n転職経歴：${careerDisplayList.join(' ➔ ')}` : "";
 
         let memo = `PL: ${d.plName || ""}\nPC: ${d.profile.name || ""}\n称号： ${fullTitleStr}\n特殊能力： ${traitsText}${careerStr}\n武器： ${weaponNames}\n所属： ${d.profile.faction || ""}`;
 
-        let commands = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
+        // シナリオ履歴テキストを駒データメモ欄の末尾に全自動追加
+        if(d.scenariosList && d.scenariosList.length > 0) {
+            memo += `\n\n【通過シナリオ記録】`;
+            d.scenariosList.forEach(sc => {
+                if(sc.name) memo += `\n・${sc.name} (${sc.exp || '0pt'}) [${sc.end || '生存'}]: ${sc.note || ''}`;
+            });
+        }
 
+        let commands = `d6+d6>= 【+】\n{身体}d6>= 【身体】\n{筋力}d6>= 【筋力】\n{知能}d6>= 【知能】\n{速度}d6>= 【速度】\n{精神}d6>= 【精神】\n`;
         cryingCitySkills.forEach((sk, idx) => {
             let totalSkillLv = (skillStats[sk] || 1) + (skillModifiers[sk] || 0);
             let dispName = d.combatAliases[sk] ? `${sk}(${d.combatAliases[sk]})` : sk;
@@ -1112,12 +1097,11 @@
                 ]
             }
         };
-        navigator.clipboard.writeText(JSON.stringify(ccfoliaJson)).then(() => alert("ココフォリア規格の駒データをクリップボードへ完全同期出力しました！"));
+        navigator.clipboard.writeText(JSON.stringify(ccfoliaJson)).then(() => alert("ココフォリア規格の駒データをクリップボードへ同期出力しました！"));
     }
 
     function parseUrlOrLoadLocal() {
-        const slotParam = new URLSearchParams(window.location.search).get('slot');
-        if (slotParam) loadFromCloset(decodeURIComponent(slotParam));
+        const slotParam = new URLSearchParams(window.location.search).get('slot'); if (slotParam) loadFromCloset(decodeURIComponent(slotParam));
     }
 
     function loadFromCloset(slotName) {
@@ -1129,7 +1113,6 @@
         if (!data) return;
         baseStats = data.baseStats || baseStats; skillStats = data.skillStats || skillStats; skillModifiers = data.skillModifiers || skillModifiers;
         document.getElementById('bonus-sp').value = data.bonusSp || 0; document.getElementById('p-pl-name').value = data.plName || "";
-
         for (let key in baseStats) { if(document.getElementById(`base-${key}`)) document.getElementById(`base-${key}`).value = baseStats[key]; }
         cryingCitySkills.forEach((sk, index) => {
             if(document.getElementById(`sk-${index}`)) document.getElementById(`sk-${index}`).value = skillStats[sk] || 1;
@@ -1139,13 +1122,10 @@
         document.querySelectorAll('.combat-alias-input').forEach(input => input.value = "");
         if(data.combatAliases) {
             cryingCitySkills.forEach((sk, index) => {
-                if(data.combatAliases[sk] && document.getElementById(`skname-${index}`)) {
-                    document.getElementById(`skname-${index}`).value = data.combatAliases[sk];
-                }
+                if(data.combatAliases[sk] && document.getElementById(`skname-${index}`)) { document.getElementById(`skname-${index}`).value = data.combatAliases[sk]; }
             });
         }
 
-        // 称号コレクションデータのロード復元
         if(data.savedPrefixList) titlePrefixCollection = data.savedPrefixList;
         if(data.savedSuffixList) titleSuffixCollection = data.savedSuffixList;
         renderTitleCollections();
@@ -1162,8 +1142,7 @@
             document.getElementById('career-history-area').innerHTML = "";
             if(data.careerHistory) { data.careerHistory.forEach(c => addNewCareerField(c.faction, c.freeFaction)); }
             updateFactionAndTraits();
-
-            document.getElementById('p-level').value = data.profile.level || 1;
+            if(data.profile.level) document.getElementById('p-level').value = data.profile.level;
             document.getElementById('p-age').value = data.profile.age || ""; document.getElementById('p-sex').value = data.profile.sex || "";
             document.getElementById('p-height').value = data.profile.height || ""; document.getElementById('p-weight').value = data.profile.weight || "";
         }
@@ -1172,9 +1151,7 @@
             data.traitsSlotsArray.forEach((t, idx) => {
                 const i = idx + 1;
                 if(document.getElementById(`special-trait-select-${i}`)) {
-                    document.getElementById(`special-trait-select-${i}`).value = t.selected || "";
-                    onTraitSelected(i);
-                    document.getElementById(`special-trait-free-desc-${i}`).value = t.freeText || "";
+                    document.getElementById(`special-trait-select-${i}`).value = t.selected || ""; onTraitSelected(i); document.getElementById(`special-trait-free-desc-${i}`).value = t.freeText || "";
                 }
             });
         }
@@ -1186,8 +1163,7 @@
         const wpArea = document.getElementById('weapons-list-area'); wpArea.innerHTML = "";
         if (data.weaponsList && data.weaponsList.length > 0) {
             data.weaponsList.forEach((wp, idx) => {
-                weaponIndexCounter = idx + 1;
-                const card = document.createElement('div'); card.className = 'dynamic-card'; card.id = `weapon-card-id-${weaponIndexCounter}`;
+                weaponIndexCounter = idx + 1; const card = document.createElement('div'); card.className = 'dynamic-card'; card.id = `weapon-card-id-${weaponIndexCounter}`;
                 card.innerHTML = `
                     <button type="button" class="btn-delete-card" onclick="deleteWeaponField(${weaponIndexCounter})">削除</button>
                     <div class="form-grid">
@@ -1202,6 +1178,12 @@
                 wpArea.appendChild(card);
             });
         } else { addNewWeaponField(); }
+
+        // シナリオ履歴データの復元ロード処理
+        const scArea = document.getElementById('scenarios-list-area'); scArea.innerHTML = "";
+        if(data.scenariosList && data.scenariosList.length > 0) {
+            data.scenariosList.forEach(sc => { addNewScenarioField(sc.name, sc.exp, sc.end, sc.note); });
+        }
 
         if(data.lore) {
             document.getElementById('f-past-event').value = data.lore.event || ""; document.getElementById('f-past-emotion').value = data.lore.emotion || "";
