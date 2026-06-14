@@ -71,45 +71,81 @@
             letter-spacing: 0.05em;
         }
 
-        /* --- 【指定デザイン】右下の固定ページ内ジャンプメニュー --- */
-        .page-menu {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10000; /* 最前面に配置 */
-            background: #ffffff;
-            border: 2px solid #9d81ba;
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            width: 165px;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .menu-title {
-            font-size: 11px;
-            font-weight: bold;
-            color: #6c528d;
-            text-align: center;
-            border-bottom: 1px dashed #b3a2cb;
-            padding-bottom: 4px;
-            margin-bottom: 6px;
-        }
-        .page-menu a {
-            display: block;
-            color: #8261ad;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 4px 6px;
-            border-radius: 4px;
-            transition: background 0.2s;
-            cursor: pointer;
-        }
-        .page-menu a:hover {
-            background: #f3effa;
-            color: #4a148c;
-        }
+/* --- 【最優先修正】画面右下にいつでも確実に常駐する拡張型スマート目次 --- */
+.floating-menu {
+    position: fixed !important;  /* 画面に対して完全に固定 */
+    bottom: 25px !important;     /* 画面下部からの距離 */
+    right: 25px !important;      /* 画面右側からの距離 */
+    z-index: 999999 !important;  /* 他のあらゆる要素より最前面に表示 */
+}
 
+.menu-trigger-btn {
+    background: linear-gradient(135deg, var(--accent-blue) 0%, #008ba3 100%);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.menu-trigger-btn:hover { 
+    transform: scale(1.08); 
+}
+
+.menu-content-panel {
+    position: absolute;
+    bottom: 65px;                /* ボタンの上方向に展開 */
+    right: 0;
+    background-color: #0e1117;
+    border: 1px solid var(--accent-blue);
+    border-radius: 8px;
+    padding: 10px;
+    width: 260px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.9);
+    display: none;               /* 初期状態は非表示（JavaScriptで開閉） */
+    max-height: 450px;
+    overflow-y: auto;
+    animation: menuFade 0.2s ease-out forwards;
+}
+
+@keyframes menuFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-content-panel .menu-section-title {
+    font-size: 0.75rem; 
+    color: var(--accent-orange); 
+    font-weight: bold;
+    padding: 4px 8px; 
+    border-bottom: 1px solid #2d3748; 
+    margin-top: 6px;
+}
+
+.menu-content-panel a {
+    display: block; 
+    color: #cbd5e1; 
+    padding: 6px 12px; 
+    text-decoration: none;
+    font-size: 0.85rem; 
+    border-radius: 4px; 
+    transition: all 0.15s; 
+    cursor: pointer;
+}
+
+.menu-content-panel a:hover {
+    background-color: #1e293b; 
+    color: var(--accent-blue); 
+    padding-left: 16px;
+}
+        
         /* --- ナビゲーション戻るボタン --- */
         .back-nav { margin-bottom: 20px; display: flex; gap: 10px; }
         .btn-nav {
@@ -236,20 +272,30 @@
     </style>
 </head>
 <body onpageshow="if (event.persisted) window.location.reload();">
+<!-- 🚨 記述位置：<body>のすぐ直後に配置してください 🚨 -->
+<div class="floating-menu">
+    <button type="button" class="menu-trigger-btn" onclick="toggleFloatingMenu()">☰</button>
+    <div class="menu-content-panel" id="floating-menu-panel">
+        <div class="menu-section-title">▼ 外部サイト・資料リンク</div>
+        <a href="index.html">◆ 概要トップページ</a>
+        <a href="news.html">◆ お知らせ・パッチノート履歴</a>
+        <a href="character.html">◆ キャラクター制作ルール</a>
+        <a href="company.html">◆ 統括企業データ一覧</a>
+        <a href="weapon.html">◆ カタログスペック兵装一覧</a>
+        <a href="world_lore.html">◆ ディストピア都市歴史・世界観</a>
 
-<!-- 常駐固定される電脳仕様ページ内ジャンプメニュー -->
-<div class="page-menu" id="fixed-page-menu">
-    <div class="menu-title">🐾 市民登録目次</div>
-    <a onclick="scrollToSection('sec-system')">◆ システム・セーブ</a>
-    <a onclick="scrollToSection('sec-profile')">◆ 市民プロフィール</a>
-    <a onclick="scrollToSection('sec-base')">◆ 基礎能力設定</a>
-    <a onclick="scrollToSection('sec-skills')">◆ 技能レベル配分</a>
-    <a onclick="scrollToSection('sec-traits')">◆ 特殊能力スロット</a>
-    <a onclick="scrollToSection('sec-weapons')">◆ 所持兵装リスト</a>
-    <a onclick="scrollToSection('sec-story')">◆ 過去の因果背景</a>
-    <a onclick="scrollToSection('sec-closet')">◆ 登録記録保管庫</a>
+        <div class="menu-section-title">▼ 制作シート内セクションジャンプ</div>
+        <a onclick="scrollToSection('sec-system')">⚡ 1. セーブ・駒出力パネル</a>
+        <a onclick="scrollToSection('sec-profile')">👤 2. プロフィール ＆ 経歴</a>
+        <a onclick="scrollToSection('sec-base')">📊 3. 基礎能力割り振り</a>
+        <a onclick="scrollToSection('sec-skills')">⚔️ 4. 技術能力 ＆ 武装名称</a>
+        <a onclick="scrollToSection('sec-traits')">🧬 5. 選択特殊能力スロット</a>
+        <a onclick="scrollToSection('sec-weapons')">📦 6. 所持兵装カード管理</a>
+        <a onclick="scrollToSection('sec-story')">📖 7. キャラクターバックストーリー</a>
+        <a onclick="scrollToSection('sec-closet')">📂 8. 端末内セーブデータ一覧</a>
+    </div>
 </div>
-
+    
 <header>
     <div class="main-title">CRYING CITY // 端末機構</div>
     <div class="sub-title">市民データ・キャラクタープロトコル生成</div>
