@@ -119,14 +119,6 @@
             letter-spacing: 0.05em;
         }
 
-        h3 {
-            font-size: 1rem;
-            color: #fff;
-            margin: 25px 0 12px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed var(--border-color);
-        }
-
         p {
             font-size: 0.95rem;
             margin-bottom: 15px;
@@ -134,7 +126,7 @@
             white-space: pre-line;
         }
 
-        /* --- ナビゲーション --- */
+        /* --- ナびゲーション --- */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -230,7 +222,7 @@
 
 <header>
     <div class="main-title">クライングシティ</div>
-    <div class="sub-title">市民登録プロトコル // 統統括議会・電電公報システム</div>
+    <div class="sub-title">市民登録プロトコル // 統括議会・中央情報ネットワーク</div>
 </header>
 
 <div class="banner-container">
@@ -244,6 +236,7 @@
 
 <div class="container">
 
+    <!-- ナびゲーション -->
     <div id="about-menu" class="section-panel">
         <h2>ナビゲーション</h2>
         <div class="nav-grid">
@@ -252,16 +245,19 @@
             <a href="character.html" class="nav-button">◆キャラクター制作◆</a>
             <a href="company.html" class="nav-button">◆会社◆</a>
             <a href="weapon.html" class="nav-button">◆武器◆</a>
+            <a href="world_lore.html" class="nav-button">◆世界観◆</a>
             <a href="appendix.html" class="nav-button">◆追記・追加説明◆</a>
-            <a href="npc_list.html" class="nav-button">◆公開キャラクター覧◆</a>
+            <a href="npc_list.html" class="nav-button">◆登場人物一覧◆</a>
             <a href="sheet_make.html" class="nav-button highlight">キャラクターシート制作ページ ➔</a>
         </div>
     </div>
 
+    <!-- お知らせセクション -->
     <div class="section-panel">
         <h2>〇お知らせ一覧</h2>
         <p>都市端末機構から配信される最新のパッチアナウンス、および重要システム修正通知です。</p>
 
+        <!-- ==================== 【最新】2026年6月13日のお知らせ ==================== -->
         <div class="news-article-card latest">
             <span class="news-date">2026年6月13日</span>
             <div class="news-title-text highlight-orange">【キャラ制作における大幅改修および関連事項修正のお知らせ】</div>
@@ -320,18 +316,85 @@
 修正後)キャラクターLv×4だけ獲得</div>
         </div>
 
+        <!-- ==================== 以下、復元・過去のお知らせバックナンバー ==================== -->
+        
         <div class="news-article-card">
-            <span class="news-date">2026年5月20日</span>
-            <div class="news-title-text">【システムパッチ】登録機構のネットワーク同期テスト</div>
-            <div class="news-body-content">ネットワークプロトコルの最適化を完了しました。
-キャラクターシート制作スロットにおけるLocalStorageの同期感度は現在すべて正常稼働中です。各市民の皆様は端末機器のキャッシュクリアを定期的に実行してください。</div>
+            <span class="news-date">2026年5月28日</span>
+            <div class="news-title-text">【特殊能力に関する変更のお知らせ】</div>
+            <div class="news-body-content">主要会社・組織における市民の初期生存率および任務遂行アビリティの見直しを行いました。各所属企業の「特殊能力」における適用タイミングおよび能力値補正の一部値のパッチテストを実施し、データ同期を完了しました。</div>
         </div>
 
         <div class="news-article-card">
-            <span class="news-date">2026年4月01日</span>
+            <span class="news-date">2026年5月22日</span>
+            <div class="news-title-text">【特殊能力に関する追加変更のお知らせ】</div>
+            <div class="news-body-content">特殊能力の重複発動時における負荷およびコストの再計算式を微修正しました。特定の行動終了時、またはターン開始時にコストが予期せぬ値になる問題を解消するための追加プロトコルを適応しました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年5月15日</span>
+            <div class="news-title-text">【武器：弓矢・ショットガンのバランス調整に関するお知らせ】</div>
+            <div class="news-body-content">遠距離武器における兵装バランス調整を実施しました。
+ショットガンの近距離における散弾収束率、および弓矢の総弾数消費に伴う威力の減衰仕様、矢の基本ダメージ処理方法を最新の戦闘規則に準拠する形で最適化しました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年5月08日</span>
+            <div class="news-title-text">【DLC会社追加のお知らせ】</div>
+            <div class="news-body-content">都市インフラ・武器整備を統括する大規模企業「電務工房」、および特殊DLCクラン「刻」「Mysticism」が中央データベースへ正式にマッピングされました。これにより、新たな所属選択と固有アビリティの開放が可能となりました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年5月02日</span>
+            <div class="news-title-text">【追加会社の特殊能力に関する修正のお知らせ】</div>
+            <div class="news-body-content">新規実装されたDLC会社（電務工房など）の特殊能力のうち、確率発動系スキル（ランダム効果）の処理速度、およびコスト・行動回数消費時の同期挙動におけるバグ修正パッチを適用しました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年4月24日</span>
+            <div class="news-title-text">【名称表記修正とスナイパーのスキル修正のお知らせ】</div>
+            <div class="news-body-content">遠距離兵装「ライフル」カテゴリにおける［スナイパー系統］の装填数および保有上限の仕様を一部変更しました。また、視覚Lvに依存する攻撃判定補正の上限値と威力ダイスの表記揺れを厳格に修正しました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年4月18日</span>
+            <div class="news-title-text">【軽微な表記修正のお知らせ】</div>
+            <div class="news-body-content">ルールブック内における、各種判定の「難度」の記載形式、および小数点以下の端数処理（切り捨てルール）に関するインフォメーションテキストの微修正を行いました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年4月12日</span>
+            <div class="news-title-text">【表記修正のお知らせ】</div>
+            <div class="news-body-content">技術能力一覧のカテゴリ、特に[戦闘系能力]内の守備能力（回避、防御、反撃）のターン内最大使用回数および併用制限ルールに関する文章表現の平易化・誤脱の修正を行いました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年4月05日</span>
+            <div class="news-title-text">【呪力に関する追加説明のお知らせ】</div>
+            <div class="news-body-content">不思議な力を操る特殊遠距離兵装「呪力」の運用プロトコルを追加。弾丸の代わりにコストを消費する際の判定ステップや、精神対抗判定、バリア消失効果、および回復ロール転換時の処理仕様についての詳細を追記しました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年3月28日</span>
+            <div class="news-title-text">【無所属の特殊能力追加と能力追加に伴う説明文の軽微な変更のお知らせ】</div>
+            <div class="news-body-content">淘汰された者たちの総称「無所属」カテゴリにおいて、「個人事業主」「個人事業所属」などの特殊なライフライン能力が追加されました。これに伴い、エリートや無才の記述、および対人難度デバフの適用テキストを調整しました。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年3月15日</span>
+            <div class="news-title-text">【キャラクターシート制作に関する告知】</div>
+            <div class="news-body-content">ココフォリアへのダイレクトクリップボード出力（公式JSONフォーマット準拠）に対応した、インタラクティブ型のキャラクターシート制作ツール（端末機構シミュレーター）のプロトタイプ公開をお知らせいたします。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年3月01日</span>
+            <div class="news-title-text">【システムパッチ】登録機構のネットワーク同期テスト</div>
+            <div class="news-body-content">ネットワークプロトコルの最適化を完了しました。キャラクターシート制作スロットにおけるLocalStorageの同期感度は現在すべて正常稼働中です。各市民の皆様は端末機器のキャッシュクリアを定期的に実行してください。</div>
+        </div>
+
+        <div class="news-article-card">
+            <span class="news-date">2026年2月15日</span>
             <div class="news-title-text">【市民通達】クライングシティ電脳ポータルへようこそ</div>
-            <div class="news-body-content">本ポータルは、市民登録およびTRPG進行用プロトコルを円滑に行うために設立された情報端末システムです。
-各セクション（世界観、会社、武器一覧）は統括議会のパッチデータに伴い、今後もリアルタイムで拡張・更新されます。義務を果たし、都市の平和維持に努めてください。</div>
+            <div class="news-body-content">本ポータルは、市民登録およびTRPG進行用プロトコルを円滑に行うために設立された情報端末システムです。各セクション（世界観、会社、武器一覧）は統括議会のパッチデータに伴い、今後もリアルタイムで拡張・更新されます。義務を果たし、都市の平和維持に努めてください。</div>
         </div>
 
     </div>
